@@ -1,0 +1,69 @@
+#include "resource.h"
+#include "version.h"
+#include "afxres.h"
+
+IDD_SELECT_LOCALE DIALOGEX 0, 0, 182, 142
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION
+CAPTION "SELECT LOCALE"
+FONT 10, "Tahoma", 0, 0, 0x0
+BEGIN
+    PUSHBUTTON      "START",IDC_START,44,123,40,13
+    PUSHBUTTON      "EXIT",IDC_EXIT,96,123,40,13
+    LISTBOX         IDC_LOCALE_LIST,6,5,170,114,LBS_SORT | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+END
+
+IDC_CURSOR_NORMAL       CURSOR                  "Cursors\\cursor.cur"
+IDC_CURSOR_CHAIR        CURSOR                  "Cursors\\cursor_chair.cur"
+IDC_CURSOR_DOOR         CURSOR                  "Cursors\\cursor_door.cur"
+IDC_CURSOR_NO           CURSOR                  "Cursors\\cursor_no.cur"
+IDC_CURSOR_PICK         CURSOR                  "Cursors\\cursor_pick.cur"
+IDC_CURSOR_TALK         CURSOR                  "Cursors\\cursor_talk.cur"
+IDC_CURSOR_ATTACK       CURSOR                  "Cursors\\cursor_attack.cur"
+IDC_CURSOR_BUY          CURSOR                  "cursors\\cursor_buy.cur"
+IDC_CURSOR_SELL         CURSOR                  "cursors\\cursor_sell.cur"
+IDC_CURSOR_CAMERA_ROTATE CURSOR                  "Cursors\\cursor_camera_rotate.cur"
+IDC_CURSOR_HSIZE        CURSOR                  "Cursors\\cursor_hsize.cur"
+IDC_CURSOR_VSIZE        CURSOR                  "Cursors\\cursor_vsize.cur"
+IDC_CURSOR_HVSIZE       CURSOR                  "Cursors\\cursor_hvsize.cur"
+IDI_METIN2              ICON                    "metin2new.ico"
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION VER_FILE_VERSION 
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x17L
+ FILEFLAGS 0x0L
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "080003b5"
+        BEGIN
+            VALUE "CompanyName", "Private"
+            VALUE "FileDescription", "Metin2"
+            VALUE "FileVersion",  VER_FILE_VERSION_STR "\0"
+            VALUE "InternalName", "Metin2"
+            VALUE "LegalCopyright", "(C) Copyright 2020"
+            VALUE "OriginalFilename", "Metin2.exe"
+            VALUE "ProductName", "Metin2"
+            VALUE "ProductVersion", "1, 0, 0, 1"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x800, 949
+    END
+END
+
+
+STRINGTABLE 
+BEGIN
+    IDS_APP_NAME            "Metin2"
+    IDS_POSSESSIVE_MORPHENE "'s"
+    IDS_WARN_BAD_DRIVER     "IDS_WARN_BAD_DRIVER"
+    IDS_WARN_NO_TNL         "IDS_WARN_NO_TNL"
+    IDS_ERR_CANNOT_READ_FILE "Cannot read %s file"
+    IDS_ERR_NOT_LATEST_FILE "File '%s' is not latest version. Please launch patcher."
+    IDS_ERR_MUST_LAUNCH_FROM_PATCHER "Please run patcher."
+END

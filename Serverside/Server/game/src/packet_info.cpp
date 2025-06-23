@@ -203,6 +203,7 @@ CPacketInfoCG::CPacketInfoCG()
 	Set(HEADER_CG_FISHING, sizeof(TPacketCGFishing), "Fishing", true);
 	Set(HEADER_CG_ITEM_GIVE, sizeof(TPacketCGGiveItem), "ItemGive", true);
 	Set(HEADER_CG_HACK, sizeof(TPacketCGHack), "Hack", true);
+        Set(HEADER_CG_OFFLINE_SHOP, sizeof(TPacketCGShop), "OfflineShop", true);
 	Set(HEADER_CG_MYSHOP, sizeof(TPacketCGMyShop), "MyShop", true);
 
 	Set(HEADER_CG_REFINE, sizeof(TPacketCGRefine), "Refine", true);

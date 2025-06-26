@@ -155,6 +155,7 @@ class CInputMain : public CInputProcessor
 		int			MyShop(LPCHARACTER ch, const char * c_pData, size_t uiBytes);
 
 		void		Refine(LPCHARACTER ch, const char* c_pData);
+                int                     OfflineShop(LPCHARACTER ch, const char * c_pData, size_t uiBytes);
 
 		void		Roulette(LPCHARACTER ch, const char* c_pData);
 		void		TargetInfoLoad(LPCHARACTER ch, const char* c_pData);
@@ -181,7 +182,7 @@ protected:
 protected:
 	void		MapLocations(const char * c_pData);
 	void		LoginSuccess(DWORD dwHandle, const char *data);
-	void		PlayerCreateFailure(LPDESC d, BYTE bType);	// 0 = ÀÏ¹İ ½ÇÆĞ 1 = ÀÌ¹Ì ÀÖÀ½
+	void		PlayerCreateFailure(LPDESC d, BYTE bType);	// 0 = ì¼ë°˜ ì‹¤íŒ¨ 1 = ì´ë¯¸ ìˆìŒ
 	void		PlayerDeleteSuccess(LPDESC d, const char * data);
 	void		PlayerDeleteFail(LPDESC d);
 	void		PlayerLoad(LPDESC d, const char* data);
@@ -268,10 +269,10 @@ protected:
 	void		BlockException(TPacketBlockException * data);
 
 	// MYSHOP_PRICE_LIST
-	/// ¾ÆÀÌÅÛ °¡°İÁ¤º¸ ¸®½ºÆ® ¿äÃ»¿¡ ´ëÇÑ ÀÀ´ä ÆĞÅ¶(HEADER_DG_MYSHOP_PRICELIST_RES) Ã³¸®ÇÔ¼ö
+	/// ì•„ì´í…œ ê°€ê²©ì •ë³´ ë¦¬ìŠ¤íŠ¸ ìš”ì²­ì— ëŒ€í•œ ì‘ë‹µ íŒ¨í‚·(HEADER_DG_MYSHOP_PRICELIST_RES) ì²˜ë¦¬í•¨ìˆ˜
 	/**
-	* @param	d ¾ÆÀÌÅÛ °¡°İÁ¤º¸ ¸®½ºÆ®¸¦ ¿äÃ»ÇÑ ÇÃ·¹ÀÌ¾îÀÇ descriptor
-	* @param	p ÆĞÅ¶µ¥ÀÌÅÍÀÇ Æ÷ÀÎÅÍ
+	* @param	d ì•„ì´í…œ ê°€ê²©ì •ë³´ ë¦¬ìŠ¤íŠ¸ë¥¼ ìš”ì²­í•œ í”Œë ˆì´ì–´ì˜ descriptor
+	* @param	p íŒ¨í‚·ë°ì´í„°ì˜ í¬ì¸í„°
 	*/
 	void		MyshopPricelistRes( LPDESC d, const TPacketMyshopPricelistHeader* p );
 	// END_OF_MYSHOP_PRICE_LIST
@@ -281,7 +282,7 @@ protected:
 	//END_RELOAD_ADMIN
 
 	void		DetailLog(const TPacketNeedLoginLogInfo* info);
-	// µ¶ÀÏ ¼±¹° ±â´É Å×½ºÆ®
+	// ë…ì¼ ì„ ë¬¼ ê¸°ëŠ¥ í…ŒìŠ¤íŠ¸
 	void		ItemAwardInformer(TPacketItemAwardInfromer* data);
 
 	void		RespondChannelStatus(LPDESC desc, const char* pcData);

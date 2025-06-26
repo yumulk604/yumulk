@@ -88,13 +88,13 @@ void SendBlockChatInfo(LPCHARACTER ch, int sec)
 	char buf[128+1];
 
 	if (hour > 0 && min > 0)
-		snprintf(buf, sizeof(buf), "%ld ore %ld minute %d secunde r„mase.", hour, min, sec);
+		snprintf(buf, sizeof(buf), "%ld ore %ld minute %d secunde r√£mase.", hour, min, sec);
 	else if (hour > 0 && min == 0)
-		snprintf(buf, sizeof(buf), "%ld ore %d secunde r„mase.", hour, sec);
+		snprintf(buf, sizeof(buf), "%ld ore %d secunde r√£mase.", hour, sec);
 	else if (hour == 0 && min > 0)
-		snprintf(buf, sizeof(buf), "%ld minute %d secunde r„mase.", min, sec);
+		snprintf(buf, sizeof(buf), "%ld minute %d secunde r√£mase.", min, sec);
 	else
-		snprintf(buf, sizeof(buf), "%d secunde r„mase.", sec);
+		snprintf(buf, sizeof(buf), "%d secunde r√£mase.", sec);
 
 	ch->ChatPacket(CHAT_TYPE_INFO, buf);
 }
@@ -458,7 +458,7 @@ int CInputMain::Chat(LPCHARACTER ch, const char * data, size_t uiBytes)
 
 		if (ch->GetLevel() < SHOUT_LIMIT_LEVEL)
 		{
-			ch->ChatPacket(CHAT_TYPE_INFO, "Trebuie s„ ai nivel %d pentru a putea face asta.", SHOUT_LIMIT_LEVEL);
+			ch->ChatPacket(CHAT_TYPE_INFO, "Trebuie s√£ ai nivel %d pentru a putea face asta.", SHOUT_LIMIT_LEVEL);
 			return (iExtraLen);
 		}
 
@@ -514,7 +514,7 @@ int CInputMain::Chat(LPCHARACTER ch, const char * data, size_t uiBytes)
 		case CHAT_TYPE_PARTY:
 			{
 				if (!ch->GetParty())
-					ch->ChatPacket(CHAT_TYPE_INFO, "Trebuie s„ fii Óntr-un grup pentru a putea face asta.");
+					ch->ChatPacket(CHAT_TYPE_INFO, "Trebuie s√£ fii √Æntr-un grup pentru a putea face asta.");
 				else
 				{
 					TEMP_BUFFER tbuf;
@@ -531,7 +531,7 @@ int CInputMain::Chat(LPCHARACTER ch, const char * data, size_t uiBytes)
 		case CHAT_TYPE_GUILD:
 			{
 				if (!ch->GetGuild())
-					ch->ChatPacket(CHAT_TYPE_INFO, "Trebuie s„ fii Óntr-o breasl„ pentru a putea face asta.");
+					ch->ChatPacket(CHAT_TYPE_INFO, "Trebuie s√£ fii √Æntr-o breasl√£ pentru a putea face asta.");
 				else
 					ch->GetGuild()->Chat(chatbuf);
 			}
@@ -656,7 +656,7 @@ int CInputMain::Messenger(LPCHARACTER ch, const char* c_pData, size_t uiBytes)
 
 				if (ch_companion->IsBlockMode(BLOCK_MESSENGER_INVITE))
 				{
-					ch->ChatPacket(CHAT_TYPE_INFO, "Juc„torul nu dore∫te o astfel de invita˛ie.");
+					ch->ChatPacket(CHAT_TYPE_INFO, "Juc√£torul nu dore¬∫te o astfel de invita√æie.");
 					return sizeof(TPacketCGMessengerAddByVID);
 				}
 
@@ -696,7 +696,7 @@ int CInputMain::Messenger(LPCHARACTER ch, const char* c_pData, size_t uiBytes)
 				LPCHARACTER tch = CHARACTER_MANAGER::instance().FindPC(name);
 
 				if (!tch)
-					ch->ChatPacket(CHAT_TYPE_INFO, "%s nu este activ Ón acest moment.", name);
+					ch->ChatPacket(CHAT_TYPE_INFO, "%s nu este activ √Æn acest moment.", name);
 				else
 				{
 					if (tch == ch)
@@ -704,7 +704,7 @@ int CInputMain::Messenger(LPCHARACTER ch, const char* c_pData, size_t uiBytes)
 
 					if (tch->IsBlockMode(BLOCK_MESSENGER_INVITE) == true)
 					{
-						ch->ChatPacket(CHAT_TYPE_INFO, "Juc„torul nu dore∫te o astfel de invita˛ie.");
+						ch->ChatPacket(CHAT_TYPE_INFO, "Juc√£torul nu dore¬∫te o astfel de invita√æie.");
 					}
 					else
 					{
@@ -817,7 +817,7 @@ void CInputMain::Exchange(LPCHARACTER ch, const char * data)
 	{
 		if (iPulse - to_ch->GetSafeboxLoadTime() < PASSES_PER_SEC(5))
 		{
-			to_ch->ChatPacket(CHAT_TYPE_INFO, "Trebuie s„ a∫tep˛i 5 secunde.");
+			to_ch->ChatPacket(CHAT_TYPE_INFO, "Trebuie s√£ a¬∫tep√æi 5 secunde.");
 			return;
 		}
 
@@ -829,7 +829,7 @@ void CInputMain::Exchange(LPCHARACTER ch, const char * data)
 
 	if (iPulse - ch->GetSafeboxLoadTime() < PASSES_PER_SEC(5))
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Trebuie s„ a∫tep˛i 5 secunde.");
+		ch->ChatPacket(CHAT_TYPE_INFO, "Trebuie s√£ a¬∫tep√æi 5 secunde.");
 		return;
 	}
 
@@ -843,19 +843,19 @@ void CInputMain::Exchange(LPCHARACTER ch, const char * data)
 				{
 					if (iPulse - ch->GetSafeboxLoadTime() < PASSES_PER_SEC(5))
 					{
-						ch->ChatPacket(CHAT_TYPE_INFO, "Trebuie s„ a∫tep˛i 5 secunde.");
+						ch->ChatPacket(CHAT_TYPE_INFO, "Trebuie s√£ a¬∫tep√æi 5 secunde.");
 						return; 
 					}
 
 					if (iPulse - to_ch->GetSafeboxLoadTime() < PASSES_PER_SEC(5))
 					{
-						to_ch->ChatPacket(CHAT_TYPE_INFO, "Trebuie s„ a∫tep˛i 5 secunde.");
+						to_ch->ChatPacket(CHAT_TYPE_INFO, "Trebuie s√£ a¬∫tep√æi 5 secunde.");
 						return; 
 					}
 
 					if (ch->GetGold() >= GOLD_MAX)
 					{	
-						ch->ChatPacket(CHAT_TYPE_INFO, "Limita de Yang a fost dep„∫it„.");
+						ch->ChatPacket(CHAT_TYPE_INFO, "Limita de Yang a fost dep√£¬∫it√£.");
 
 						sys_err("[OVERFLOG_GOLD] START (%u) id %u name %s ", ch->GetGold(), ch->GetPlayerID(), ch->GetName());
 						return;
@@ -872,7 +872,7 @@ void CInputMain::Exchange(LPCHARACTER ch, const char * data)
 
 					if (ch->GetMyShop() || ch->IsOpenSafebox() || ch->GetShopOwner() || ch->IsCubeOpen())
 					{
-						ch->ChatPacket(CHAT_TYPE_INFO, "Altceva se petrece Ón acest moment.");
+						ch->ChatPacket(CHAT_TYPE_INFO, "Altceva se petrece √Æn acest moment.");
 						return;
 					}
 
@@ -904,7 +904,7 @@ void CInputMain::Exchange(LPCHARACTER ch, const char * data)
 
 				if (GOLD_MAX <= nTotalGold)
 				{
-					ch->ChatPacket(CHAT_TYPE_INFO, "Limita de Yang a fost dep„∫it„.");
+					ch->ChatPacket(CHAT_TYPE_INFO, "Limita de Yang a fost dep√£¬∫it√£.");
 
 					sys_err("[OVERFLOW_GOLD] ELK_ADD (%u) id %u name %s ",
 							ch->GetExchange()->GetCompany()->GetOwner()->GetGold(),
@@ -1177,13 +1177,13 @@ void CInputMain::Move(LPCHARACTER ch, const char * data)
 
 	ch->PacketAround(&pack, sizeof(TPacketGCMove), ch);
 /*
-	if (pinfo->dwTime == 10653691) // µπˆ∞≈ πﬂ∞ﬂ
+	if (pinfo->dwTime == 10653691) // ¬µ√∞¬π√∂¬∞√Ö ¬π√ü¬∞√ü
 	{
 		if (ch->GetDesc()->DelayedDisconnect(number(15, 30)))
 			LogManager::instance().HackLog("Debugger", ch);
 
 	}
-	else if (pinfo->dwTime == 10653971) // Softice πﬂ∞ﬂ
+	else if (pinfo->dwTime == 10653971) // Softice ¬π√ü¬∞√ü
 	{
 		if (ch->GetDesc()->DelayedDisconnect(number(15, 30)))
 			LogManager::instance().HackLog("Softice", ch);
@@ -1528,31 +1528,31 @@ void CInputMain::SafeboxCheckin(LPCHARACTER ch, const char * c_pData)
 
 	if (pkItem->GetCell() >= INVENTORY_MAX_NUM && IS_SET(pkItem->GetFlag(), ITEM_FLAG_IRREMOVABLE))
 	{
-		 ch->ChatPacket(CHAT_TYPE_INFO, "Nu po˛i muta acest obiect Ón depozit.");
+		 ch->ChatPacket(CHAT_TYPE_INFO, "Nu po√æi muta acest obiect √Æn depozit.");
 		 return;
 	}
 
 	if (!pkSafebox->IsEmpty(p->bSafePos, pkItem->GetSize()))
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Nu po˛i muta acest obiect Ón depozit.");
+		ch->ChatPacket(CHAT_TYPE_INFO, "Nu po√æi muta acest obiect √Æn depozit.");
 		return;
 	}
 
 	if (pkItem->GetVnum() == UNIQUE_ITEM_SAFEBOX_EXPAND)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Nu po˛i muta acest obiect Ón depozit.");
+		ch->ChatPacket(CHAT_TYPE_INFO, "Nu po√æi muta acest obiect √Æn depozit.");
 		return;
 	}
 
 	if (IS_SET(pkItem->GetAntiFlag(), ITEM_ANTIFLAG_SAFEBOX) )
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Nu po˛i muta acest obiect Ón depozit.");
+		ch->ChatPacket(CHAT_TYPE_INFO, "Nu po√æi muta acest obiect √Æn depozit.");
 		return;
 	}
 
 	if (pkItem->isLocked())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Nu po˛i muta acest obiect Ón depozit.");
+		ch->ChatPacket(CHAT_TYPE_INFO, "Nu po√æi muta acest obiect √Æn depozit.");
 		return;
 	}
 
@@ -1636,7 +1636,7 @@ void CInputMain::PartyInvite(LPCHARACTER ch, const char * c_pData)
 {
 	if (ch->GetArena())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Nu po˛i face asta aici.");
+		ch->ChatPacket(CHAT_TYPE_INFO, "Nu po√æi face asta aici.");
 		return;
 	}
 
@@ -1657,7 +1657,7 @@ void CInputMain::PartyInviteAnswer(LPCHARACTER ch, const char * c_pData)
 {
 	if (ch->GetArena())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Nu po˛i face asta aici.");
+		ch->ChatPacket(CHAT_TYPE_INFO, "Nu po√æi face asta aici.");
 		return;
 	}
 
@@ -1666,7 +1666,7 @@ void CInputMain::PartyInviteAnswer(LPCHARACTER ch, const char * c_pData)
 	LPCHARACTER pInviter = CHARACTER_MANAGER::instance().Find(p->leader_vid);
 
 	if (!pInviter)
-		ch->ChatPacket(CHAT_TYPE_INFO, "Juc„torul nu este activ Ón acest moment.");
+		ch->ChatPacket(CHAT_TYPE_INFO, "Juc√£torul nu este activ √Æn acest moment.");
 	else if (!p->accept)
 		pInviter->PartyInviteDeny(ch->GetPlayerID());
 	else
@@ -1678,7 +1678,7 @@ void CInputMain::PartySetState(LPCHARACTER ch, const char* c_pData)
 {
 	if (!CPartyManager::instance().IsEnablePCParty())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Aceast„ comand„ nu poate fi folosit„.");
+		ch->ChatPacket(CHAT_TYPE_INFO, "Aceast√£ comand√£ nu poate fi folosit√£.");
 		return;
 	}
 
@@ -1734,19 +1734,19 @@ void CInputMain::PartyRemove(LPCHARACTER ch, const char* c_pData)
 {
 	if (ch->GetArena())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Nu po˛i face asta aici.");
+		ch->ChatPacket(CHAT_TYPE_INFO, "Nu po√æi face asta aici.");
 		return;
 	}
 
 	if (!CPartyManager::instance().IsEnablePCParty())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Aceast„ comand„ nu poate fi folosit„.");
+		ch->ChatPacket(CHAT_TYPE_INFO, "Aceast√£ comand√£ nu poate fi folosit√£.");
 		return;
 	}
 
 	if (ch->GetDungeon())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Nu pot face asta Óntr-o temni˛„.");
+		ch->ChatPacket(CHAT_TYPE_INFO, "Nu pot face asta √Æntr-o temni√æ√£.");
 		return;
 	}
 
@@ -1765,7 +1765,7 @@ void CInputMain::PartyRemove(LPCHARACTER ch, const char* c_pData)
 		{
 			LPCHARACTER B = CHARACTER_MANAGER::instance().FindByPID(p->pid);
 			if (B)
-				B->ChatPacket(CHAT_TYPE_INFO, "Ai fost eliminat din grup„.");
+				B->ChatPacket(CHAT_TYPE_INFO, "Ai fost eliminat din grup√£.");
 
 			pParty->Quit(p->pid);
 		}
@@ -1778,7 +1778,7 @@ void CInputMain::PartyRemove(LPCHARACTER ch, const char* c_pData)
 				CPartyManager::instance().DeleteParty(pParty);
 			else
 			{
-				ch->ChatPacket(CHAT_TYPE_INFO, "Ai fost eliminat din grup„.");
+				ch->ChatPacket(CHAT_TYPE_INFO, "Ai fost eliminat din grup√£.");
 				pParty->Quit(ch->GetPlayerID());
 			}
 		}
@@ -1795,13 +1795,13 @@ void CInputMain::AnswerMakeGuild(LPCHARACTER ch, const char* c_pData)
 
 	if (ch->GetGold() < GuildCreateFee || ch->GetLevel() < 40)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Ai nevoie de nivel minim 40 ∫i 10 mil. Yang pentru a fonda o breasl„.");
+		ch->ChatPacket(CHAT_TYPE_INFO, "Ai nevoie de nivel minim 40 ¬∫i 10 mil. Yang pentru a fonda o breasl√£.");
 		return;
 	}
 
 	if (ch->GetGuild())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "E∫ti deja Óntr-o breasl„.");
+		ch->ChatPacket(CHAT_TYPE_INFO, "E¬∫ti deja √Æntr-o breasl√£.");
 		return;
 	}
 
@@ -1822,7 +1822,7 @@ void CInputMain::AnswerMakeGuild(LPCHARACTER ch, const char* c_pData)
 
 	if (dwGuildID)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Breasla %s a fost fondat„ cu succes.", cp.name);
+		ch->ChatPacket(CHAT_TYPE_INFO, "Breasla %s a fost fondat√£ cu succes.", cp.name);
 
 		ch->PointChange(POINT_GOLD, -GuildCreateFee);
 		DBManager::instance().SendMoneyLog(MONEY_LOG_GUILD, ch->GetPlayerID(), -GuildCreateFee);
@@ -1860,7 +1860,7 @@ void CInputMain::PartyUseSkill(LPCHARACTER ch, const char* c_pData)
 				if (pch)
 					ch->GetParty()->SummonToLeader(pch->GetPlayerID());
 				else
-					ch->ChatPacket(CHAT_TYPE_INFO, "Juc„torul nu a fost g„sit.");
+					ch->ChatPacket(CHAT_TYPE_INFO, "Juc√£torul nu a fost g√£sit.");
 			}
 			break;
 	}
@@ -1936,13 +1936,13 @@ int CInputMain::Guild(LPCHARACTER ch, const char * data, size_t uiBytes)
 
 				if (gold < 0)
 				{
-					ch->ChatPacket(CHAT_TYPE_INFO, "Suma poate fi doar pozitiv„.");
+					ch->ChatPacket(CHAT_TYPE_INFO, "Suma poate fi doar pozitiv√£.");
 					return SubPacketLen;
 				}
 
 				if (ch->GetGold() < gold)
 				{
-					ch->ChatPacket(CHAT_TYPE_INFO, "<Breasl„> Yang insuficient.");
+					ch->ChatPacket(CHAT_TYPE_INFO, "<Breasl√£> Yang insuficient.");
 					return SubPacketLen;
 				}
 
@@ -1958,7 +1958,7 @@ int CInputMain::Guild(LPCHARACTER ch, const char * data, size_t uiBytes)
 
 				if (gold < 0)
 				{
-					ch->ChatPacket(CHAT_TYPE_INFO, "Suma poate fi doar pozitiv„.");
+					ch->ChatPacket(CHAT_TYPE_INFO, "Suma poate fi doar pozitiv√£.");
 					return SubPacketLen;
 				}
 
@@ -1973,7 +1973,7 @@ int CInputMain::Guild(LPCHARACTER ch, const char * data, size_t uiBytes)
 
 				if (!newmember)
 				{
-					ch->ChatPacket(CHAT_TYPE_INFO, "Juc„torul nu a fost g„sit.");
+					ch->ChatPacket(CHAT_TYPE_INFO, "Juc√£torul nu a fost g√£sit.");
 					return SubPacketLen;
 				}
 
@@ -1988,7 +1988,7 @@ int CInputMain::Guild(LPCHARACTER ch, const char * data, size_t uiBytes)
 			{
 				if (pGuild->UnderAnyWar())
 				{
-					ch->ChatPacket(CHAT_TYPE_INFO, "Nu pot face asta pe timp de r„zboi.");
+					ch->ChatPacket(CHAT_TYPE_INFO, "Nu pot face asta pe timp de r√£zboi.");
 					return SubPacketLen;
 				}
 
@@ -2004,7 +2004,7 @@ int CInputMain::Guild(LPCHARACTER ch, const char * data, size_t uiBytes)
 				{
 					if (member->GetGuild() != pGuild)
 					{
-						ch->ChatPacket(CHAT_TYPE_INFO, "Juc„torul nu apar˛ine acestei bresle.");
+						ch->ChatPacket(CHAT_TYPE_INFO, "Juc√£torul nu apar√æine acestei bresle.");
 						return SubPacketLen;
 					}
 
@@ -2025,9 +2025,9 @@ int CInputMain::Guild(LPCHARACTER ch, const char * data, size_t uiBytes)
 					}
 
 					if (pGuild->RequestRemoveMember(pid))
-						ch->ChatPacket(CHAT_TYPE_INFO, "Juc„torul a fost eliminat.");
+						ch->ChatPacket(CHAT_TYPE_INFO, "Juc√£torul a fost eliminat.");
 					else
-						ch->ChatPacket(CHAT_TYPE_INFO, "Juc„torul nu a fost g„sit.");
+						ch->ChatPacket(CHAT_TYPE_INFO, "Juc√£torul nu a fost g√£sit.");
 				}
 			}
 			return SubPacketLen;
@@ -2047,7 +2047,7 @@ int CInputMain::Guild(LPCHARACTER ch, const char * data, size_t uiBytes)
 				else if (*c_pData == GUILD_LEADER_GRADE)
 					ch->ChatPacket(CHAT_TYPE_INFO, "Permisiuni insuficiente.");
 				else if (!check_name(gradename))
-					ch->ChatPacket(CHAT_TYPE_INFO, "™ir necorespunz„tor.");
+					ch->ChatPacket(CHAT_TYPE_INFO, "¬™ir necorespunz√£tor.");
 				else
 					pGuild->ChangeGradeName(*c_pData, gradename);
 			}
@@ -2081,7 +2081,7 @@ int CInputMain::Guild(LPCHARACTER ch, const char * data, size_t uiBytes)
 					offer *= 100;
 
 					if (pGuild->OfferExp(ch, offer))
-						ch->ChatPacket(CHAT_TYPE_INFO, "%u puncte de experien˛„ donate.", offer);
+						ch->ChatPacket(CHAT_TYPE_INFO, "%u puncte de experien√æ√£ donate.", offer);
 				}
 			}
 			return SubPacketLen;
@@ -2099,7 +2099,7 @@ int CInputMain::Guild(LPCHARACTER ch, const char * data, size_t uiBytes)
 
 				if (!pGuild->ChargeSP(ch, offer))
 				{
-					ch->ChatPacket(CHAT_TYPE_INFO, "Man„ insuficient„.");
+					ch->ChatPacket(CHAT_TYPE_INFO, "Man√£ insuficient√£.");
 				}
 			}
 			return SubPacketLen;
@@ -2193,7 +2193,7 @@ int CInputMain::Guild(LPCHARACTER ch, const char * data, size_t uiBytes)
 				{
 					if (!pGuild->ChangeMemberGeneral(pid, is_general))
 					{
-						ch->ChatPacket(CHAT_TYPE_INFO, "Nu pot alege un alt lider de breasl„.");
+						ch->ChatPacket(CHAT_TYPE_INFO, "Nu pot alege un alt lider de breasl√£.");
 					}
 				}
 			}
@@ -2261,7 +2261,7 @@ int CInputMain::MyShop(LPCHARACTER ch, const char * c_pData, size_t uiBytes)
 
 	if (ch->GetGold() >= GOLD_MAX)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Limita de Yang a fost atins„.");
+		ch->ChatPacket(CHAT_TYPE_INFO, "Limita de Yang a fost atins√£.");
 		sys_log(0, "MyShop ==> OverFlow Gold id %u name %s ", ch->GetPlayerID(), ch->GetName());
 		return (iExtraLen);
 	}
@@ -2271,7 +2271,24 @@ int CInputMain::MyShop(LPCHARACTER ch, const char * c_pData, size_t uiBytes)
 
 	if (ch->GetExchange() || ch->IsOpenSafebox() || ch->GetShopOwner() || ch->IsCubeOpen())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Altceva se petrece Ón acest moment.");
+int CInputMain::OfflineShop(LPCHARACTER ch, const char * c_pData, size_t uiBytes)
+{
+    TPacketCGOfflineShop * p = (TPacketCGOfflineShop *) c_pData;
+    int iExtraLen = p->bCount * sizeof(TShopItemTable);
+    if (uiBytes < sizeof(TPacketCGOfflineShop) + iExtraLen)
+        return -1;
+    if (ch->IsStun() || ch->IsDead())
+        return iExtraLen;
+    if (ch->GetExchange() || ch->IsOpenSafebox() || ch->GetShopOwner() || ch->GetMyShop() || ch->IsCubeOpen())
+    {
+        ch->ChatPacket(CHAT_TYPE_INFO, "Altceva se petrece n acest moment.");
+        return iExtraLen;
+    }
+    ch->OpenOfflineShop(p->szSign, (TShopItemTable *)(c_pData + sizeof(TPacketCGOfflineShop)), p->bCount);
+    return iExtraLen;
+}
+
+		ch->ChatPacket(CHAT_TYPE_INFO, "Altceva se petrece √Æn acest moment.");
 		return (iExtraLen);
 	}
 
@@ -2286,7 +2303,7 @@ void CInputMain::Refine(LPCHARACTER ch, const char* c_pData)
 
 	if (ch->GetExchange() || ch->IsOpenSafebox() || ch->GetShopOwner() || ch->GetMyShop() || ch->IsCubeOpen())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Altceva se petrece Ón acest moment.");
+		ch->ChatPacket(CHAT_TYPE_INFO, "Altceva se petrece √Æn acest moment.");
 		ch->ClearRefineMode();
 		return;
 	}
@@ -2353,7 +2370,7 @@ void CInputMain::Refine(LPCHARACTER ch, const char* c_pData)
 						ch->ChatPacket(CHAT_TYPE_INFO, "Yang insuficient.");
 				}
 				else
-					ch->ChatPacket(CHAT_TYPE_INFO, "ﬁi-ai primit deja recompensa.");
+					ch->ChatPacket(CHAT_TYPE_INFO, "√ûi-ai primit deja recompensa.");
 			}
 		}
 	}
@@ -2575,10 +2592,14 @@ int CInputMain::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 			Hack(ch, c_pData);
 			break;
 
-		case HEADER_CG_MYSHOP:
-			if ((iExtraLen = MyShop(ch, c_pData, m_iBufferLeft)) < 0)
-				return -1;
-			break;
+                case HEADER_CG_MYSHOP:
+                        if ((iExtraLen = MyShop(ch, c_pData, m_iBufferLeft)) < 0)
+                                return -1;
+                        break;
+                case HEADER_CG_OFFLINE_SHOP:
+                        if ((iExtraLen = OfflineShop(ch, c_pData, m_iBufferLeft)) < 0)
+                                return -1;
+                        break;
 
 		case HEADER_CG_REFINE:
 			Refine(ch, c_pData);

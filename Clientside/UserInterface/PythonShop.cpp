@@ -157,6 +157,17 @@ void CPythonShop::BuildPrivateShop(const char * c_szName)
 
 	CPythonNetworkStream::Instance().SendBuildPrivateShopPacket(c_szName, ItemStock);
 }
+void CPythonShop::BuildOfflineShop(const char * c_szName)
+{
+        std::vector<TShopItemTable> ItemStock;
+        ItemStock.reserve(m_PrivateShopItemStock.size());
+        TPrivateShopItemStock::iterator itor = m_PrivateShopItemStock.begin();
+        for (; itor != m_PrivateShopItemStock.end(); ++itor)
+                ItemStock.push_back(itor->second);
+        std::sort(ItemStock.begin(), ItemStock.end(), ItemStockSortFunc());
+        CPythonNetworkStream::Instance().SendBuildOfflineShopPacket(c_szName, ItemStock);
+}
+
 
 void CPythonShop::Open(BOOL isPrivateShop, BOOL isMainPrivateShop)
 {
@@ -368,13 +379,22 @@ PyObject * shopGetPrivateShopItemPrice(PyObject * poSelf, PyObject * poArgs)
 }
 PyObject * shopBuildPrivateShop(PyObject * poSelf, PyObject * poArgs)
 {
-	char * szName;
-	if (!PyTuple_GetString(poArgs, 0, &szName))
-		return Py_BuildException();
-
-	CPythonShop::Instance().BuildPrivateShop(szName);
-	return Py_BuildNone();
+    char * szName;
+    if (!PyTuple_GetString(poArgs, 0, &szName))
+            return Py_BuildException();
+    CPythonShop::Instance().BuildPrivateShop(szName);
+    return Py_BuildNone();
 }
+
+PyObject * shopBuildOfflineShop(PyObject * poSelf, PyObject * poArgs)
+{
+    char * szName;
+    if (!PyTuple_GetString(poArgs, 0, &szName))
+            return Py_BuildException();
+    CPythonShop::Instance().BuildOfflineShop(szName);
+    return Py_BuildNone();
+}
+
 
 PyObject * shopGetTabCount(PyObject * poSelf, PyObject * poArgs)
 {
@@ -424,6 +444,7 @@ void initshop()
 		{ "DelPrivateShopItemStock",	shopDelPrivateShopItemStock,	METH_VARARGS },
 		{ "GetPrivateShopItemPrice",	shopGetPrivateShopItemPrice,	METH_VARARGS },
 		{ "BuildPrivateShop",			shopBuildPrivateShop,			METH_VARARGS },
+                { "BuildOfflineShop",                  shopBuildOfflineShop,  METH_VARARGS },
 		{ NULL,							NULL,							NULL },
 	};
 	PyObject * poModule = Py_InitModule("shop", s_methods);

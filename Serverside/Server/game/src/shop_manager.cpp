@@ -95,10 +95,10 @@ LPSHOP CShopManager::GetByNPCVnum(DWORD dwVnum)
 }
 
 /*
- * ÀÎÅÍÆäÀÌ½º ÇÔ¼öµé
+ * ç‰¢ç£å…¶æèƒ¶ çªƒèç”¸
  */
 
-// »óÁ¡ °Å·¡¸¦ ½ÃÀÛ
+// æƒ‘ç—¢ èŠ­è´°ç”« çŸ«ç´¯
 bool CShopManager::StartShopping(LPCHARACTER pkChr, LPCHARACTER pkChrShopKeeper, int iShopVnum)
 {
 	if (pkChr->GetShopOwner() == pkChrShopKeeper)
@@ -110,7 +110,7 @@ bool CShopManager::StartShopping(LPCHARACTER pkChr, LPCHARACTER pkChrShopKeeper,
 	//PREVENT_TRADE_WINDOW
 	if (pkChr->IsOpenSafebox() || pkChr->GetExchange() || pkChr->GetMyShop() || pkChr->IsCubeOpen())
 	{
-		pkChr->ChatPacket(CHAT_TYPE_INFO, "Altceva se petrece în acest moment.");
+		pkChr->ChatPacket(CHAT_TYPE_INFO, "Altceva se petrece é ½ acest moment.");
 		return false;
 	}
 	//END_PREVENT_TRADE_WINDOW
@@ -169,6 +169,18 @@ LPSHOP CShopManager::CreatePCShop(LPCHARACTER ch, TShopItemTable * pTable, BYTE 
 	m_map_pkShopByPC.insert(TShopMap::value_type(ch->GetVID(), pkShop));
 	return pkShop;
 }
+LPSHOP CShopManager::CreateOfflineShop(LPCHARACTER owner, LPCHARACTER npc, TShopItemTable * pTable, BYTE bItemCount)
+{
+    if (FindPCShop(npc->GetVID()))
+        return NULL;
+    LPSHOP pkShop = M2_NEW CShop;
+    pkShop->SetPCShop(owner);
+    pkShop->SetShopItems(pTable, bItemCount);
+    m_map_pkShopByPC.insert(TShopMap::value_type(npc->GetVID(), pkShop));
+    return pkShop;
+}
+
+}
 
 void CShopManager::DestroyPCShop(LPCHARACTER ch)
 {
@@ -185,7 +197,7 @@ void CShopManager::DestroyPCShop(LPCHARACTER ch)
 	M2_DELETE(pkShop);
 }
 
-// »óÁ¡ °Å·¡¸¦ Á¾·á
+// æƒ‘ç—¢ èŠ­è´°ç”« è¾†ä¸°
 void CShopManager::StopShopping(LPCHARACTER ch)
 {
 	LPSHOP shop;
@@ -201,7 +213,7 @@ void CShopManager::StopShopping(LPCHARACTER ch)
 	sys_log(0, "SHOP: END: %s", ch->GetName());
 }
 
-// ¾ÆÀÌÅÛ ±¸ÀÔ
+// é…’æè¢ å¤‡æ¶
 void CShopManager::Buy(LPCHARACTER ch, BYTE pos)
 {
 	if (!ch->GetShop())
@@ -212,7 +224,7 @@ void CShopManager::Buy(LPCHARACTER ch, BYTE pos)
 
 	if (DISTANCE_APPROX(ch->GetX() - ch->GetShopOwner()->GetX(), ch->GetY() - ch->GetShopOwner()->GetY()) > 2000)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Eºti prea departe.");
+		ch->ChatPacket(CHAT_TYPE_INFO, "Eç°i prea departe.");
 		return;
 	}
 
@@ -241,7 +253,7 @@ void CShopManager::Buy(LPCHARACTER ch, BYTE pos)
 
 	int ret = pkShop->Buy(ch, pos);
 
-	if (SHOP_SUBHEADER_GC_OK != ret) // ¹®Á¦°¡ ÀÖ¾úÀ¸¸é º¸³½´Ù.
+	if (SHOP_SUBHEADER_GC_OK != ret) // å·©åŠ›å•Š ä¹èŒæ æ ç„Šè¾°ä¿ƒ.
 	{
 		TPacketGCShop pack;
 
@@ -269,7 +281,7 @@ void CShopManager::Sell(LPCHARACTER ch, BYTE bCell, BYTE bCount)
 
 	if (DISTANCE_APPROX(ch->GetX()-ch->GetShopOwner()->GetX(), ch->GetY()-ch->GetShopOwner()->GetY())>2000)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Eºti prea departe.");
+		ch->ChatPacket(CHAT_TYPE_INFO, "Eç°i prea departe.");
 		return;
 	}
 	
@@ -319,7 +331,7 @@ void CShopManager::Sell(LPCHARACTER ch, BYTE bCell, BYTE bCount)
 		if (GOLD_MAX <= nTotalMoney)
 		{
 			sys_err("[OVERFLOW_GOLD] id %u name %s gold %u", ch->GetPlayerID(), ch->GetName(), ch->GetGold());
-			ch->ChatPacket(CHAT_TYPE_INFO, "Limita de Yang a fost atinsã.");
+			ch->ChatPacket(CHAT_TYPE_INFO, "Limita de Yang a fost atinsï¿½.");
 			return;
 		}
 	}
@@ -327,7 +339,7 @@ void CShopManager::Sell(LPCHARACTER ch, BYTE bCell, BYTE bCount)
 	sys_log(0, "SHOP: SELL: %s item name: %s(x%d):%u price: %u", ch->GetName(), item->GetName(), bCount, item->GetID(), dwPrice);
 
 	if (iVal > 0 && dwPrice > 0)
-		ch->ChatPacket(CHAT_TYPE_INFO, "Vânzarea a fost cu %d%% impozitatã.", iVal);
+		ch->ChatPacket(CHAT_TYPE_INFO, "Véˆ”zarea a fost cu %d%% impozitatï¿½.", iVal);
 
 	DBManager::instance().SendMoneyLog(MONEY_LOG_SHOP, item->GetVnum(), dwPrice);
 
@@ -464,8 +476,8 @@ bool ConvertToShopItemTable(IN CGroupNode* pNode, OUT TShopTableEx& shopTable)
 
 bool CShopManager::ReadShopTableEx(const char* stFileName)
 {
-	// file À¯¹« Ã¼Å©.
-	// ¾ø´Â °æ¿ì´Â ¿¡·¯·Î Ã³¸®ÇÏÁö ¾Ê´Â´Ù.
+	// file èœ¡å…¬ çœ‰å†œ.
+	// ç»ç»° ç‰ˆå¿«ç»° ä¿ŠçŸ¾è‚º è´¸åºœçªç˜¤ è‡¼ç»°ä¿ƒ.
 	FILE* fp = fopen(stFileName, "rb");
 	if (NULL == fp)
 		return true;

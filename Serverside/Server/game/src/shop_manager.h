@@ -26,6 +26,7 @@ public:
 	void	Sell(LPCHARACTER ch, BYTE bCell, BYTE bCount=0);
 
 	LPSHOP	CreatePCShop(LPCHARACTER ch, TShopItemTable * pTable, BYTE bItemCount);
+        LPSHOP  CreateOfflineShop(LPCHARACTER owner, LPCHARACTER npc, TShopItemTable * pTable, BYTE bItemCount);
 	LPSHOP	FindPCShop(DWORD dwVID);
 	void	DestroyPCShop(LPCHARACTER ch);
 

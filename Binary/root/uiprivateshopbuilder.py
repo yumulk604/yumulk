@@ -9,8 +9,8 @@ import uiCommon
 import localeInfo
 import chat
 import item
-import systemSetting #±èÁØÈ£
-import player #±èÁØÈ£
+import systemSetting #ê¹€ì¤€í˜¸
+import player #ê¹€ì¤€í˜¸
 
 g_isBuildingPrivateShop = False
 
@@ -106,7 +106,7 @@ class PrivateShopAdvertisementBoard(ui.ThinBoard):
 		
 		else:
 			for key in g_privateShopAdvertisementBoardDict.keys():
-				if  player.GetMainCharacterIndex() == key:  #»óÁ¡Ç³¼±À» ¾Èº¸ÀÌ°Ô °¨Ãß´Â °æ¿ì¿¡µµ, ÇÃ·¹ÀÌ¾î ÀÚ½ÅÀÇ »óÁ¡ Ç³¼±Àº º¸ÀÌµµ·Ï ÇÔ. by ±èÁØÈ£
+				if  player.GetMainCharacterIndex() == key:  #ìƒì í’ì„ ì„ ì•ˆë³´ì´ê²Œ ê°ì¶”ëŠ” ê²½ìš°ì—ë„, í”Œë ˆì´ì–´ ìì‹ ì˜ ìƒì  í’ì„ ì€ ë³´ì´ë„ë¡ í•¨. by ê¹€ì¤€í˜¸
 					g_privateShopAdvertisementBoardDict[key].Show() 	
 					x, y = chr.GetProjectPosition(player.GetMainCharacterIndex(), 220)
 					g_privateShopAdvertisementBoardDict[key].SetPosition(x - self.GetWidth()/2, y - self.GetHeight()/2)
@@ -325,7 +325,7 @@ class PrivateShopBuilder(ui.ScriptWindow):
 		if 0 == len(self.itemStock):
 			return
 
-		shop.BuildPrivateShop(self.title)
+		shop.BuildOfflineShop(self.title)
 		self.Close()
 
 	def OnClose(self):

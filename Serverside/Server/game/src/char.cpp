@@ -523,7 +523,7 @@ void CHARACTER::OpenMyShop(const char * c_pszSign, TShopItemTable * pTable, BYTE
 {
 	if (GetPart(PART_MAIN) > 2)
 	{
-		ChatPacket(CHAT_TYPE_INFO, "Da-þi jos armura înainte.");
+		ChatPacket(CHAT_TYPE_INFO, "Da-Ã¾i jos armura Ã®nainte.");
 		return;
 	}
 
@@ -551,7 +551,7 @@ void CHARACTER::OpenMyShop(const char * c_pszSign, TShopItemTable * pTable, BYTE
 	if (GOLD_MAX <= nTotalMoney)
 	{
 		sys_err("[OVERFLOW_GOLD] Overflow (GOLD_MAX) id %u name %s", GetPlayerID(), GetName());
-		ChatPacket(CHAT_TYPE_INFO, "Valoarea maximã de Yang a fost depãºitã.");
+		ChatPacket(CHAT_TYPE_INFO, "Valoarea maximÃ£ de Yang a fost depÃ£ÂºitÃ£.");
 		return;
 	}
 
@@ -565,7 +565,7 @@ void CHARACTER::OpenMyShop(const char * c_pszSign, TShopItemTable * pTable, BYTE
 
 	if (CBanwordManager::instance().CheckString(m_stShopSign.c_str(), m_stShopSign.length()))
 	{
-		ChatPacket(CHAT_TYPE_INFO, "Numele magazinului tãu nu este potrivit.");	
+		ChatPacket(CHAT_TYPE_INFO, "Numele magazinului tÃ£u nu este potrivit.");	
 		return;
 	}
 
@@ -588,19 +588,19 @@ void CHARACTER::OpenMyShop(const char * c_pszSign, TShopItemTable * pTable, BYTE
 
 			if (item_table && (IS_SET(item_table->dwAntiFlags, ITEM_ANTIFLAG_GIVE | ITEM_ANTIFLAG_MYSHOP)))
 			{
-				ChatPacket(CHAT_TYPE_INFO, "Acest obiect nu poate fi vândut în magazin.");
+				ChatPacket(CHAT_TYPE_INFO, "Acest obiect nu poate fi vÃ¢ndut Ã®n magazin.");
 				return;
 			}
 
 			if (pkItem->IsEquipped())
 			{
-				ChatPacket(CHAT_TYPE_INFO, "Acest obiect trebuie dezechipat întâi.");
+				ChatPacket(CHAT_TYPE_INFO, "Acest obiect trebuie dezechipat Ã®ntÃ¢i.");
 				return;
 			}
 
 			if (pkItem->isLocked())
 			{
-				ChatPacket(CHAT_TYPE_INFO, "Acest obiect trebuie deblocat întâi.");
+				ChatPacket(CHAT_TYPE_INFO, "Acest obiect trebuie deblocat Ã®ntÃ¢i.");
 				return;
 			}
 
@@ -663,6 +663,25 @@ void CHARACTER::OpenMyShop(const char * c_pszSign, TShopItemTable * pTable, BYTE
 	}
 	SetPolymorph(30000, true);
 }
+void CHARACTER::OpenOfflineShop(const char * c_pszSign, TShopItemTable * pTable, BYTE bItemCount)
+{
+    if (bItemCount == 0)
+        return;
+    char szSign[SHOP_SIGN_MAX_LEN+1];
+    strlcpy(szSign, c_pszSign, sizeof(szSign));
+    if (CBanwordManager::instance().CheckString(szSign, strlen(szSign)))
+        return;
+    LPCHARACTER shopNPC = CHARACTER_MANAGER::instance().SpawnMob(30000, GetMapIndex(), GetX(), GetY(), GetZ(), false);
+    if (!shopNPC)
+        return;
+    TPacketGCShopSign p;
+    p.bHeader = HEADER_GC_SHOP_SIGN;
+    p.dwVID = shopNPC->GetVID();
+    strlcpy(p.szSign, c_pszSign, sizeof(p.szSign));
+    shopNPC->PacketAround(&p, sizeof(p));
+    CShopManager::instance().CreateOfflineShop(this, shopNPC, pTable, bItemCount);
+}
+
 
 void CHARACTER::CloseMyShop()
 {
@@ -3380,7 +3399,7 @@ void CHARACTER::mining_cancel()
 	if (m_pkMiningEvent)
 	{
 		event_cancel(&m_pkMiningEvent);
-		ChatPacket(CHAT_TYPE_INFO, "Explorarea a luat sfârºit.");
+		ChatPacket(CHAT_TYPE_INFO, "Explorarea a luat sfÃ¢rÂºit.");
 	}
 }
 
@@ -3405,7 +3424,7 @@ void CHARACTER::mining(LPCHARACTER chLoad)
 
 	if (!pick || pick->GetType() != ITEM_PICK)
 	{
-		ChatPacket(CHAT_TYPE_INFO, "Ai nevoie de un târnãcop.");
+		ChatPacket(CHAT_TYPE_INFO, "Ai nevoie de un tÃ¢rnÃ£cop.");
 		return;
 	}
 
@@ -3441,7 +3460,7 @@ void CHARACTER::fishing()
 
 	if (IS_SET(dwAttr, ATTR_BLOCK))
 	{
-		ChatPacket(CHAT_TYPE_INFO, "Nu poþi pescui aici.");
+		ChatPacket(CHAT_TYPE_INFO, "Nu poÃ¾i pescui aici.");
 		return;
 	}
 
@@ -3449,13 +3468,13 @@ void CHARACTER::fishing()
 
 	if (!rod || rod->GetType() != ITEM_ROD)
 	{
-		ChatPacket(CHAT_TYPE_INFO, "Pune undiþa în mânã.");
+		ChatPacket(CHAT_TYPE_INFO, "Pune undiÃ¾a Ã®n mÃ¢nÃ£.");
 		return;
 	}
 
 	if (!rod->GetSocket(2))
 	{
-		ChatPacket(CHAT_TYPE_INFO, "Pune momeala în cârlig.");
+		ChatPacket(CHAT_TYPE_INFO, "Pune momeala Ã®n cÃ¢rlig.");
 		return;
 	}
 
@@ -3480,7 +3499,7 @@ void CHARACTER::fishing_take()
 		}
 	}
 	else
-		ChatPacket(CHAT_TYPE_INFO, "Ai nevoie de o undiþã.");
+		ChatPacket(CHAT_TYPE_INFO, "Ai nevoie de o undiÃ¾Ã£.");
 
 	event_cancel(&m_pkFishingEvent);
 }
@@ -3729,7 +3748,7 @@ bool CHARACTER::RequestToParty(LPCHARACTER leader)
 
 	if (!leader)
 	{
-		ChatPacket(CHAT_TYPE_INFO, "Conducãtorul nu este activ în acest moment.");
+		ChatPacket(CHAT_TYPE_INFO, "ConducÃ£torul nu este activ Ã®n acest moment.");
 		return false;
 	}
 
@@ -3750,38 +3769,38 @@ bool CHARACTER::RequestToParty(LPCHARACTER leader)
 			break;
 
 		case PERR_SERVER:
-			ChatPacket(CHAT_TYPE_INFO, "Aceastã comandã nu poate fi folositã.");
+			ChatPacket(CHAT_TYPE_INFO, "AceastÃ£ comandÃ£ nu poate fi folositÃ£.");
 			return false;
 
 		case PERR_DIFFEMPIRE:
-			ChatPacket(CHAT_TYPE_INFO, "Nu poþi face grupã cu un jucãtor din alt regat.");
+			ChatPacket(CHAT_TYPE_INFO, "Nu poÃ¾i face grupÃ£ cu un jucÃ£tor din alt regat.");
 			return false;
 
 		case PERR_DUNGEON:
-			ChatPacket(CHAT_TYPE_INFO, "Nu poþi face grupã într-o temniþã."); 
+			ChatPacket(CHAT_TYPE_INFO, "Nu poÃ¾i face grupÃ£ Ã®ntr-o temniÃ¾Ã£."); 
 			return false;
 
 		case PERR_OBSERVER:
-			ChatPacket(CHAT_TYPE_INFO, "Nu poþi sã trimiþi ca spectator o invitaþie de grup."); 
+			ChatPacket(CHAT_TYPE_INFO, "Nu poÃ¾i sÃ£ trimiÃ¾i ca spectator o invitaÃ¾ie de grup."); 
 			return false;
 
 		case PERR_LVBOUNDARY:
-			ChatPacket(CHAT_TYPE_INFO, "Nu poþi intra în grup pentru cã diferenþa de nivel este prea mare."); 
+			ChatPacket(CHAT_TYPE_INFO, "Nu poÃ¾i intra Ã®n grup pentru cÃ£ diferenÃ¾a de nivel este prea mare."); 
 			return false;
 
 		case PERR_LOWLEVEL:
-			ChatPacket(CHAT_TYPE_INFO, "Nu poþi intra în grup pentru cã diferenþa de nivel este prea mare.");
+			ChatPacket(CHAT_TYPE_INFO, "Nu poÃ¾i intra Ã®n grup pentru cÃ£ diferenÃ¾a de nivel este prea mare.");
 			return false;
 
 		case PERR_HILEVEL:
-			ChatPacket(CHAT_TYPE_INFO, "Nu poþi intra în grup pentru cã diferenþa de nivel este prea mare."); 
+			ChatPacket(CHAT_TYPE_INFO, "Nu poÃ¾i intra Ã®n grup pentru cÃ£ diferenÃ¾a de nivel este prea mare."); 
 			return false;
 
 		case PERR_ALREADYJOIN: 	
 			return false;
 
 		case PERR_PARTYISFULL:
-			ChatPacket(CHAT_TYPE_INFO, "Nu poþi intra în grup pentru cã acesta este plin."); 
+			ChatPacket(CHAT_TYPE_INFO, "Nu poÃ¾i intra Ã®n grup pentru cÃ£ acesta este plin."); 
 			return false;
 
 		default:
@@ -3861,16 +3880,16 @@ void CHARACTER::AcceptToParty(LPCHARACTER member)
 		switch (errcode) 
 		{
 			case PERR_NONE: 		member->PartyJoin(this); return;
-			case PERR_SERVER:		member->ChatPacket(CHAT_TYPE_INFO, "Aceastã comandã nu poate fi folositã."); break;
-			case PERR_DUNGEON:		member->ChatPacket(CHAT_TYPE_INFO, "Nu poþi face grupã într-o temniþã."); break;
-			case PERR_OBSERVER: 	member->ChatPacket(CHAT_TYPE_INFO, "Nu poþi sã trimiþi ca spectator o invitaþie de grup."); break;
-			case PERR_LVBOUNDARY:	member->ChatPacket(CHAT_TYPE_INFO, "Nu poþi intra în grup pentru cã diferenþa de nivel este prea mare."); break;
-			case PERR_LOWLEVEL: 	member->ChatPacket(CHAT_TYPE_INFO, "Nu poþi intra în grup pentru cã diferenþa de nivel este prea mare."); break;
-			case PERR_HILEVEL: 		member->ChatPacket(CHAT_TYPE_INFO, "Nu poþi intra în grup pentru cã diferenþa de nivel este prea mare."); break;
+			case PERR_SERVER:		member->ChatPacket(CHAT_TYPE_INFO, "AceastÃ£ comandÃ£ nu poate fi folositÃ£."); break;
+			case PERR_DUNGEON:		member->ChatPacket(CHAT_TYPE_INFO, "Nu poÃ¾i face grupÃ£ Ã®ntr-o temniÃ¾Ã£."); break;
+			case PERR_OBSERVER: 	member->ChatPacket(CHAT_TYPE_INFO, "Nu poÃ¾i sÃ£ trimiÃ¾i ca spectator o invitaÃ¾ie de grup."); break;
+			case PERR_LVBOUNDARY:	member->ChatPacket(CHAT_TYPE_INFO, "Nu poÃ¾i intra Ã®n grup pentru cÃ£ diferenÃ¾a de nivel este prea mare."); break;
+			case PERR_LOWLEVEL: 	member->ChatPacket(CHAT_TYPE_INFO, "Nu poÃ¾i intra Ã®n grup pentru cÃ£ diferenÃ¾a de nivel este prea mare."); break;
+			case PERR_HILEVEL: 		member->ChatPacket(CHAT_TYPE_INFO, "Nu poÃ¾i intra Ã®n grup pentru cÃ£ diferenÃ¾a de nivel este prea mare."); break;
 			case PERR_ALREADYJOIN: 	break;
 			case PERR_PARTYISFULL: {
-									   ChatPacket(CHAT_TYPE_INFO, "Nu poþi intra în grup pentru cã acesta este plin.");
-									   member->ChatPacket(CHAT_TYPE_INFO, "Limita de membrii în acest grup a fost atinsã.");
+									   ChatPacket(CHAT_TYPE_INFO, "Nu poÃ¾i intra Ã®n grup pentru cÃ£ acesta este plin.");
+									   member->ChatPacket(CHAT_TYPE_INFO, "Limita de membrii Ã®n acest grup a fost atinsÃ£.");
 									   break;
 								   }
 			default: sys_err("Do not process party join error(%d)", errcode);
@@ -3905,12 +3924,12 @@ void CHARACTER::PartyInvite(LPCHARACTER pchInvitee)
 {
 	if (GetParty() && GetParty()->GetLeaderPID() != GetPlayerID())
 	{
-		ChatPacket(CHAT_TYPE_INFO, "Nu ai dreptul de a invita alþi membrii.");
+		ChatPacket(CHAT_TYPE_INFO, "Nu ai dreptul de a invita alÃ¾i membrii.");
 		return;
 	}
 	else if (pchInvitee->IsBlockMode(BLOCK_PARTY_INVITE))
 	{
-		ChatPacket(CHAT_TYPE_INFO, "%s nu doreºte sã fie invitat în vreun grup.", pchInvitee->GetName());
+		ChatPacket(CHAT_TYPE_INFO, "%s nu doreÂºte sÃ£ fie invitat Ã®n vreun grup.", pchInvitee->GetName());
 		return;
 	}
 
@@ -3922,39 +3941,39 @@ void CHARACTER::PartyInvite(LPCHARACTER pchInvitee)
 			break;
 
 		case PERR_SERVER:
-			ChatPacket(CHAT_TYPE_INFO, "Aceastã comandã nu poate fi folositã.");
+			ChatPacket(CHAT_TYPE_INFO, "AceastÃ£ comandÃ£ nu poate fi folositÃ£.");
 			return;
 
 		case PERR_DIFFEMPIRE:
-			ChatPacket(CHAT_TYPE_INFO, "Nu poþi face grupã cu un jucãtor din alt regat.");
+			ChatPacket(CHAT_TYPE_INFO, "Nu poÃ¾i face grupÃ£ cu un jucÃ£tor din alt regat.");
 			return;
 
 		case PERR_DUNGEON:
-			ChatPacket(CHAT_TYPE_INFO, "Nu poþi face grupã într-o temniþã.");
+			ChatPacket(CHAT_TYPE_INFO, "Nu poÃ¾i face grupÃ£ Ã®ntr-o temniÃ¾Ã£.");
 			return;
 
 		case PERR_OBSERVER:
-			ChatPacket(CHAT_TYPE_INFO, "Nu poþi sã trimiþi ca spectator o invitaþie de grup.");
+			ChatPacket(CHAT_TYPE_INFO, "Nu poÃ¾i sÃ£ trimiÃ¾i ca spectator o invitaÃ¾ie de grup.");
 			return;
 
 		case PERR_LVBOUNDARY:
-			ChatPacket(CHAT_TYPE_INFO, "Nu poþi intra în grup pentru cã diferenþa de nivel este prea mare.");
+			ChatPacket(CHAT_TYPE_INFO, "Nu poÃ¾i intra Ã®n grup pentru cÃ£ diferenÃ¾a de nivel este prea mare.");
 			return;
 
 		case PERR_LOWLEVEL:
-			ChatPacket(CHAT_TYPE_INFO, "Nu poþi intra în grup pentru cã diferenþa de nivel este prea mare.");
+			ChatPacket(CHAT_TYPE_INFO, "Nu poÃ¾i intra Ã®n grup pentru cÃ£ diferenÃ¾a de nivel este prea mare.");
 			return;
 
 		case PERR_HILEVEL:
-			ChatPacket(CHAT_TYPE_INFO, "Nu poþi intra în grup pentru cã diferenþa de nivel este prea mare.");
+			ChatPacket(CHAT_TYPE_INFO, "Nu poÃ¾i intra Ã®n grup pentru cÃ£ diferenÃ¾a de nivel este prea mare.");
 			return;
 
 		case PERR_ALREADYJOIN:
-			ChatPacket(CHAT_TYPE_INFO, "%s s-a alãturat deja unui grup.", pchInvitee->GetName());
+			ChatPacket(CHAT_TYPE_INFO, "%s s-a alÃ£turat deja unui grup.", pchInvitee->GetName());
 			return;
 
 		case PERR_PARTYISFULL:
-			ChatPacket(CHAT_TYPE_INFO, "Nu poþi intra în grup pentru cã acesta este plin.");
+			ChatPacket(CHAT_TYPE_INFO, "Nu poÃ¾i intra Ã®n grup pentru cÃ£ acesta este plin.");
 			return;
 
 		default:
@@ -3993,7 +4012,7 @@ void CHARACTER::PartyInviteAccept(LPCHARACTER pchInvitee)
 
 	if (GetParty() && GetParty()->GetLeaderPID() != GetPlayerID())
 	{
-		ChatPacket(CHAT_TYPE_INFO, "Nu ai dreptul de a invita alþi membrii.");
+		ChatPacket(CHAT_TYPE_INFO, "Nu ai dreptul de a invita alÃ¾i membrii.");
 		return;
 	}
 
@@ -4005,36 +4024,36 @@ void CHARACTER::PartyInviteAccept(LPCHARACTER pchInvitee)
 			break;
 
 		case PERR_SERVER:
-			pchInvitee->ChatPacket(CHAT_TYPE_INFO, "Aceastã comandã nu poate fi folositã.");
+			pchInvitee->ChatPacket(CHAT_TYPE_INFO, "AceastÃ£ comandÃ£ nu poate fi folositÃ£.");
 			return;
 
 		case PERR_DUNGEON:
-			pchInvitee->ChatPacket(CHAT_TYPE_INFO, "Grupul nu poate rãspunde solicitãrilor într-o temniþã.");
+			pchInvitee->ChatPacket(CHAT_TYPE_INFO, "Grupul nu poate rÃ£spunde solicitÃ£rilor Ã®ntr-o temniÃ¾Ã£.");
 			return;
 
 		case PERR_OBSERVER:
-			pchInvitee->ChatPacket(CHAT_TYPE_INFO, "Nu poþi sã trimiþi ca spectator o invitaþie de grup.");
+			pchInvitee->ChatPacket(CHAT_TYPE_INFO, "Nu poÃ¾i sÃ£ trimiÃ¾i ca spectator o invitaÃ¾ie de grup.");
 			return;
 
 		case PERR_LVBOUNDARY:
-			pchInvitee->ChatPacket(CHAT_TYPE_INFO, "Nu poþi intra în grup pentru cã diferenþa de nivel este prea mare.");
+			pchInvitee->ChatPacket(CHAT_TYPE_INFO, "Nu poÃ¾i intra Ã®n grup pentru cÃ£ diferenÃ¾a de nivel este prea mare.");
 			return;
 
 		case PERR_LOWLEVEL:
-			pchInvitee->ChatPacket(CHAT_TYPE_INFO, "Nu poþi intra în grup pentru cã diferenþa de nivel este prea mare.");
+			pchInvitee->ChatPacket(CHAT_TYPE_INFO, "Nu poÃ¾i intra Ã®n grup pentru cÃ£ diferenÃ¾a de nivel este prea mare.");
 			return;
 
 		case PERR_HILEVEL:
-			pchInvitee->ChatPacket(CHAT_TYPE_INFO, "Nu poþi intra în grup pentru cã diferenþa de nivel este prea mare.");
+			pchInvitee->ChatPacket(CHAT_TYPE_INFO, "Nu poÃ¾i intra Ã®n grup pentru cÃ£ diferenÃ¾a de nivel este prea mare.");
 			return;
 
 		case PERR_ALREADYJOIN:
-			pchInvitee->ChatPacket(CHAT_TYPE_INFO, "Jucãtorul s-a alãturat deja unui grup.");
+			pchInvitee->ChatPacket(CHAT_TYPE_INFO, "JucÃ£torul s-a alÃ£turat deja unui grup.");
 			return;
 
 		case PERR_PARTYISFULL:
-			ChatPacket(CHAT_TYPE_INFO, "Nu poþi intra în grup pentru cã acesta este plin.");
-			pchInvitee->ChatPacket(CHAT_TYPE_INFO, "Limita de membrii în acest grup a fost atinsã.");
+			ChatPacket(CHAT_TYPE_INFO, "Nu poÃ¾i intra Ã®n grup pentru cÃ£ acesta este plin.");
+			pchInvitee->ChatPacket(CHAT_TYPE_INFO, "Limita de membrii Ã®n acest grup a fost atinsÃ£.");
 			return;
 
 		default:
@@ -4069,13 +4088,13 @@ void CHARACTER::PartyInviteDeny(DWORD dwPID)
 
 	LPCHARACTER pchInvitee = CHARACTER_MANAGER::instance().FindByPID(dwPID);
 	if (pchInvitee)
-		ChatPacket(CHAT_TYPE_INFO, "%s a respins invitaþia de grup.", pchInvitee->GetName());
+		ChatPacket(CHAT_TYPE_INFO, "%s a respins invitaÃ¾ia de grup.", pchInvitee->GetName());
 }
 
 void CHARACTER::PartyJoin(LPCHARACTER pLeader)
 {
-	pLeader->ChatPacket(CHAT_TYPE_INFO, "%s s-a alãturat grupei.", GetName());
-	ChatPacket(CHAT_TYPE_INFO, "Te-ai alãturat grupului condus de %s.", pLeader->GetName());
+	pLeader->ChatPacket(CHAT_TYPE_INFO, "%s s-a alÃ£turat grupei.", GetName());
+	ChatPacket(CHAT_TYPE_INFO, "Te-ai alÃ£turat grupului condus de %s.", pLeader->GetName());
 
 	pLeader->GetParty()->Join(GetPlayerID());
 	pLeader->GetParty()->Link(this);
@@ -4250,7 +4269,7 @@ void CHARACTER::OnClick(LPCHARACTER pkChrCauser)
 				{
 					if ((GetExchange() || IsOpenSafebox() || GetShopOwner()) || IsCubeOpen())
 					{
-						pkChrCauser->ChatPacket(CHAT_TYPE_INFO, "Se petrece altceva în acest moment.");
+						pkChrCauser->ChatPacket(CHAT_TYPE_INFO, "Se petrece altceva Ã®n acest moment.");
 						return;
 					}
 				}
@@ -4258,13 +4277,13 @@ void CHARACTER::OnClick(LPCHARACTER pkChrCauser)
 				{
 					if ((pkChrCauser->GetExchange() || pkChrCauser->IsOpenSafebox() || pkChrCauser->GetMyShop() || pkChrCauser->GetShopOwner()) || pkChrCauser->IsCubeOpen())
 					{
-						pkChrCauser->ChatPacket(CHAT_TYPE_INFO, "Se petrece altceva în acest moment.");
+						pkChrCauser->ChatPacket(CHAT_TYPE_INFO, "Se petrece altceva Ã®n acest moment.");
 						return;
 					}
 
 					if ((GetExchange() || IsOpenSafebox() || IsCubeOpen()))
 					{
-						pkChrCauser->ChatPacket(CHAT_TYPE_INFO, "Se petrece altceva în acest moment.");
+						pkChrCauser->ChatPacket(CHAT_TYPE_INFO, "Se petrece altceva Ã®n acest moment.");
 						return;
 					}
 				}
@@ -4804,7 +4823,7 @@ void CHARACTER::ReqSafeboxLoad(const char* pszPassword)
 {
 	if (!*pszPassword || strlen(pszPassword) > SAFEBOX_PASSWORD_MAX_LEN)
 	{
-		ChatPacket(CHAT_TYPE_INFO, "Parola introdusã nu corespunde.");
+		ChatPacket(CHAT_TYPE_INFO, "Parola introdusÃ£ nu corespunde.");
 		return;
 	}
 	else if (m_pkSafebox)
@@ -4817,12 +4836,12 @@ void CHARACTER::ReqSafeboxLoad(const char* pszPassword)
 
 	if (iPulse - GetSafeboxLoadTime()  < PASSES_PER_SEC(5))
 	{
-		ChatPacket(CHAT_TYPE_INFO, "Trebuie sã aºtepþi 5 secunde.");
+		ChatPacket(CHAT_TYPE_INFO, "Trebuie sÃ£ aÂºtepÃ¾i 5 secunde.");
 		return;
 	}
 	else if (GetDistanceFromSafeboxOpen() > 1000)
 	{
-		ChatPacket(CHAT_TYPE_INFO, "Eºti prea departe.");
+		ChatPacket(CHAT_TYPE_INFO, "EÂºti prea departe.");
 		return;
 	}
 	else if (m_bOpeningSafebox)
@@ -5740,7 +5759,7 @@ bool CHARACTER::WarpToPID(DWORD dwPID)
 			WarpSet(victim->GetX(), victim->GetY());
 		else
 		{
-			ChatPacket(CHAT_TYPE_INFO, "Nu poþi merge în acel loc.");
+			ChatPacket(CHAT_TYPE_INFO, "Nu poÃ¾i merge Ã®n acel loc.");
 			return false;
 		}
 	}
@@ -5750,18 +5769,18 @@ bool CHARACTER::WarpToPID(DWORD dwPID)
 
 		if (!pcci)
 		{
-			ChatPacket(CHAT_TYPE_INFO, "Jucãtorul nu este activ în acest moment.");
+			ChatPacket(CHAT_TYPE_INFO, "JucÃ£torul nu este activ Ã®n acest moment.");
 			return false;
 		}
 
 		if (pcci->bChannel != g_bChannel)
 		{
-			ChatPacket(CHAT_TYPE_INFO, "Canal jucãtorului (%d) este diferit faþã de al meu (%d).", pcci->bChannel, g_bChannel);
+			ChatPacket(CHAT_TYPE_INFO, "Canal jucÃ£torului (%d) este diferit faÃ¾Ã£ de al meu (%d).", pcci->bChannel, g_bChannel);
 			return false;
 		}
 		else if (false == IS_SUMMONABLE_ZONE(pcci->lMapIndex))
 		{
-			ChatPacket(CHAT_TYPE_INFO, "Nu poþi merge în acel loc.");
+			ChatPacket(CHAT_TYPE_INFO, "Nu poÃ¾i merge Ã®n acel loc.");
 			return false;
 		}
 		else
@@ -5831,7 +5850,7 @@ bool CHARACTER::IsHack(bool bSendMsg, bool bCheckShopOwner, int limittime)
 	if (iPulse - GetSafeboxLoadTime() < PASSES_PER_SEC(limittime))
 	{
 		if (bSendMsg)
-			ChatPacket(CHAT_TYPE_INFO, "Aºteaptã %d secunde.", limittime);
+			ChatPacket(CHAT_TYPE_INFO, "AÂºteaptÃ£ %d secunde.", limittime);
 
 		return true; 
 	}
@@ -5841,7 +5860,7 @@ bool CHARACTER::IsHack(bool bSendMsg, bool bCheckShopOwner, int limittime)
 		if (GetExchange() || GetMyShop() || GetShopOwner() || IsOpenSafebox() || IsCubeOpen())
 		{
 			if (bSendMsg)
-				ChatPacket(CHAT_TYPE_INFO, "Se petrece altceva în acest moment.");
+				ChatPacket(CHAT_TYPE_INFO, "Se petrece altceva Ã®n acest moment.");
 
 			return true;
 		}
@@ -5851,7 +5870,7 @@ bool CHARACTER::IsHack(bool bSendMsg, bool bCheckShopOwner, int limittime)
 		if (GetExchange() || GetMyShop() || IsOpenSafebox() || IsCubeOpen())
 		{
 			if (bSendMsg)
-				ChatPacket(CHAT_TYPE_INFO, "Se petrece altceva în acest moment.");
+				ChatPacket(CHAT_TYPE_INFO, "Se petrece altceva Ã®n acest moment.");
 
 			return true;
 		}
@@ -5861,7 +5880,7 @@ bool CHARACTER::IsHack(bool bSendMsg, bool bCheckShopOwner, int limittime)
 	if (iPulse - GetExchangeTime()  < PASSES_PER_SEC(limittime))
 	{
 		if (bSendMsg)
-			ChatPacket(CHAT_TYPE_INFO, "Aºteaptã %d secunde.", limittime);
+			ChatPacket(CHAT_TYPE_INFO, "AÂºteaptÃ£ %d secunde.", limittime);
 		return true;
 	}
 	//END_PREVENT_PORTAL_AFTER_EXCHANGE
@@ -5870,14 +5889,14 @@ bool CHARACTER::IsHack(bool bSendMsg, bool bCheckShopOwner, int limittime)
 	if (iPulse - GetMyShopTime() < PASSES_PER_SEC(limittime))
 	{
 		if (bSendMsg)
-			ChatPacket(CHAT_TYPE_INFO, "Aºteaptã %d secunde.", limittime);
+			ChatPacket(CHAT_TYPE_INFO, "AÂºteaptÃ£ %d secunde.", limittime);
 		return true;
 	}
 
 	if (iPulse - GetRefineTime() < PASSES_PER_SEC(limittime))
 	{
 		if (bSendMsg)
-			ChatPacket(CHAT_TYPE_INFO, "Aºteaptã %d secunde.", limittime);
+			ChatPacket(CHAT_TYPE_INFO, "AÂºteaptÃ£ %d secunde.", limittime);
 		return true; 
 	}
 	//END_PREVENT_ITEM_COPY

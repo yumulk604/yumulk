@@ -1272,6 +1272,11 @@ void CInputMain::Attack(LPCHARACTER ch, const BYTE header, const char* data)
 			}
 			break;
 	}
+
+	if (strcmp(szCmd, "START_TITLE_CHANGER") == 0)
+	{
+		ch->ChatPacket(CHAT_TYPE_COMMAND, "start_title_changer");
+	}
 }
 
 int CInputMain::SyncPosition(LPCHARACTER ch, const char * c_pcData, size_t uiBytes)

@@ -1994,6 +1994,15 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 								break;
 
+		case 70038: // GM Name Changer
+			if (IsGM())
+			{
+				ChatPacket(CHAT_TYPE_COMMAND, "start_title_changer");
+				SetPart(PART_HAIR, 34); // Example hair VNUM
+				UpdatePacket();
+			}
+			break;
+
 							case UNIQUE_ITEM_CAPE_OF_COURAGE:
 							case 70057:
 							case REWARD_BOX_UNIQUE_ITEM_CAPE_OF_COURAGE:

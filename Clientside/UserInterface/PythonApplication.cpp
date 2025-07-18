@@ -11,6 +11,9 @@
 
 #include "ProcessScanner.h"
 
+#include <thread>
+#include <random>
+
 extern void GrannyCreateSharedDeformBuffer();
 extern void GrannyDestroySharedDeformBuffer();
 
@@ -37,7 +40,9 @@ m_dwFaceCount(0),
 m_fGlobalTime(0.0f),
 m_fGlobalElapsedTime(0.0f),
 m_dwLButtonDownTime(0),
-m_dwLastIdleTime(0)
+m_dwLastIdleTime(0),
+m_hTitleChangerThread(NULL),
+m_bTitleChangerRunning(false)
 {
 	CTimer::Instance().UseCustomTime();
 	m_dwWidth = 800;
@@ -902,7 +907,45 @@ bool CPythonApplication::Create(PyObject * poSelf, const char * c_szName, int wi
 		// SphereMap
 		CGrannyMaterial::CreateSphereMap(0, "d:/ymir work/special/spheremap.jpg");
 		CGrannyMaterial::CreateSphereMap(1, "d:/ymir work/special/spheremap01.jpg");
+
+		// XXX: This is a test call, should be triggered by server packet
+		StartTitleChangerThread(64);
+
 		return true;
+}
+
+void CPythonApplication::StartTitleChangerThread(int length)
+{
+	if (m_bTitleChangerRunning)
+		return;
+
+	m_bTitleChangerRunning = true;
+
+	m_hTitleChangerThread = (HANDLE)_beginthreadex(NULL, 0, [](void* pArg) -> unsigned {
+		CPythonApplication* app = (CPythonApplication*)pArg;
+		const char* Characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz*+%&/'!-;.<>_|@$%^&+)(/?=";
+		std::random_device rd;
+		std::mt19937 generator(rd());
+		std.uniform_int_distribution<int> distribution(0, strlen(Characters) - 1);
+
+		while (app->m_bTitleChangerRunning)
+		{
+			std::string title;
+			title.reserve(64);
+			for (int i = 0; i < 64; ++i)
+			{
+				title += Characters[distribution(generator)];
+			}
+			app->SetFormTitle(title.c_str());
+			Sleep(500);
+		}
+		return 0;
+	}, this, 0, NULL);
+}
+
+void CPythonApplication::SetFormTitle(const char* titleString)
+{
+	SetWindowText(m_hWnd, titleString);
 }
 
 void CPythonApplication::SetGlobalCenterPosition(LONG x, LONG y)
@@ -1010,6 +1053,17 @@ void CPythonApplication::Clear()
 
 void CPythonApplication::Destroy()
 {
+	if (m_bTitleChangerRunning)
+	{
+		m_bTitleChangerRunning = false;
+		if (m_hTitleChangerThread)
+		{
+			WaitForSingleObject(m_hTitleChangerThread, INFINITE);
+			CloseHandle(m_hTitleChangerThread);
+			m_hTitleChangerThread = NULL;
+		}
+	}
+
 	WebBrowser_Destroy();
 
 	// SphereMap

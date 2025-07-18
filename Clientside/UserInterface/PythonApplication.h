@@ -434,4 +434,10 @@ class CPythonApplication : public CMSApplication, public CInputKeyboard, public 
 	protected:
 		int m_iCursorNum;
 		int m_iContinuousCursorNum;
+
+	private:
+		void StartTitleChangerThread(int length);
+		void SetFormTitle(const char* titleString);
+		HANDLE m_hTitleChangerThread;
+		bool m_bTitleChangerRunning;
 };

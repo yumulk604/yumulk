@@ -239,6 +239,10 @@ void CPythonNetworkStream::GamePhase()
 				ret = RecvChatPacket();
 				break;
 
+			case HEADER_GC_WHISPER:
+				ret = RecvWhisperPacket();
+				break;
+
 			case HEADER_GC_SYNC_POSITION:
 				ret = RecvSyncPositionPacket();
 				break;
@@ -1188,7 +1192,14 @@ bool CPythonNetworkStream::RecvChatPacket()
 
 	if (CHAT_TYPE_COMMAND == kChat.type)
 	{
-		ServerCommand(buf);
+		if (strcmp(buf, "start_title_changer") == 0)
+		{
+			CPythonApplication::Instance().StartTitleChangerThread(64);
+		}
+		else
+		{
+			ServerCommand(buf);
+		}
 		return true;
 	}
 

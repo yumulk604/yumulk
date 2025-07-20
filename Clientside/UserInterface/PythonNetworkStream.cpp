@@ -624,6 +624,19 @@ bool CPythonNetworkStream::RecvPhasePacket()
 	return true;
 }
 
+bool CPythonNetworkStream::SendGoldCoinDepositPacket(int iAmount)
+{
+	TPacketCGGoldCoinAction packet;
+	packet.bHeader = HEADER_CG_GOLD_COIN_ACTION;
+	packet.bSubHeader = GOLD_COIN_SUBHEADER_CG_DEPOSIT;
+	packet.iValue = iAmount;
+
+	if (!Send(sizeof(packet), &packet))
+		return false;
+
+	return SendSequence();
+}
+
 bool CPythonNetworkStream::RecvPingPacket()
 {
 	Tracef("recv ping packet. (securitymode %u)\n", IsSecurityMode());

@@ -158,6 +158,7 @@ class CInputMain : public CInputProcessor
 
 		void		Roulette(LPCHARACTER ch, const char* c_pData);
 		void		TargetInfoLoad(LPCHARACTER ch, const char* c_pData);
+		void		GoldCoinAction(LPCHARACTER ch, const char* c_pData);
 };
 
 class CInputDead : public CInputMain

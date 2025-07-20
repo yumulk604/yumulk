@@ -2587,8 +2587,63 @@ int CInputMain::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 		case HEADER_CG_CLIENT_VERSION:
 			Version(ch, c_pData);
 			break;
+
+		case HEADER_CG_GOLD_COIN_ACTION:
+			GoldCoinAction(ch, c_pData);
+			break;
 	}
 	return (iExtraLen);
+}
+
+void CInputMain::GoldCoinAction(LPCHARACTER ch, const char* c_pData)
+{
+    TPacketCGGoldCoinAction* p = (TPacketCGGoldCoinAction*)c_pData;
+
+    switch (p->bSubHeader)
+    {
+        case GOLD_COIN_SUBHEADER_CG_DEPOSIT:
+        {
+            if (p->iValue <= 0)
+                return;
+
+            if (ch->GetGold() < p->iValue)
+            {
+                ch->ChatPacket(CHAT_TYPE_INFO, "Yang yetersiz.");
+                return;
+            }
+
+            LPITEM item = ITEM_MANAGER::instance().CreateItem(70032, 1);
+
+            if (!item)
+            {
+                sys_err("Cannot create gold coin item.");
+                return;
+            }
+
+            item->SetSocket(0, 1); // Madeni Para olduğunu belirtmek için
+            item->SetSocket(1, p->iValue);
+
+            int iEmptyPos = ch->GetEmptyInventory(item->GetSize());
+
+            if (iEmptyPos < 0)
+            {
+                ch->ChatPacket(CHAT_TYPE_INFO, "Envanterinizde yeterli alan yok.");
+                M2_DESTROY_ITEM(item);
+                return;
+            }
+
+            ch->PointChange(POINT_GOLD, -p->iValue);
+            item->AddToCharacter(ch, TItemPos(INVENTORY, iEmptyPos));
+
+            ch->ChatPacket(CHAT_TYPE_INFO, "%d Yang, Madeni Paraya dönüştürüldü.", p->iValue);
+            break;
+        }
+        case GOLD_COIN_SUBHEADER_CG_WITHDRAW:
+        {
+            // Bu kısım daha sonra implemente edilecek.
+            break;
+        }
+    }
 }
 
 int CInputDead::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)

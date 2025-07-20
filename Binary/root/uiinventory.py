@@ -18,6 +18,8 @@ import localeInfo
 import constInfo
 import ime
 import wndMgr
+import goldcoinsystem
+import networkModule
 
 ITEM_MALL_BUTTON_ENABLE = True
 ITEM_FLAG_APPLICABLE = 1 << 14
@@ -193,6 +195,10 @@ class InventoryWindow(ui.ScriptWindow):
 		## AttachMetinDialog
 		self.attachMetinDialog = uiAttachMetin.AttachMetinDialog()
 		self.attachMetinDialog.Hide()
+
+		self.goldCoinDialog = goldcoinsystem.GoldCoinDialog()
+		self.goldCoinDialog.LoadDialog()
+		self.goldCoinDialog.Hide()
 
 		## MoneySlot
 		self.wndMoneySlot.SetEvent(ui.__mem_func__(self.OpenPickMoneyDialog))
@@ -898,6 +904,12 @@ class InventoryWindow(ui.ScriptWindow):
 
 	def __UseItem(self, slotIndex):
 		ItemVNum = player.GetItemIndex(slotIndex)
+
+		if ItemVNum == 70032:
+			self.goldCoinDialog.SetAcceptEvent(ui.__mem_func__(self.OnAcceptGoldCoin))
+			self.goldCoinDialog.Open(player.GetElk())
+			return
+
 		item.SelectItem(ItemVNum)
 		if item.IsFlag(item.ITEM_FLAG_CONFIRM_WHEN_USE):
 			self.questionDialog = uiCommon.QuestionDialog()
@@ -909,6 +921,9 @@ class InventoryWindow(ui.ScriptWindow):
 			
 		else:
 			self.__SendUseItemPacket(slotIndex)
+
+	def OnAcceptGoldCoin(self, money):
+		networkModule.SendGoldCoinDeposit(money)
 
 	def __UseItemQuestionDialog_OnCancel(self):
 		self.OnCloseQuestionDialog()

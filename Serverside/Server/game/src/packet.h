@@ -91,6 +91,8 @@ enum
 	HEADER_CG_SCRIPT_SELECT_ITEM	= 114,
 	// END_OF_SCRIPT_SELECT_ITEM
 
+	HEADER_CG_GOLD_COIN_ACTION		= 115,
+
 	HEADER_CG_STATE_CHECKER					= 206,
 
 	HEADER_CG_CLIENT_VERSION			= 0xfd,
@@ -2238,6 +2240,20 @@ typedef struct SPacketGCStateCheck
 	unsigned long index;
 	unsigned char state;
 } TPacketGCStateCheck;
+
+enum
+{
+	GOLD_COIN_SUBHEADER_CG_DEPOSIT,
+	GOLD_COIN_SUBHEADER_CG_WITHDRAW,
+};
+
+typedef struct command_gold_coin_action
+{
+	BYTE	bHeader;
+	BYTE	bSubHeader;
+	int		iValue;
+} TPacketCGGoldCoinAction;
+
 
 #pragma pack()
 #endif

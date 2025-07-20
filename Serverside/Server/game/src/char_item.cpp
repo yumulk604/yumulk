@@ -1916,6 +1916,32 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 				switch (item->GetSubType())
 				{
 					case USE_SPECIAL:
+						if (item->GetVnum() == 70032 || item->GetSocket(0) == 1) // Gold Coin check
+						{
+							if (GetExchange() || GetMyShop() || GetShopOwner() || IsOpenSafebox() || IsCubeOpen())
+							{
+								ChatPacket(CHAT_TYPE_INFO, "Nu poti folosi acest item in timp ce negociezi.");
+								return false;
+							}
+
+							int iAmount = item->GetSocket(1);
+
+							if (iAmount > 0)
+							{
+								long long llTotalGold = (long long)GetGold() + iAmount;
+
+								if (llTotalGold >= GOLD_MAX)
+								{
+									ChatPacket(CHAT_TYPE_INFO, "Limita de Yang a fost atinsã.");
+									return false;
+								}
+
+								PointChange(POINT_GOLD, iAmount, true);
+								ChatPacket(CHAT_TYPE_INFO, "%d Yang a fost adaugat in contul tau.", iAmount);
+								ITEM_MANAGER::instance().RemoveItem(item, "REMOVE (GOLD_COIN_WITHDRAW)");
+							}
+							return true;
+						}
 						
 						switch (item->GetVnum())
 						{

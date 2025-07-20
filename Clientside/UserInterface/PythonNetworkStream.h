@@ -251,6 +251,9 @@ class CPythonNetworkStream : public CNetworkStream, public CSingleton<CPythonNet
 		bool SendRefinePacket(BYTE byPos, BYTE byType);
 		bool SendSelectItemPacket(DWORD dwItemPos);
 
+		// Gold Coin
+		bool SendGoldCoinDepositPacket(int iAmount);
+
 		// Client Version
 		bool SendClientVersionPacket();
 

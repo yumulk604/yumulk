@@ -28,6 +28,18 @@ PyObject* netPreserveServerCommand(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildNone();
 }
 
+PyObject* netSendGoldCoinDeposit(PyObject* poSelf, PyObject* poArgs)
+{
+	int iAmount;
+	if (!PyTuple_GetInteger(poArgs, 0, &iAmount))
+		return Py_BuildException();
+
+	CPythonNetworkStream& rns=CPythonNetworkStream::Instance();
+	rns.SendGoldCoinDepositPacket(iAmount);
+
+	return Py_BuildNone();
+}
+
 PyObject* netGetPreservedServerCommand(PyObject* poSelf, PyObject* poArgs)
 {
 	if (g_kList_strCommand.empty())
@@ -1757,6 +1769,8 @@ void initnet()
 		{ "SendRequestRefineInfoPacket",			netSendRequestRefineInfoPacket,				METH_VARARGS },
 		{ "SendRefinePacket",						netSendRefinePacket,						METH_VARARGS },
 		{ "SendSelectItemPacket",					netSendSelectItemPacket,					METH_VARARGS },
+
+		{ "SendGoldCoinDeposit",					netSendGoldCoinDeposit,						METH_VARARGS },
 
 		// SYSTEM
 		{ "SetPacketSequenceMode",					netSetPacketSequenceMode,					METH_VARARGS },

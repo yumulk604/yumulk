@@ -365,6 +365,7 @@ typedef struct character_point
 	int				stamina;
 
 	BYTE			skill_group;
+	BYTE			inventory_page_count;
 } CHARACTER_POINT;
 
 typedef struct character_point_instant
@@ -1333,6 +1334,10 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		void				SetAffectedEunhyung();
 		void				ClearAffectedEunhyung() { m_dwAffectedEunhyungLevel = 0; }
 		bool				GetAffectedEunhyung() const { return m_dwAffectedEunhyungLevel; }
+
+	public:
+		void				ExpandInventory();
+		int					GetInventoryPageCount() const;
 
 	private:
 		DWORD				m_dwAffectedEunhyungLevel;

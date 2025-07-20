@@ -1764,6 +1764,7 @@ class GameWindow(ui.ScriptWindow):
 			# PRIVATE_SHOP_PRICE_LIST
 			"MyShopPriceList"		: self.__PrivateShop_PriceList,
 			# END_OF_PRIVATE_SHOP_PRICE_LIST
+			"expand_inventory"      : self.ExpandInventory,
 		}
 
 		self.serverCommander=stringCommander.Analyzer()
@@ -2030,6 +2031,9 @@ class GameWindow(ui.ScriptWindow):
 			self.interface.wndMessenger.ClearLoverInfo()
 		if self.affectShower:
 			self.affectShower.ClearLoverState()
+
+	def ExpandInventory(self, page_count):
+		self.interface.wndInventory.OnExpandInventory(int(page_count))
 
 	def __PlayMusic(self, flag, filename):
 		flag = int(flag)

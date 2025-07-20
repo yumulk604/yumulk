@@ -796,6 +796,11 @@ PyObject * playerGetItemFlags(PyObject* poSelf, PyObject* poArgs)
 			DWORD flags = CPythonPlayer::Instance().GetItemFlags(Cell);
 			return Py_BuildValue("i", flags);
 		}
+
+PyObject* playerGetInventoryPageCount(PyObject* poSelf, PyObject* poArgs)
+{
+	return Py_BuildValue("i", CPythonPlayer::Instance().GetInventoryPageCount());
+}
 	default:
 		return Py_BuildException();
 	}
@@ -2036,6 +2041,7 @@ void initPlayer()
 		{ "GetItemFlags",						playerGetItemFlags,							METH_VARARGS },
 		{ "GetItemCount",						playerGetItemCount,							METH_VARARGS },
 		{ "GetItemCountByVnum",					playerGetItemCountByVnum,					METH_VARARGS },
+		{ "GetInventoryPageCount",		playerGetInventoryPageCount,		METH_VARARGS },
 		{ "GetItemMetinSocket",					playerGetItemMetinSocket,					METH_VARARGS },
 		{ "GetItemAttribute",					playerGetItemAttribute,						METH_VARARGS },
 		{ "GetISellItemPrice",					playerGetISellItemPrice,					METH_VARARGS },

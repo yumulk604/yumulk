@@ -450,7 +450,40 @@ int CHARACTER::GetEmptyInventory(BYTE size) const
 	for ( int i = 0; i < INVENTORY_MAX_NUM; ++i)
 		if (IsEmptyItemGrid(TItemPos (INVENTORY, i), size))
 			return i;
+
+	int maxPage = GetInventoryPageCount();
+	for (int i = INVENTORY_PAGE_SIZE; i < INVENTORY_PAGE_SIZE * maxPage; ++i)
+		if (IsEmptyItemGrid(TItemPos (INVENTORY, i), size))
+			return i;
+
 	return -1;
+}
+
+void CHARACTER::ExpandInventory()
+{
+	if (GetInventoryPageCount() >= INVENTORY_MAX_PAGE_COUNT)
+	{
+		ChatPacket(CHAT_TYPE_INFO, "Envanterin zaten maksimum seviyede.");
+		return;
+	}
+
+	int cost = (GetInventoryPageCount() - 2) * 10000000; // 3. sayfa 10m, 4. sayfa 20m vs.
+
+	if (GetGold() < cost)
+	{
+		ChatPacket(CHAT_TYPE_INFO, "Envanteri genişletmek için yeterli altının yok.");
+		return;
+	}
+
+	PointChange(POINT_GOLD, -cost);
+	m_points.inventory_page_count++;
+	ChatPacket(CHAT_TYPE_INFO, "Envanterin genişletildi!");
+	Save();
+}
+
+int CHARACTER::GetInventoryPageCount() const
+{
+	return m_points.inventory_page_count;
 }
 
 int CHARACTER::CountEmptyInventory() const

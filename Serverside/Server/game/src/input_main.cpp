@@ -413,7 +413,14 @@ int CInputMain::Chat(LPCHARACTER ch, const char * data, size_t uiBytes)
 
 	if (buflen > 1 && *buf == '/')
 	{
-		interpret_command(ch, buf + 1, buflen - 1);
+		if (strcmp(buf + 1, "expand_inventory") == 0)
+		{
+			ch->ExpandInventory();
+		}
+		else
+		{
+			interpret_command(ch, buf + 1, buflen - 1);
+		}
 		return iExtraLen;
 	}
 

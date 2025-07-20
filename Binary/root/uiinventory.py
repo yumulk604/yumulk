@@ -135,9 +135,9 @@ class InventoryWindow(ui.ScriptWindow):
 			pyScrLoader = ui.PythonScriptLoader()
 
 			if ITEM_MALL_BUTTON_ENABLE:
-				pyScrLoader.LoadScriptFile(self, uiScriptLocale.LOCALE_UISCRIPT_PATH + "InventoryWindow.py")
+				pyScrLoader.LoadScriptFile(self, "UIScript/CostumeWindow.py")
 			else:
-				pyScrLoader.LoadScriptFile(self, "UIScript/InventoryWindow.py")
+				pyScrLoader.LoadScriptFile(self, "UIScript/CostumeWindow.py")
 		except:
 			import exception
 			exception.Abort("InventoryWindow.LoadWindow.LoadObject")
@@ -152,9 +152,11 @@ class InventoryWindow(ui.ScriptWindow):
 			self.costumeButton = self.GetChild2("CostumeButton")
 			
 			self.inventoryTab = []
-			self.inventoryTab.append(self.GetChild("Inventory_Tab_01"))
-			self.inventoryTab.append(self.GetChild("Inventory_Tab_02"))
-			self.inventoryTab.append(self.GetChild("Inventory_Tab_03"))
+			for i in range(player.INVENTORY_MAX_PAGE_COUNT):
+				self.inventoryTab.append(self.GetChild("Inventory_Tab_%02d" % (i+1)))
+
+			self.expandButton = self.GetChild("ExpandButton")
+			self.expandButton.SetEvent(ui.__mem_func__(self.ExpandInventory))
 
 			if self.costumeButton and not app.ENABLE_COSTUME_SYSTEM:
 				self.costumeButton.Hide()
@@ -197,9 +199,12 @@ class InventoryWindow(ui.ScriptWindow):
 		## MoneySlot
 		self.wndMoneySlot.SetEvent(ui.__mem_func__(self.OpenPickMoneyDialog))
 
-		self.inventoryTab[0].SetEvent(lambda arg=0: self.SetInventoryPage(arg))
-		self.inventoryTab[1].SetEvent(lambda arg=1: self.SetInventoryPage(arg))
-		self.inventoryTab[2].SetEvent(lambda arg=2: self.SetInventoryPage(arg))
+		for i in range(player.INVENTORY_MAX_PAGE_COUNT):
+			self.inventoryTab[i].SetEvent(lambda arg=i: self.SetInventoryPage(arg))
+
+		for i in range(player.GetInventoryPageCount(), player.INVENTORY_MAX_PAGE_COUNT):
+			self.inventoryTab[i].Hide()
+
 		self.inventoryTab[0].Down()
 		self.inventoryPageIndex = 0
 
@@ -210,6 +215,16 @@ class InventoryWindow(ui.ScriptWindow):
 		# MallButton
 		if self.mallButton:
 			self.mallButton.SetEvent(ui.__mem_func__(self.ClickMallButton))
+
+		self.expandButton = ui.Button()
+		self.expandButton.SetParent(self)
+		self.expandButton.SetUpVisual("d:/ymir work/ui/public/large_button_01.sub")
+		self.expandButton.SetOverVisual("d:/ymir work/ui/public/large_button_02.sub")
+		self.expandButton.SetDownVisual("d:/ymir work/ui/public/large_button_03.sub")
+		self.expandButton.SetText("Genişlet")
+		self.expandButton.SetPosition(10, 100)
+		self.expandButton.SetEvent(ui.__mem_func__(self.ExpandInventory))
+		self.expandButton.Show()
 		
 		# Costume Button
 		#if self.costumeButton:
@@ -272,9 +287,20 @@ class InventoryWindow(ui.ScriptWindow):
 		self.Hide()
 
 	def SetInventoryPage(self, page):
+		if page >= player.GetInventoryPageCount():
+			return
+
 		self.inventoryTab[self.inventoryPageIndex].SetUp()
 		self.inventoryPageIndex = page
 		self.inventoryTab[self.inventoryPageIndex].Down()
+		self.RefreshBagSlotWindow()
+
+	def ExpandInventory(self):
+		net.SendChatPacket("/expand_inventory")
+
+	def OnExpandInventory(self, page_count):
+		for i in range(page_count):
+			self.inventoryTab[i].Show()
 		self.RefreshBagSlotWindow()
 
 	def ClickMallButton(self):

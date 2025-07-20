@@ -834,6 +834,13 @@ PyObject* netSendShopSellPacketNew(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildNone();
 }
 
+PyObject* netSendExpandInventoryPacket(PyObject* poSelf, PyObject* poArgs)
+{
+	CPythonNetworkStream& rkNetStream=CPythonNetworkStream::Instance();
+	rkNetStream.SendExpandInventoryPacket();
+	return Py_BuildNone();
+}
+
 PyObject* netSendExchangeStartPacket(PyObject* poSelf, PyObject* poArgs)
 {
 	int vid;

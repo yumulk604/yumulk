@@ -412,6 +412,12 @@ void CPythonPlayer::SetStatus(DWORD dwType, long lValue)
 		}
 	}
 
+	if (dwType == POINT_INVENTORY_PAGE_COUNT)
+	{
+		m_playerStatus.inventory_page_count = lValue;
+		return;
+	}
+
 	switch (dwType)
 	{
 		case POINT_MIN_WEP:
@@ -431,6 +437,11 @@ void CPythonPlayer::SetStatus(DWORD dwType, long lValue)
 			m_playerStatus.SetPoint(dwType, lValue);
 			break;
 	}		
+}
+
+int CPythonPlayer::GetInventoryPageCount()
+{
+	return m_playerStatus.inventory_page_count;
 }
 
 int CPythonPlayer::GetStatus(DWORD dwType)

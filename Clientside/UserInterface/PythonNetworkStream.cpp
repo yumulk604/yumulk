@@ -624,6 +624,26 @@ bool CPythonNetworkStream::RecvPhasePacket()
 	return true;
 }
 
+bool CPythonNetworkStream::RecvExpandInventory()
+{
+	TPacketGCExpandInventory p;
+	if (!Recv(sizeof(TPacketGCExpandInventory), &p))
+		return false;
+
+	CPythonPlayer::Instance().SetStatus(POINT_INVENTORY_PAGE_COUNT, p.page_count);
+	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OnExpandInventory", Py_BuildValue("(i)", p.page_count));
+	return true;
+}
+
+bool CPythonNetworkStream::SendExpandInventoryPacket()
+{
+	TPacketCGExpandInventory packet;
+	packet.header = HEADER_CG_EXPAND_INVENTORY;
+	if (!Send(sizeof(packet), &packet))
+		return false;
+	return true;
+}
+
 bool CPythonNetworkStream::RecvPingPacket()
 {
 	Tracef("recv ping packet. (securitymode %u)\n", IsSecurityMode());

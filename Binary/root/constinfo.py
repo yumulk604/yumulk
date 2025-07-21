@@ -1,4 +1,5 @@
 import item
+from upgrade_items import UPGRADE_ITEMS
 # option
 CONSOLE_ENABLE = 0
 

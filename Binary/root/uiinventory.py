@@ -213,6 +213,15 @@ class InventoryWindow(ui.ScriptWindow):
 		self.wndEquip = wndEquip
 		self.dlgPickMoney = dlgPickMoney
 
+		self.plusIcons = []
+		for i in xrange(player.INVENTORY_PAGE_SIZE):
+			plusIcon = ui.ImageBox()
+			plusIcon.SetParent(self.wndItem)
+			plusIcon.LoadImage("d:/ymir work/ui/icon/special_plus_icon.tga")
+			plusIcon.SetPosition(4, 4) # Adjust position as needed
+			plusIcon.Hide()
+			self.plusIcons.append(plusIcon)
+
 		# MallButton
 		if self.mallButton:
 			self.mallButton.SetEvent(ui.__mem_func__(self.ClickMallButton))
@@ -389,10 +398,9 @@ class InventoryWindow(ui.ScriptWindow):
 			itemVnum = player.GetItemIndex(slotNumber)
 
 			if itemVnum in plus_icon_items:
-				self.wndItem.ActivateSlot(i)
+				self.plusIcons[i].Show()
 			else:
-				if not player.GetItemIndex(slotNumber):
-					self.wndItem.DeactivateSlot(i)
+				self.plusIcons[i].Hide()
 					
 		self.wndItem.RefreshSlot()
 

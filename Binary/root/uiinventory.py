@@ -979,3 +979,5 @@ class InventoryWindow(ui.ScriptWindow):
 			return
 
 		net.SendItemMovePacket(srcSlotPos, dstSlotPos, srcItemCount)			
+
+[end of Binary/root/uiinventory.py]

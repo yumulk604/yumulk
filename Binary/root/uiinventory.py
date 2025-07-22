@@ -380,6 +380,19 @@ class InventoryWindow(ui.ScriptWindow):
 					
 				else:
 					self.wndItem.DeactivateSlot(slotNumber)			
+
+		# Special Items with '+' Icon
+		plus_icon_items = [27992, 27993, 27994]
+
+		for i in xrange(player.INVENTORY_PAGE_SIZE):
+			slotNumber = self.__InventoryLocalSlotPosToGlobalSlotPos(i)
+			itemVnum = player.GetItemIndex(slotNumber)
+
+			if itemVnum in plus_icon_items:
+				self.wndItem.ActivateSlot(i)
+			else:
+				if not player.GetItemIndex(slotNumber):
+					self.wndItem.DeactivateSlot(i)
 					
 		self.wndItem.RefreshSlot()
 

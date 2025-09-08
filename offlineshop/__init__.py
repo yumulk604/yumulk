@@ -1,0 +1,2 @@
+"""Offline Shop package."""
+

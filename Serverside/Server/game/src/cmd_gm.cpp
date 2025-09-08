@@ -33,6 +33,7 @@
 #include "log.h"
 #include "threeway_war.h"
 #include "unique_item.h"
+#include "offline_shop.h"
 
 extern bool DropEvent_RefineBox_SetValue(const std::string& name, int value);
 
@@ -1466,7 +1467,7 @@ ACMD(do_makeguild)
 	}
 
 	gm.CreateGuild(cp);
-	ch->ChatPacket(CHAT_TYPE_INFO, "Breasla %s a fost fondatã.", cp.name);
+	ch->ChatPacket(CHAT_TYPE_INFO, "Breasla %s a fost fondatï¿½.", cp.name);
 }
 
 ACMD(do_deleteguild)
@@ -2058,7 +2059,7 @@ ACMD(do_guild_state)
 		ch->ChatPacket(CHAT_TYPE_INFO, "IsInWar: %d", pGuild->UnderAnyWar());
 	}
 	else
-		ch->ChatPacket(CHAT_TYPE_INFO, "%s nu existã.", arg1);
+		ch->ChatPacket(CHAT_TYPE_INFO, "%s nu existï¿½.", arg1);
 }
 
 struct FuncWeaken
@@ -2400,7 +2401,7 @@ ACMD(do_priv_guild)
 		}
 
 		if (!g)
-			ch->ChatPacket(CHAT_TYPE_INFO, "Aceastã breaslã nu existã.");
+			ch->ChatPacket(CHAT_TYPE_INFO, "Aceastï¿½ breaslï¿½ nu existï¿½.");
 		else
 		{
 			char buf[1024+1];
@@ -2516,7 +2517,7 @@ ACMD(do_ban_guid)
 	if (!*arg1)
 	{
 		if (ch)
-			ch->ChatPacket(CHAT_TYPE_INFO, "Foloseºte: /ban_guid <nume>");
+			ch->ChatPacket(CHAT_TYPE_INFO, "Foloseï¿½te: /ban_guid <nume>");
 
 		return;
 	}
@@ -2622,7 +2623,7 @@ ACMD(do_maintenance)
 
 	if (!*arg1)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "/maintenance <0 - fãrã mentenanþã | cu mentenanþã - 1>");
+		ch->ChatPacket(CHAT_TYPE_INFO, "/maintenance <0 - fï¿½rï¿½ mentenanï¿½ï¿½ | cu mentenanï¿½ï¿½ - 1>");
 		return;
 	}
 
@@ -2695,7 +2696,7 @@ ACMD(do_block_chat)
 		}
 
 		if (ch)
-			ch->ChatPacket(CHAT_TYPE_INFO, "Operaþiune reuºitã.");
+			ch->ChatPacket(CHAT_TYPE_INFO, "Operaï¿½iune reuï¿½itï¿½.");
 
 		return;
 	}
@@ -2706,7 +2707,7 @@ ACMD(do_block_chat)
 		if (lBlockDuration > 0)
 		{
 			char buf[1024];
-			snprintf(buf, sizeof(buf), "Jucãtorului %s i-a fost blocat chatul pentru %ld minute.", arg1, lBlockDuration / 60);
+			snprintf(buf, sizeof(buf), "Jucï¿½torului %s i-a fost blocat chatul pentru %ld minute.", arg1, lBlockDuration / 60);
 			BroadcastNotice(buf);
 		}
 	}
@@ -2779,7 +2780,7 @@ ACMD(do_build)
 				const TObjectProto * t = CManager::instance().GetObjectProto(dwVnum);
 				if (!t)
 				{
-					ch->ChatPacket(CHAT_TYPE_INFO, "Nu s-au gãsit construcþii.");
+					ch->ChatPacket(CHAT_TYPE_INFO, "Nu s-au gï¿½sit construcï¿½ii.");
 					return;
 				}
 
@@ -2798,7 +2799,7 @@ ACMD(do_build)
 				{
 					if (!pkLand->FindObjectByGroup(t->dwDependOnGroupVnum))
 					{
-						ch->ChatPacket(CHAT_TYPE_INFO, "Eºec.");
+						ch->ChatPacket(CHAT_TYPE_INFO, "Eï¿½ec.");
 						return;
 					}
 				}
@@ -2807,7 +2808,7 @@ ACMD(do_build)
 				{
 					if (t->dwPrice > BUILDING_MAX_PRICE)
 					{
-						ch->ChatPacket(CHAT_TYPE_INFO, "Preþ depãºit.");
+						ch->ChatPacket(CHAT_TYPE_INFO, "Preï¿½ depï¿½it.");
 						return;
 					}
 
@@ -3039,7 +3040,7 @@ ACMD(do_horse_level)
 
 	if (NULL == victim)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Caracterul nu existã.");
+		ch->ChatPacket(CHAT_TYPE_INFO, "Caracterul nu existï¿½.");
 		return;
 	}
 
@@ -3223,14 +3224,14 @@ ACMD(do_end_duel)
 	LPCHARACTER pChar = CHARACTER_MANAGER::instance().FindPC(szName);
 	if (!pChar)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Caracterul nu existã.");
+		ch->ChatPacket(CHAT_TYPE_INFO, "Caracterul nu existï¿½.");
 		return;
 	}
 
 	if (!CArenaManager::instance().EndDuel(pChar->GetPlayerID()))
-		ch->ChatPacket(CHAT_TYPE_INFO, "Duelul nu s-a încheiat cu succes.");
+		ch->ChatPacket(CHAT_TYPE_INFO, "Duelul nu s-a ï¿½ncheiat cu succes.");
 	else
-		ch->ChatPacket(CHAT_TYPE_INFO, "Duelul s-a încheiat cu succes.");
+		ch->ChatPacket(CHAT_TYPE_INFO, "Duelul s-a ï¿½ncheiat cu succes.");
 }
 
 ACMD(do_duel)
@@ -3276,7 +3277,7 @@ ACMD(do_duel)
 			}
 			else
 			{
-				pChar1->ChatPacket(CHAT_TYPE_INFO, "Ai fost eliminat din grupã.");
+				pChar1->ChatPacket(CHAT_TYPE_INFO, "Ai fost eliminat din grupï¿½.");
 				pParty->Quit(pChar1->GetPlayerID());
 			}
 		}
@@ -3290,18 +3291,18 @@ ACMD(do_duel)
 			}
 			else
 			{
-				pChar2->ChatPacket(CHAT_TYPE_INFO, "Ai fost eliminat din grupã.");
+				pChar2->ChatPacket(CHAT_TYPE_INFO, "Ai fost eliminat din grupï¿½.");
 				pParty->Quit(pChar2->GetPlayerID());
 			}
 		}
 		
 		if (CArenaManager::instance().StartDuel(pChar1, pChar2, set, minute))
-			ch->ChatPacket(CHAT_TYPE_INFO, "Lupta a început.");
+			ch->ChatPacket(CHAT_TYPE_INFO, "Lupta a ï¿½nceput.");
 		else
-			ch->ChatPacket(CHAT_TYPE_INFO, "Lupta nu a început.");
+			ch->ChatPacket(CHAT_TYPE_INFO, "Lupta nu a ï¿½nceput.");
 	}
 	else
-		ch->ChatPacket(CHAT_TYPE_INFO, "Cineva nu este gãsit.");
+		ch->ChatPacket(CHAT_TYPE_INFO, "Cineva nu este gï¿½sit.");
 }
 
 ACMD(do_stat_plus_amount)
@@ -3315,7 +3316,7 @@ ACMD(do_stat_plus_amount)
 
 	if (ch->IsPolymorphed())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Eºec.");
+		ch->ChatPacket(CHAT_TYPE_INFO, "Eï¿½ec.");
 		return;
 	}
 
@@ -3373,7 +3374,7 @@ ACMD(do_stat_plus_amount)
 			break;
 
 		default :
-			ch->ChatPacket(CHAT_TYPE_INFO, "Eºec.");
+			ch->ChatPacket(CHAT_TYPE_INFO, "Eï¿½ec.");
 			return;
 			break;
 	}
@@ -3406,7 +3407,7 @@ ACMD(do_break_marriage)
 	str_to_number(pids.pid1, arg1);
 	str_to_number(pids.pid2, arg2);
 	
-	ch->ChatPacket(CHAT_TYPE_INFO, "Ai divorþat.", pids.pid1, pids.pid2);
+	ch->ChatPacket(CHAT_TYPE_INFO, "Ai divorï¿½at.", pids.pid1, pids.pid2);
 	db_clientdesc->DBPacket(HEADER_GD_BREAK_MARRIAGE, 0, &pids, sizeof(pids));
 }
 
@@ -3720,13 +3721,13 @@ ACMD(do_set_stat)
 	{
 		if (tch->IsPolymorphed())
 		{
-			ch->ChatPacket(CHAT_TYPE_INFO, "Eºec.");
+			ch->ChatPacket(CHAT_TYPE_INFO, "Eï¿½ec.");
 			return;
 		}
 
 		if (subcmd != POINT_HT && subcmd != POINT_IQ && subcmd != POINT_ST && subcmd != POINT_DX)
 		{
-			ch->ChatPacket(CHAT_TYPE_INFO, "Eºec.");
+			ch->ChatPacket(CHAT_TYPE_INFO, "Eï¿½ec.");
 			return;
 		}
 		int nRemainPoint = tch->GetPoint(POINT_STAT);
@@ -4144,4 +4145,30 @@ ACMD (do_use_item)
 ACMD (do_clear_affect)
 {
 	ch->ClearAffect(true);
+}
+
+ACMD(do_offlineshop_create)
+{
+	if (!ch)
+		return;
+
+	char sign[256];
+	one_argument(argument, sign, sizeof(sign));
+	if (!*sign)
+	{
+		ch->ChatPacket(CHAT_TYPE_INFO, "Usage: offlineshop_create <sign>");
+		return;
+	}
+
+	COfflineShop* pShop = M2_NEW COfflineShop;
+	if (!pShop->Create(ch->GetPlayerID(), sign))
+	{
+		M2_DELETE(pShop);
+		ch->ChatPacket(CHAT_TYPE_INFO, "Failed to create offline shop.");
+		return;
+	}
+
+	// Present the shop window to creator immediately
+	pShop->AddGuest(ch, ch->GetVID(), false);
+	ch->ChatPacket(CHAT_TYPE_INFO, "Offline shop created: %s", sign);
 }

@@ -204,6 +204,7 @@ ACMD(do_attr_full_set);
 ACMD(do_all_skill_master);
 ACMD(do_use_item);
 ACMD(do_clear_affect);
+ACMD(do_offlineshop_create);
 ACMD(do_ban);
 
 struct command_info cmd_info[] =
@@ -461,6 +462,7 @@ struct command_info cmd_info[] =
 	{ "all_skill_master",	do_all_skill_master,	0,	POS_DEAD,	GM_IMPLEMENTOR},
 	{ "use_item",		do_use_item,	0, POS_DEAD,		GM_IMPLEMENTOR},
 	{ "do_clear_affect",	do_clear_affect, 	0, POS_DEAD,		GM_IMPLEMENTOR},
+	{ "offlineshop_create",	do_offlineshop_create,	0, POS_DEAD,		GM_HIGH_WIZARD},
 
 	{ "\n",		NULL,			0,			POS_DEAD,	GM_IMPLEMENTOR	}
 };
@@ -485,7 +487,7 @@ void double_dollar(const char *src, size_t src_len, char *dest, size_t dest_len)
 	const char * tmp = src;
 	size_t cur_len = 0;
 
-	// \0 ³ÖÀ» ÀÚ¸® È®º¸
+	// \0 ï¿½ï¿½ï¿½ï¿½ ï¿½Ú¸ï¿½ È®ï¿½ï¿½
 	dest_len -= 1;
 
 	while (src_len-- && *tmp)
@@ -520,7 +522,7 @@ void interpret_command(LPCHARACTER ch, const char * argument, size_t len)
 		return ;
 	}
 
-	char cmd[128 + 1];  // buffer overflow ¹®Á¦°¡ »ý±âÁö ¾Êµµ·Ï ÀÏºÎ·¯ ±æÀÌ¸¦ Âª°Ô ÀâÀ½
+	char cmd[128 + 1];  // buffer overflow ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Êµï¿½ï¿½ï¿½ ï¿½ÏºÎ·ï¿½ ï¿½ï¿½ï¿½Ì¸ï¿½ Âªï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	char new_line[256 + 1];
 	const char * line;
 	int icmd;
@@ -537,7 +539,7 @@ void interpret_command(LPCHARACTER ch, const char * argument, size_t len)
 	{
 		if (cmd_info[icmd].command_pointer == do_cmd)
 		{
-			if (!strcmp(cmd_info[icmd].command, cmd)) // do_cmd´Â ¸ðµç ¸í·É¾î¸¦ ÃÄ¾ß ÇÒ ¼ö ÀÖ´Ù.
+			if (!strcmp(cmd_info[icmd].command, cmd)) // do_cmdï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½É¾î¸¦ ï¿½Ä¾ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´ï¿½.
 				break;
 		}
 		else if (!strncmp(cmd_info[icmd].command, cmd, cmdlen))
@@ -575,13 +577,13 @@ void interpret_command(LPCHARACTER ch, const char * argument, size_t len)
 
 	if (*cmd_info[icmd].command == '\n')
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Eºec.");
+		ch->ChatPacket(CHAT_TYPE_INFO, "Eï¿½ec.");
 		return;
 	}
 
 	if (cmd_info[icmd].gm_level && cmd_info[icmd].gm_level > ch->GetGMLevel())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Eºec.");
+		ch->ChatPacket(CHAT_TYPE_INFO, "Eï¿½ec.");
 		return;
 	}
 

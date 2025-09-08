@@ -39,7 +39,7 @@ CPPFILE = BattleArena.cpp FSM.cpp MarkConvert.cpp MarkImage.cpp MarkManager.cpp 
 		  FileMonitor_FreeBSD.cpp ClientPackageCryptInfo.cpp cipher.cpp\
 		  buff_on_attributes.cpp\
 		  group_text_parse_tree.cpp\
-		  shop_manager.cpp shopEx.cpp item_manager_read_tables.cpp
+		  shop_manager.cpp shopEx.cpp item_manager_read_tables.cpp offline_shop.cpp
 
 
 COBJS	= $(CFILE:%.c=$(OBJDIR)/%.o)

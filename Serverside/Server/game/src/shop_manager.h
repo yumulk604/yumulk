@@ -29,6 +29,9 @@ public:
 	LPSHOP	FindPCShop(DWORD dwVID);
 	void	DestroyPCShop(LPCHARACTER ch);
 
+	// Expose PC shops for system iteration (read-only)
+	const TShopMap& GetPCShops() const { return m_map_pkShopByPC; }
+
 private:
 	TShopMap	m_map_pkShop;
 	TShopMap	m_map_pkShopByNPCVnum;

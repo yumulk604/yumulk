@@ -206,6 +206,7 @@ ACMD(do_use_item);
 ACMD(do_clear_affect);
 ACMD(do_offlineshop_create);
 ACMD(do_ban);
+ACMD(do_autobuy);
 
 struct command_info cmd_info[] =
 {
@@ -463,6 +464,7 @@ struct command_info cmd_info[] =
 	{ "use_item",		do_use_item,	0, POS_DEAD,		GM_IMPLEMENTOR},
 	{ "do_clear_affect",	do_clear_affect, 	0, POS_DEAD,		GM_IMPLEMENTOR},
 	{ "offlineshop_create",	do_offlineshop_create,	0, POS_DEAD,		GM_HIGH_WIZARD},
+    { "autobuy",            do_autobuy,            0,  POS_DEAD,   GM_HIGH_WIZARD},
 
 	{ "\n",		NULL,			0,			POS_DEAD,	GM_IMPLEMENTOR	}
 };

@@ -34,6 +34,7 @@
 #include "threeway_war.h"
 #include "unique_item.h"
 #include "offline_shop.h"
+#include "autobuy_manager.h"
 
 extern bool DropEvent_RefineBox_SetValue(const std::string& name, int value);
 
@@ -4171,4 +4172,39 @@ ACMD(do_offlineshop_create)
 	// Present the shop window to creator immediately
 	pShop->AddGuest(ch, ch->GetVID(), false);
 	ch->ChatPacket(CHAT_TYPE_INFO, "Offline shop created: %s", sign);
+}
+
+ACMD(do_autobuy)
+{
+    char arg1[256];
+    one_argument(argument, arg1, sizeof(arg1));
+    if (!*arg1)
+    {
+        ch->ChatPacket(CHAT_TYPE_INFO, "Usage: autobuy <start|stop|reload|status>");
+        return;
+    }
+
+    if (!strcasecmp(arg1, "start"))
+    {
+        CAutoBuyManager::instance().Start();
+        ch->ChatPacket(CHAT_TYPE_INFO, "AutoBuy started.");
+    }
+    else if (!strcasecmp(arg1, "stop"))
+    {
+        CAutoBuyManager::instance().Stop();
+        ch->ChatPacket(CHAT_TYPE_INFO, "AutoBuy stopped.");
+    }
+    else if (!strcasecmp(arg1, "reload"))
+    {
+        CAutoBuyManager::instance().Reload();
+        ch->ChatPacket(CHAT_TYPE_INFO, "AutoBuy reloaded.");
+    }
+    else if (!strcasecmp(arg1, "status"))
+    {
+        CAutoBuyManager::instance().Status(ch);
+    }
+    else
+    {
+        ch->ChatPacket(CHAT_TYPE_INFO, "Usage: autobuy <start|stop|reload|status>");
+    }
 }

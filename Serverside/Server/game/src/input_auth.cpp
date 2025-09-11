@@ -23,7 +23,7 @@ bool FN_IS_VALID_LOGIN_STRING(const char *str)
 
 	for (tmp = str; *tmp; ++tmp)
 	{
-		// ¾ËÆÄºª°ú ¼öÀÚ¸¸ Çã¿ë
+		// ï¿½ï¿½ï¿½Äºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ú¸ï¿½ ï¿½ï¿½ï¿½
 		if (isdigit(*tmp) || isalpha(*tmp))
 			continue;
 
@@ -65,7 +65,7 @@ void CInputAuth::Login(LPDESC d, const char * c_pData)
 		return;
 	}
 
-	// string ¹«°á¼ºÀ» À§ÇØ º¹»ç
+	// string ï¿½ï¿½ï¿½á¼ºï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	char login[LOGIN_MAX_LEN + 1];
 	trim_and_lower(pinfo->login, login, sizeof(login));
 
@@ -168,6 +168,10 @@ int CInputAuth::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 			break;
 
 		case HEADER_CG_LOGIN3:
+			Login(d, c_pData);
+			break;
+
+		case HEADER_CG_LOGIN4:
 			Login(d, c_pData);
 			break;
 

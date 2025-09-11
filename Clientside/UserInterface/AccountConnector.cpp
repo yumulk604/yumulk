@@ -85,7 +85,7 @@ bool CAccountConnector::__HandshakeState_Process()
 	if (!__AnalyzePacket(HEADER_GC_PING, sizeof(TPacketGCPing), &CAccountConnector::__AuthState_RecvPing))
 		return false;
 
-	//  TODO :  Â÷ÈÄ ¼­¹ö¿Í µ¿ÀÏÇÏ°Ô °¡º¯±æÀÌ data serialize & deserialize  ÀÛ¾÷ÇØ¾ß ÇÑ´Ù.
+	//  TODO :  ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ data serialize & deserialize  ï¿½Û¾ï¿½ï¿½Ø¾ï¿½ ï¿½Ñ´ï¿½.
 	if (!__AnalyzeVarSizePacket(HEADER_GC_HYBRIDCRYPT_KEYS, &CAccountConnector::__AuthState_RecvHybridCryptKeys))
 		return false;
 
@@ -131,7 +131,7 @@ bool CAccountConnector::__AuthState_Process()
 		return false;
 #endif
 
-	//  TODO :  Â÷ÈÄ ¼­¹ö¿Í µ¿ÀÏÇÏ°Ô °¡º¯±æÀÌ data serialize & deserialize  ÀÛ¾÷ÇØ¾ß ÇÑ´Ù.
+	//  TODO :  ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ data serialize & deserialize  ï¿½Û¾ï¿½ï¿½Ø¾ï¿½ ï¿½Ñ´ï¿½.
 	if (!__AnalyzeVarSizePacket(HEADER_GC_HYBRIDCRYPT_KEYS, &CAccountConnector::__AuthState_RecvHybridCryptKeys))
 		return false;
 
@@ -357,7 +357,7 @@ bool CAccountConnector::__AuthState_RecvKeyAgreement()
 	size_t agreedLength = Prepare(packetToSend.data, &dataLength);
 	if (agreedLength == 0)
 	{
-		// ÃÊ±âÈ­ ½ÇÆÐ
+		// ï¿½Ê±ï¿½È­ ï¿½ï¿½ï¿½ï¿½
 		Disconnect();
 		return false;
 	}
@@ -365,7 +365,7 @@ bool CAccountConnector::__AuthState_RecvKeyAgreement()
 
 	if (Activate(packet.wAgreedLength, packet.data, packet.wDataLength))
 	{
-		// Key agreement ¼º°ø, ÀÀ´ä Àü¼Û
+		// Key agreement ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 		packetToSend.bHeader = HEADER_CG_KEY_AGREEMENT;
 		packetToSend.wAgreedLength = (WORD)agreedLength;
 		packetToSend.wDataLength = (WORD)dataLength;
@@ -379,7 +379,7 @@ bool CAccountConnector::__AuthState_RecvKeyAgreement()
 	}
 	else
 	{
-		// Å° Çù»ó ½ÇÆÐ
+		// Å° ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 		Disconnect();
 		return false;
 	}

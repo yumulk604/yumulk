@@ -4208,3 +4208,39 @@ ACMD(do_autobuy)
         ch->ChatPacket(CHAT_TYPE_INFO, "Usage: autobuy <start|stop|reload|status>");
     }
 }
+
+ACMD(do_online_classes)
+{
+    int cntWarrior = 0;
+    int cntAssassin = 0;
+    int cntSura = 0;
+    int cntShaman = 0;
+
+    const DESC_MANAGER::DESC_SET & c_ref_set = DESC_MANAGER::instance().GetClientSet();
+    for (itertype(c_ref_set) it = c_ref_set.begin(); it != c_ref_set.end(); ++it)
+    {
+        LPDESC d = *it;
+        if (!d)
+            continue;
+        LPCHARACTER tch = d->GetCharacter();
+        if (!tch)
+            continue;
+        if (!tch->IsPC())
+            continue;
+
+        if (tch->IsWarrior())
+            ++cntWarrior;
+        else if (tch->IsAssassin())
+            ++cntAssassin;
+        else if (tch->IsSura())
+            ++cntSura;
+        else if (tch->IsShaman())
+            ++cntShaman;
+    }
+
+    ch->ChatPacket(CHAT_TYPE_INFO, "Online by class:");
+    ch->ChatPacket(CHAT_TYPE_INFO, "Warrior: %d", cntWarrior);
+    ch->ChatPacket(CHAT_TYPE_INFO, "Assassin: %d", cntAssassin);
+    ch->ChatPacket(CHAT_TYPE_INFO, "Sura: %d", cntSura);
+    ch->ChatPacket(CHAT_TYPE_INFO, "Shaman: %d", cntShaman);
+}

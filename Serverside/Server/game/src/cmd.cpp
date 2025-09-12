@@ -31,6 +31,7 @@ ACMD(do_notice);
 ACMD(do_map_notice);
 ACMD(do_big_notice);
 ACMD(do_who);
+ACMD(do_jobcount);
 ACMD(do_user);
 ACMD(do_disconnect);
 ACMD(do_kill);
@@ -212,6 +213,7 @@ struct command_info cmd_info[] =
 {
 	{ "!RESERVED!",	NULL,			0,			POS_DEAD,	GM_IMPLEMENTOR	},
 	{ "who",		do_who,			0,			POS_DEAD,	GM_HIGH_WIZARD	},
+	{ "jobcount",	do_jobcount,		0,			POS_DEAD,	GM_HIGH_WIZARD	},
 	{ "war",		do_war,			0,			POS_DEAD,	GM_PLAYER	},
 	{ "warp",		do_warp,		0,			POS_DEAD,	GM_HIGH_WIZARD	},
 	{ "user",		do_user,		0,			POS_DEAD,	GM_HIGH_WIZARD	},

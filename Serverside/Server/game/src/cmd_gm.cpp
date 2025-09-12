@@ -1139,6 +1139,40 @@ ACMD(do_who)
 			iTotal, paiEmpireUserCount[1], paiEmpireUserCount[2], paiEmpireUserCount[3], iLocal);
 }
 
+ACMD(do_jobcount)
+{
+	int countWarrior = 0;
+	int countAssassin = 0;
+	int countSura = 0;
+	int countShaman = 0;
+	int total = 0;
+
+	const DESC_MANAGER::DESC_SET & c_ref_set = DESC_MANAGER::instance().GetClientSet();
+	for (DESC_MANAGER::DESC_SET::const_iterator it = c_ref_set.begin(); it != c_ref_set.end(); ++it)
+	{
+		LPDESC d = *it;
+		if (!d)
+			continue;
+		LPCHARACTER tch = d->GetCharacter();
+		if (!tch)
+			continue;
+		if (!tch->IsPC())
+			continue;
+
+		++total;
+		switch (tch->GetJob())
+		{
+			case JOB_WARRIOR: ++countWarrior; break;
+			case JOB_ASSASSIN: ++countAssassin; break;
+			case JOB_SURA: ++countSura; break;
+			case JOB_SHAMAN: ++countShaman; break;
+			default: break;
+		}
+	}
+
+	ch->ChatPacket(CHAT_TYPE_INFO, "WARR:%d ASAS:%d SURA:%d SHAM:%d TOTAL:%d", countWarrior, countAssassin, countSura, countShaman, total);
+}
+
 class user_func
 {
 	public:

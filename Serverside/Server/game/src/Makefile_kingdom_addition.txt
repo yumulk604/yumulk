@@ -1,0 +1,40 @@
+# Makefile'a eklenecek krallık sistemi dosyaları
+
+# SOURCES listesine eklenecek:
+SOURCES += kingdom.cpp
+SOURCES += kingdom_packet.cpp
+
+# HEADERS listesine eklenecek (eğer varsa):
+HEADERS += kingdom.h
+HEADERS += kingdom_packet.h
+
+# Alternatif olarak, mevcut SOURCES satırına eklenebilir:
+# Örnek mevcut satır:
+# SOURCES = char.cpp char_manager.cpp item.cpp item_manager.cpp ...
+
+# Yeni hali:
+# SOURCES = char.cpp char_manager.cpp item.cpp item_manager.cpp kingdom.cpp kingdom_packet.cpp ...
+
+# CMake kullanılıyorsa CMakeLists.txt'ye eklenecek:
+# set(SOURCES
+#     ...
+#     kingdom.cpp
+#     kingdom_packet.cpp
+# )
+
+# Visual Studio kullanılıyorsa .vcproj veya .vcxproj dosyasına eklenecek:
+# <ClCompile Include="kingdom.cpp" />
+# <ClCompile Include="kingdom_packet.cpp" />
+# <ClInclude Include="kingdom.h" />
+# <ClInclude Include="kingdom_packet.h" />
+
+# Derleme talimatları:
+# 1. kingdom.cpp ve kingdom_packet.cpp dosyalarını src/ dizinine kopyalayın
+# 2. kingdom.h ve kingdom_packet.h dosyalarını src/ dizinine kopyalayın
+# 3. Makefile'ı yukarıdaki gibi güncelleyin
+# 4. make clean && make komutu ile yeniden derleyin
+
+# Bağımlılıklar:
+# - MySQL development libraries (libmysqlclient-dev)
+# - Standard C++ libraries
+# - Mevcut game server dependencies

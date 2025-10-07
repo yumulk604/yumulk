@@ -122,16 +122,16 @@ class MainStream(object):
 
 	def SetPhaseWindow(self, newPhaseWindow):
 		if self.newPhaseWindow:
-			#print "Ã€ÃŒÂ¹ÃŒ Â»ÃµÂ·ÃŽÂ¿Ã® Ã€Â©ÂµÂµÂ¿Ã¬Â·ÃŽ Â¹Ã™Â²Ã›Â»Ã³Ã…Ã‚Â¿Â¡Â¼Â­ Â¶Ã‡ Â¹Ã™Â²Ãž", newPhaseWindow
+			#print "ÀÌ¹Ì »õ·Î¿î À©µµ¿ì·Î ¹Ù²Û»óÅÂ¿¡¼­ ¶Ç ¹Ù²Þ", newPhaseWindow
 			self.__ChangePhaseWindow()
 
 		self.newPhaseWindow=newPhaseWindow
 
 		if self.curPhaseWindow:
-			#print "Ã†Ã¤Ã€ÃŒÂµÃ¥ Â¾Ã†Â¿Ã´ÂµÃ‡Â¸Ã© Â¹Ã™Â²Ãž"
+			#print "ÆäÀÌµå ¾Æ¿ôµÇ¸é ¹Ù²Þ"
 			self.curtain.FadeOut(self.__ChangePhaseWindow)
 		else:
-			#print "Ã‡Ã¶Ã€Ã§ Ã€Â©ÂµÂµÂ¿Ã¬Â°Â¡ Â¾Ã¸Â´Ã‚ Â»Ã³Ã…Ã‚Â¶Ã³ Â¹Ã™Â·ÃŽ Â¹Ã™Â²Ãž"
+			#print "ÇöÀç À©µµ¿ì°¡ ¾ø´Â »óÅÂ¶ó ¹Ù·Î ¹Ù²Þ"
 			self.__ChangePhaseWindow()
 
 	def __ChangePhaseWindow(self):
@@ -170,8 +170,8 @@ class MainStream(object):
 
 	def SetSelectEmpirePhase(self):
 		try:
-			import introempire_new	
-			self.SetPhaseWindow(introempire_new.SelectKingdomWindow(self))
+			import introEmpire	
+			self.SetPhaseWindow(introEmpire.SelectEmpireWindow(self))
 		except:
 			import exception
 			exception.Abort("networkModule.SetSelectEmpirePhase")
@@ -257,73 +257,3 @@ class MainStream(object):
 	## Empty
 	def EmptyFunction(self):
 		pass
-
-	## Kingdom System Functions
-	def SendCreateKingdomPacket(self, name, color, flag):
-		"""Send create kingdom packet to server"""
-		import struct
-		
-		# Pack kingdom data
-		packet = struct.pack("!I20s3BI", 
-			len(name),  # name length
-			name.encode('utf-8').ljust(20, b'\0'),  # kingdom name (20 bytes)
-			color[0],   # red
-			color[1],   # green  
-			color[2],   # blue
-			flag        # flag design index
-		)
-		
-		net.SendPacket(200, packet)  # HEADER_CG_CREATE_KINGDOM
-
-	def SendJoinKingdomPacket(self, kingdomId):
-		"""Send join kingdom packet to server"""
-		import struct
-		
-		packet = struct.pack("!I", kingdomId)
-		net.SendPacket(201, packet)  # HEADER_CG_JOIN_KINGDOM
-
-	def SendRequestKingdomListPacket(self):
-		"""Request list of available kingdoms"""
-		net.SendPacket(203, "")  # HEADER_CG_REQUEST_KINGDOM_LIST
-
-	def SendLeaveKingdomPacket(self):
-		"""Leave current kingdom"""
-		net.SendPacket(202, "")  # HEADER_CG_LEAVE_KINGDOM
-
-	def SendKingdomInvitePacket(self, playerName):
-		"""Invite player to kingdom"""
-		import struct
-		
-		packet = struct.pack("!20s", playerName.encode('utf-8').ljust(20, b'\0'))
-		net.SendPacket(204, packet)  # HEADER_CG_KINGDOM_INVITE
-
-	def SendKingdomKickPacket(self, playerName):
-		"""Kick player from kingdom"""
-		import struct
-		
-		packet = struct.pack("!20s", playerName.encode('utf-8').ljust(20, b'\0'))
-		net.SendPacket(205, packet)  # HEADER_CG_KINGDOM_KICK
-
-	def SendKingdomRankPacket(self, playerName, rank):
-		"""Change player rank in kingdom"""
-		import struct
-		
-		packet = struct.pack("!20sB", 
-			playerName.encode('utf-8').ljust(20, b'\0'),
-			rank
-		)
-		net.SendPacket(206, packet)  # HEADER_CG_KINGDOM_RANK
-
-	def SendKingdomSettingsPacket(self, settings):
-		"""Update kingdom settings"""
-		import struct
-		
-		packet = struct.pack("!20s3BI100s", 
-			settings['name'].encode('utf-8').ljust(20, b'\0'),
-			settings['color'][0],
-			settings['color'][1], 
-			settings['color'][2],
-			settings['flag'],
-			settings['description'].encode('utf-8').ljust(100, b'\0')
-		)
-		net.SendPacket(207, packet)  # HEADER_CG_KINGDOM_SETTINGS

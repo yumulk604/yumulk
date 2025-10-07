@@ -26,6 +26,19 @@ struct SKingdomMember
     SKingdomMember() : dwPlayerID(0), bRank(KINGDOM_RANK_MEMBER), dwJoinTime(0), bOnline(false) {}
 };
 
+// Kingdom land/territory structure
+struct SKingdomLand
+{
+    DWORD dwMapIndex;     // Map ID where kingdom is located
+    long lCenterX, lCenterY;  // Center coordinates of kingdom land
+    long lSpawnX, lSpawnY;    // Spawn point for kingdom members
+    DWORD dwLandSize;     // Size of kingdom territory (radius)
+    bool bIsPrivate;      // Is this a private kingdom land?
+    
+    SKingdomLand() : dwMapIndex(0), lCenterX(0), lCenterY(0), 
+                     lSpawnX(0), lSpawnY(0), dwLandSize(1000), bIsPrivate(true) {}
+};
+
 // Kingdom structure
 struct SKingdom
 {
@@ -38,8 +51,21 @@ struct SKingdom
     DWORD dwKingID;  // Player ID of the king
     std::vector<SKingdomMember> vecMembers;
     
+    // Kingdom land/territory info
+    SKingdomLand landInfo;
+    
+    // Kingdom buildings and structures
+    std::vector<DWORD> vecBuildings;  // Building IDs in this kingdom
+    
+    // Kingdom resources
+    DWORD dwGold;         // Kingdom treasury
+    DWORD dwWood;         // Wood resources
+    DWORD dwStone;        // Stone resources
+    DWORD dwIron;         // Iron resources
+    
     SKingdom() : dwKingdomID(0), bColorR(255), bColorG(255), bColorB(255), 
-                 bFlag(0), dwCreateTime(0), dwKingID(0) {}
+                 bFlag(0), dwCreateTime(0), dwKingID(0), dwGold(0), 
+                 dwWood(0), dwStone(0), dwIron(0) {}
 };
 
 // Kingdom management class
@@ -77,6 +103,19 @@ public:
     bool CanPlayerManage(DWORD dwKingdomID, DWORD dwPlayerID, DWORD dwTargetPlayerID);
     DWORD GetPlayerKingdomID(DWORD dwPlayerID);
     
+    // Land/Territory management
+    bool AssignKingdomLand(DWORD dwKingdomID, DWORD dwMapIndex, long lX, long lY);
+    bool TeleportToKingdom(DWORD dwPlayerID, DWORD dwKingdomID);
+    bool TeleportToOwnKingdom(DWORD dwPlayerID);
+    SKingdomLand* GetKingdomLand(DWORD dwKingdomID);
+    bool IsInKingdomTerritory(DWORD dwKingdomID, long lX, long lY);
+    std::vector<DWORD> GetAvailableLandSlots();
+    
+    // Resource management
+    bool AddKingdomResource(DWORD dwKingdomID, DWORD dwGold, DWORD dwWood, DWORD dwStone, DWORD dwIron);
+    bool SpendKingdomResource(DWORD dwKingdomID, DWORD dwGold, DWORD dwWood, DWORD dwStone, DWORD dwIron);
+    bool HasEnoughResources(DWORD dwKingdomID, DWORD dwGold, DWORD dwWood, DWORD dwStone, DWORD dwIron);
+    
     // Database operations
     void LoadKingdomsFromDB();
     void SaveKingdomToDB(const SKingdom& kingdom);
@@ -86,12 +125,31 @@ public:
 private:
     std::map<DWORD, SKingdom> m_mapKingdoms;  // Kingdom ID -> Kingdom data
     std::map<DWORD, DWORD> m_mapPlayerKingdom;  // Player ID -> Kingdom ID
+    std::map<DWORD, bool> m_mapLandSlots;  // Land slot ID -> is occupied
     DWORD m_dwNextKingdomID;
+    
+    // Land configuration
+    struct SLandSlot {
+        DWORD dwMapIndex;
+        long lCenterX, lCenterY;
+        long lSpawnX, lSpawnY;
+        bool bOccupied;
+        
+        SLandSlot() : dwMapIndex(0), lCenterX(0), lCenterY(0), 
+                      lSpawnX(0), lSpawnY(0), bOccupied(false) {}
+        SLandSlot(DWORD map, long cx, long cy, long sx, long sy) 
+            : dwMapIndex(map), lCenterX(cx), lCenterY(cy), 
+              lSpawnX(sx), lSpawnY(sy), bOccupied(false) {}
+    };
+    
+    std::vector<SLandSlot> m_vecLandSlots;  // Available land slots for kingdoms
     
     // Helper functions
     DWORD GenerateKingdomID();
     bool ValidateKingdomName(const std::string& strName);
     void NotifyKingdomMembers(DWORD dwKingdomID, const std::string& strMessage);
+    void InitializeLandSlots();  // Initialize available land positions
+    DWORD FindAvailableLandSlot();  // Find next available land slot
 };
 
 // Packet structures for kingdom system

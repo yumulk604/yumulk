@@ -12,9 +12,26 @@ CREATE TABLE IF NOT EXISTS `kingdom` (
   `flag` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `create_time` int(10) unsigned NOT NULL DEFAULT '0',
   `king_id` int(10) unsigned NOT NULL DEFAULT '0',
+  
+  -- Land/Territory information
+  `map_index` int(10) unsigned NOT NULL DEFAULT '1',
+  `center_x` bigint(20) NOT NULL DEFAULT '120000',
+  `center_y` bigint(20) NOT NULL DEFAULT '120000',
+  `spawn_x` bigint(20) NOT NULL DEFAULT '120000',
+  `spawn_y` bigint(20) NOT NULL DEFAULT '120000',
+  `land_size` int(10) unsigned NOT NULL DEFAULT '2000',
+  `is_private` tinyint(1) NOT NULL DEFAULT '1',
+  
+  -- Kingdom resources
+  `gold` int(10) unsigned NOT NULL DEFAULT '10000',
+  `wood` int(10) unsigned NOT NULL DEFAULT '1000',
+  `stone` int(10) unsigned NOT NULL DEFAULT '1000',
+  `iron` int(10) unsigned NOT NULL DEFAULT '500',
+  
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`),
-  KEY `king_id` (`king_id`)
+  KEY `king_id` (`king_id`),
+  KEY `map_coords` (`map_index`, `center_x`, `center_y`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- Krallık üyelerini tutan tablo
@@ -62,10 +79,15 @@ CREATE TABLE IF NOT EXISTS `kingdom_log` (
 -- ALTER TABLE player ADD KEY kingdom_id (kingdom_id);
 
 -- Örnek krallık verileri (test için)
-INSERT INTO `kingdom` (`id`, `name`, `description`, `color_r`, `color_g`, `color_b`, `flag`, `create_time`, `king_id`) VALUES
-(1, 'Ejder Krallığı', 'Güçlü savaşçıların krallığı', 255, 0, 0, 0, UNIX_TIMESTAMP(), 1),
-(2, 'Mavi Deniz', 'Denizlerin efendileri', 0, 100, 255, 1, UNIX_TIMESTAMP(), 2),
-(3, 'Altın Orman', 'Doğanın koruyucuları', 255, 215, 0, 2, UNIX_TIMESTAMP(), 3);
+INSERT INTO `kingdom` (`id`, `name`, `description`, `color_r`, `color_g`, `color_b`, `flag`, `create_time`, `king_id`, 
+                      `map_index`, `center_x`, `center_y`, `spawn_x`, `spawn_y`, `land_size`, `is_private`,
+                      `gold`, `wood`, `stone`, `iron`) VALUES
+(1, 'Ejder Krallığı', 'Güçlü savaşçıların krallığı', 255, 0, 0, 0, UNIX_TIMESTAMP(), 1, 
+   1, 120000, 120000, 120000, 120000, 2000, 1, 50000, 5000, 5000, 2500),
+(2, 'Mavi Deniz', 'Denizlerin efendileri', 0, 100, 255, 1, UNIX_TIMESTAMP(), 2,
+   1, 130000, 120000, 130000, 120000, 2000, 1, 45000, 4500, 4500, 2000),
+(3, 'Altın Orman', 'Doğanın koruyucuları', 255, 215, 0, 2, UNIX_TIMESTAMP(), 3,
+   3, 120000, 120000, 120000, 120000, 2000, 1, 40000, 4000, 4000, 1500);
 
 -- Örnek üye verileri (test için)
 INSERT INTO `kingdom_member` (`kingdom_id`, `player_id`, `player_name`, `rank`, `join_time`) VALUES

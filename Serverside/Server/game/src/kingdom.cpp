@@ -37,6 +37,41 @@ bool CKingdomManager::CreateKingdom(DWORD dwPlayerID, const std::string& strName
     kingdom.dwCreateTime = time(0);
     kingdom.dwKingID = dwPlayerID;
     
+    // Assign land to kingdom
+    DWORD landSlotIndex = FindAvailableLandSlot();
+    if (landSlotIndex < m_vecLandSlots.size())
+    {
+        SLandSlot& slot = m_vecLandSlots[landSlotIndex];
+        kingdom.landInfo.dwMapIndex = slot.dwMapIndex;
+        kingdom.landInfo.lCenterX = slot.lCenterX;
+        kingdom.landInfo.lCenterY = slot.lCenterY;
+        kingdom.landInfo.lSpawnX = slot.lSpawnX;
+        kingdom.landInfo.lSpawnY = slot.lSpawnY;
+        kingdom.landInfo.dwLandSize = 2000; // Default land size
+        kingdom.landInfo.bIsPrivate = true;
+        
+        // Mark slot as occupied
+        slot.bOccupied = true;
+        m_mapLandSlots[landSlotIndex] = true;
+    }
+    else
+    {
+        // No available land slots, use default coordinates
+        kingdom.landInfo.dwMapIndex = 1; // Default map
+        kingdom.landInfo.lCenterX = 100000 + (kingdom.dwKingdomID * 5000);
+        kingdom.landInfo.lCenterY = 100000 + (kingdom.dwKingdomID * 5000);
+        kingdom.landInfo.lSpawnX = kingdom.landInfo.lCenterX;
+        kingdom.landInfo.lSpawnY = kingdom.landInfo.lCenterY;
+        kingdom.landInfo.dwLandSize = 2000;
+        kingdom.landInfo.bIsPrivate = true;
+    }
+    
+    // Initialize kingdom resources
+    kingdom.dwGold = 10000;   // Starting gold
+    kingdom.dwWood = 1000;    // Starting wood
+    kingdom.dwStone = 1000;   // Starting stone
+    kingdom.dwIron = 500;     // Starting iron
+    
     // Add creator as king
     SKingdomMember kingMember;
     kingMember.dwPlayerID = dwPlayerID;
@@ -549,4 +584,312 @@ void CKingdomManager::NotifyKingdomMembers(DWORD dwKingdomID, const std::string&
             ch->ChatPacket(CHAT_TYPE_NOTICE, "[Krallık] %s", strMessage.c_str());
         }
     }
+}
+
+// Land/Territory management functions
+
+bool CKingdomManager::AssignKingdomLand(DWORD dwKingdomID, DWORD dwMapIndex, long lX, long lY)
+{
+    SKingdom* kingdom = GetKingdom(dwKingdomID);
+    if (!kingdom)
+        return false;
+    
+    kingdom->landInfo.dwMapIndex = dwMapIndex;
+    kingdom->landInfo.lCenterX = lX;
+    kingdom->landInfo.lCenterY = lY;
+    kingdom->landInfo.lSpawnX = lX;
+    kingdom->landInfo.lSpawnY = lY;
+    
+    SaveKingdomToDB(*kingdom);
+    return true;
+}
+
+bool CKingdomManager::TeleportToKingdom(DWORD dwPlayerID, DWORD dwKingdomID)
+{
+    LPCHARACTER ch = CHARACTER_MANAGER::instance().FindByPID(dwPlayerID);
+    if (!ch)
+        return false;
+    
+    SKingdom* kingdom = GetKingdom(dwKingdomID);
+    if (!kingdom)
+        return false;
+    
+    // Check if player has permission to enter this kingdom
+    if (kingdom->landInfo.bIsPrivate)
+    {
+        // Only kingdom members can enter private kingdoms
+        if (!GetKingdomMember(dwKingdomID, dwPlayerID))
+            return false;
+    }
+    
+    // Teleport player to kingdom spawn point
+    ch->WarpSet(kingdom->landInfo.lSpawnX, kingdom->landInfo.lSpawnY, kingdom->landInfo.dwMapIndex);
+    
+    // Notify player
+    ch->ChatPacket(CHAT_TYPE_INFO, "[Krallık] %s krallığına ışınlandınız.", kingdom->strName.c_str());
+    
+    return true;
+}
+
+bool CKingdomManager::TeleportToOwnKingdom(DWORD dwPlayerID)
+{
+    DWORD kingdomID = GetPlayerKingdomID(dwPlayerID);
+    if (kingdomID == 0)
+        return false;
+    
+    return TeleportToKingdom(dwPlayerID, kingdomID);
+}
+
+SKingdomLand* CKingdomManager::GetKingdomLand(DWORD dwKingdomID)
+{
+    SKingdom* kingdom = GetKingdom(dwKingdomID);
+    return kingdom ? &kingdom->landInfo : nullptr;
+}
+
+bool CKingdomManager::IsInKingdomTerritory(DWORD dwKingdomID, long lX, long lY)
+{
+    SKingdom* kingdom = GetKingdom(dwKingdomID);
+    if (!kingdom)
+        return false;
+    
+    long dx = lX - kingdom->landInfo.lCenterX;
+    long dy = lY - kingdom->landInfo.lCenterY;
+    long distance = sqrt(dx*dx + dy*dy);
+    
+    return distance <= kingdom->landInfo.dwLandSize;
+}
+
+std::vector<DWORD> CKingdomManager::GetAvailableLandSlots()
+{
+    std::vector<DWORD> availableSlots;
+    
+    for (DWORD i = 0; i < m_vecLandSlots.size(); ++i)
+    {
+        if (!m_vecLandSlots[i].bOccupied)
+        {
+            availableSlots.push_back(i);
+        }
+    }
+    
+    return availableSlots;
+}
+
+// Resource management functions
+
+bool CKingdomManager::AddKingdomResource(DWORD dwKingdomID, DWORD dwGold, DWORD dwWood, DWORD dwStone, DWORD dwIron)
+{
+    SKingdom* kingdom = GetKingdom(dwKingdomID);
+    if (!kingdom)
+        return false;
+    
+    kingdom->dwGold += dwGold;
+    kingdom->dwWood += dwWood;
+    kingdom->dwStone += dwStone;
+    kingdom->dwIron += dwIron;
+    
+    SaveKingdomToDB(*kingdom);
+    return true;
+}
+
+bool CKingdomManager::SpendKingdomResource(DWORD dwKingdomID, DWORD dwGold, DWORD dwWood, DWORD dwStone, DWORD dwIron)
+{
+    SKingdom* kingdom = GetKingdom(dwKingdomID);
+    if (!kingdom)
+        return false;
+    
+    // Check if kingdom has enough resources
+    if (!HasEnoughResources(dwKingdomID, dwGold, dwWood, dwStone, dwIron))
+        return false;
+    
+    kingdom->dwGold -= dwGold;
+    kingdom->dwWood -= dwWood;
+    kingdom->dwStone -= dwStone;
+    kingdom->dwIron -= dwIron;
+    
+    SaveKingdomToDB(*kingdom);
+    return true;
+}
+
+bool CKingdomManager::HasEnoughResources(DWORD dwKingdomID, DWORD dwGold, DWORD dwWood, DWORD dwStone, DWORD dwIron)
+{
+    SKingdom* kingdom = GetKingdom(dwKingdomID);
+    if (!kingdom)
+        return false;
+    
+    return (kingdom->dwGold >= dwGold && 
+            kingdom->dwWood >= dwWood && 
+            kingdom->dwStone >= dwStone && 
+            kingdom->dwIron >= dwIron);
+}
+
+// Helper functions
+
+void CKingdomManager::InitializeLandSlots()
+{
+    // Clear existing slots
+    m_vecLandSlots.clear();
+    m_mapLandSlots.clear();
+    
+    // Define available land slots (you can customize these coordinates)
+    // Map 1 - Main world land slots
+    m_vecLandSlots.push_back(SLandSlot(1, 120000, 120000, 120000, 120000)); // Slot 0
+    m_vecLandSlots.push_back(SLandSlot(1, 130000, 120000, 130000, 120000)); // Slot 1
+    m_vecLandSlots.push_back(SLandSlot(1, 140000, 120000, 140000, 120000)); // Slot 2
+    m_vecLandSlots.push_back(SLandSlot(1, 120000, 130000, 120000, 130000)); // Slot 3
+    m_vecLandSlots.push_back(SLandSlot(1, 130000, 130000, 130000, 130000)); // Slot 4
+    m_vecLandSlots.push_back(SLandSlot(1, 140000, 130000, 140000, 130000)); // Slot 5
+    m_vecLandSlots.push_back(SLandSlot(1, 120000, 140000, 120000, 140000)); // Slot 6
+    m_vecLandSlots.push_back(SLandSlot(1, 130000, 140000, 130000, 140000)); // Slot 7
+    m_vecLandSlots.push_back(SLandSlot(1, 140000, 140000, 140000, 140000)); // Slot 8
+    
+    // Map 3 - Desert land slots
+    m_vecLandSlots.push_back(SLandSlot(3, 120000, 120000, 120000, 120000)); // Slot 9
+    m_vecLandSlots.push_back(SLandSlot(3, 130000, 120000, 130000, 120000)); // Slot 10
+    m_vecLandSlots.push_back(SLandSlot(3, 140000, 120000, 140000, 120000)); // Slot 11
+    m_vecLandSlots.push_back(SLandSlot(3, 120000, 130000, 120000, 130000)); // Slot 12
+    m_vecLandSlots.push_back(SLandSlot(3, 130000, 130000, 130000, 130000)); // Slot 13
+    m_vecLandSlots.push_back(SLandSlot(3, 140000, 130000, 140000, 130000)); // Slot 14
+    
+    // Map 21 - Snow land slots
+    m_vecLandSlots.push_back(SLandSlot(21, 120000, 120000, 120000, 120000)); // Slot 15
+    m_vecLandSlots.push_back(SLandSlot(21, 130000, 120000, 130000, 120000)); // Slot 16
+    m_vecLandSlots.push_back(SLandSlot(21, 140000, 120000, 140000, 120000)); // Slot 17
+    m_vecLandSlots.push_back(SLandSlot(21, 120000, 130000, 120000, 130000)); // Slot 18
+    m_vecLandSlots.push_back(SLandSlot(21, 130000, 130000, 130000, 130000)); // Slot 19
+    m_vecLandSlots.push_back(SLandSlot(21, 140000, 130000, 140000, 130000)); // Slot 20
+    
+    // Initialize land slot map
+    for (DWORD i = 0; i < m_vecLandSlots.size(); ++i)
+    {
+        m_mapLandSlots[i] = false; // All slots are initially available
+    }
+    
+    sys_log(0, "Kingdom land slots initialized: %d slots available", m_vecLandSlots.size());
+}
+
+DWORD CKingdomManager::FindAvailableLandSlot()
+{
+    for (DWORD i = 0; i < m_vecLandSlots.size(); ++i)
+    {
+        if (!m_vecLandSlots[i].bOccupied)
+        {
+            return i;
+        }
+    }
+    
+    return UINT_MAX; // No available slots
+}
+
+// Constructor update to initialize land slots
+CKingdomManager::CKingdomManager()
+{
+    m_dwNextKingdomID = 1;
+    InitializeLandSlots();
+}
+
+// Update LoadKingdomsFromDB to load land info
+void CKingdomManager::LoadKingdomsFromDB()
+{
+    // Initialize land slots first
+    InitializeLandSlots();
+    
+    // Load kingdoms with updated query including land info
+    std::unique_ptr<SQLMsg> pMsg(DBManager::instance().DirectQuery(
+        "SELECT id, name, description, color_r, color_g, color_b, flag, create_time, king_id, "
+        "map_index, center_x, center_y, spawn_x, spawn_y, land_size, is_private, "
+        "gold, wood, stone, iron FROM kingdom"));
+    
+    if (pMsg->Get()->uiNumRows > 0)
+    {
+        MYSQL_ROW row;
+        while ((row = mysql_fetch_row(pMsg->Get()->pSQLResult)) != nullptr)
+        {
+            SKingdom kingdom;
+            kingdom.dwKingdomID = strtoul(row[0], nullptr, 10);
+            kingdom.strName = row[1];
+            kingdom.strDescription = row[2] ? row[2] : "";
+            kingdom.bColorR = strtoul(row[3], nullptr, 10);
+            kingdom.bColorG = strtoul(row[4], nullptr, 10);
+            kingdom.bColorB = strtoul(row[5], nullptr, 10);
+            kingdom.bFlag = strtoul(row[6], nullptr, 10);
+            kingdom.dwCreateTime = strtoul(row[7], nullptr, 10);
+            kingdom.dwKingID = strtoul(row[8], nullptr, 10);
+            
+            // Load land info
+            kingdom.landInfo.dwMapIndex = row[9] ? strtoul(row[9], nullptr, 10) : 1;
+            kingdom.landInfo.lCenterX = row[10] ? strtol(row[10], nullptr, 10) : 120000;
+            kingdom.landInfo.lCenterY = row[11] ? strtol(row[11], nullptr, 10) : 120000;
+            kingdom.landInfo.lSpawnX = row[12] ? strtol(row[12], nullptr, 10) : kingdom.landInfo.lCenterX;
+            kingdom.landInfo.lSpawnY = row[13] ? strtol(row[13], nullptr, 10) : kingdom.landInfo.lCenterY;
+            kingdom.landInfo.dwLandSize = row[14] ? strtoul(row[14], nullptr, 10) : 2000;
+            kingdom.landInfo.bIsPrivate = row[15] ? (strtoul(row[15], nullptr, 10) == 1) : true;
+            
+            // Load resources
+            kingdom.dwGold = row[16] ? strtoul(row[16], nullptr, 10) : 10000;
+            kingdom.dwWood = row[17] ? strtoul(row[17], nullptr, 10) : 1000;
+            kingdom.dwStone = row[18] ? strtoul(row[18], nullptr, 10) : 1000;
+            kingdom.dwIron = row[19] ? strtoul(row[19], nullptr, 10) : 500;
+            
+            m_mapKingdoms[kingdom.dwKingdomID] = kingdom;
+            
+            if (kingdom.dwKingdomID >= m_dwNextKingdomID)
+                m_dwNextKingdomID = kingdom.dwKingdomID + 1;
+        }
+    }
+    
+    // Load members (existing code remains the same)
+    std::unique_ptr<SQLMsg> pMemberMsg(DBManager::instance().DirectQuery(
+        "SELECT kingdom_id, player_id, player_name, rank, join_time FROM kingdom_member"));
+    
+    if (pMemberMsg->Get()->uiNumRows > 0)
+    {
+        MYSQL_ROW row;
+        while ((row = mysql_fetch_row(pMemberMsg->Get()->pSQLResult)) != nullptr)
+        {
+            DWORD dwKingdomID = strtoul(row[0], nullptr, 10);
+            auto it = m_mapKingdoms.find(dwKingdomID);
+            if (it != m_mapKingdoms.end())
+            {
+                SKingdomMember member;
+                member.dwPlayerID = strtoul(row[1], nullptr, 10);
+                member.strName = row[2];
+                member.bRank = strtoul(row[3], nullptr, 10);
+                member.dwJoinTime = strtoul(row[4], nullptr, 10);
+                member.bOnline = false;  // Will be updated when player logs in
+                
+                it->second.vecMembers.push_back(member);
+                m_mapPlayerKingdom[member.dwPlayerID] = dwKingdomID;
+            }
+        }
+    }
+}
+
+// Update SaveKingdomToDB to save land info
+void CKingdomManager::SaveKingdomToDB(const SKingdom& kingdom)
+{
+    DBManager::instance().DirectQuery(
+        "REPLACE INTO kingdom (id, name, description, color_r, color_g, color_b, flag, create_time, king_id, "
+        "map_index, center_x, center_y, spawn_x, spawn_y, land_size, is_private, gold, wood, stone, iron) "
+        "VALUES (%u, '%s', '%s', %u, %u, %u, %u, %u, %u, %u, %ld, %ld, %ld, %ld, %u, %u, %u, %u, %u, %u)",
+        kingdom.dwKingdomID,
+        kingdom.strName.c_str(),
+        kingdom.strDescription.c_str(),
+        kingdom.bColorR,
+        kingdom.bColorG,
+        kingdom.bColorB,
+        kingdom.bFlag,
+        kingdom.dwCreateTime,
+        kingdom.dwKingID,
+        kingdom.landInfo.dwMapIndex,
+        kingdom.landInfo.lCenterX,
+        kingdom.landInfo.lCenterY,
+        kingdom.landInfo.lSpawnX,
+        kingdom.landInfo.lSpawnY,
+        kingdom.landInfo.dwLandSize,
+        kingdom.landInfo.bIsPrivate ? 1 : 0,
+        kingdom.dwGold,
+        kingdom.dwWood,
+        kingdom.dwStone,
+        kingdom.dwIron
+    );
 }

@@ -2,6 +2,8 @@
 #define __QUEST_PC_H
 
 #include "quest.h"
+#include "questflag.h"
+#include <unordered_map>
 
 class CHARACTER;
 
@@ -167,10 +169,9 @@ namespace quest
 			QuestState *	m_RunningQuestState;
 			string		m_stCurQuest;
 
-			typedef map<string, int> TFlagMap;
-			TFlagMap		m_FlagMap;
-
-			TFlagMap		m_FlagSaveMap;
+			typedef std::unordered_map<int, int> TFlagMap;
+			TFlagMap m_FlagMap;
+			TFlagMap m_FlagSaveMap;
 
 			typedef map<string, LPEVENT> TTimerMap;
 			TTimerMap		m_TimerMap;

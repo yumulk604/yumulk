@@ -90,28 +90,28 @@ static bool IS_MONKEY_DUNGEON(int map_index)
 
 bool IS_SUMMONABLE_ZONE(int map_index)
 {
-	// ¸ùÅ°´øÀü
+	// æ ¹è™å¸¦å‚ˆ
 	if (IS_MONKEY_DUNGEON(map_index))
 		return false;
-	// ¼º
+	// å·±
 	if (IS_CASTLE_MAP(map_index))
 		return false;
 
 	switch (map_index)
 	{
-		case 66 : // »ç±ÍÅ¸¿ö
-		case 71 : // °Å¹Ì ´øÀü 2Ãş
-		case 72 : // ÃµÀÇ µ¿±¼
-		case 73 : // ÃµÀÇ µ¿±¼ 2Ãş
+		case 66 : // è¤è“–é¸¥å†µ
+		case 71 : // èŠ­å›º å¸¦å‚ˆ 2æ‘¸
+		case 72 : // ç«ç‹¼ æ‚¼å¥”
+		case 73 : // ç«ç‹¼ æ‚¼å¥” 2æ‘¸
 		case 113 :
 		case 207 :
-		case 208 : // ÃµÀÇ µ¿±¼ (¿ë¹æ)
+		case 208 : // ç«ç‹¼ æ‚¼å¥” (ä¾©è§„)
 			return false;
 	}
 
 	if (CBattleArena::IsBattleArenaMap(map_index)) return false;
 
-	// ¸ğµç private ¸ÊÀ¸·Ğ ¿öÇÁ ºÒ°¡´É
+	// è‘›ç”µ private ç”˜æ æ²¸ å†µæ©‡ é˜‚å•Šç“·
 	if (map_index > 10000) return false;
 
 	return true;
@@ -137,13 +137,13 @@ static void FN_copy_item_socket(LPITEM dest, LPITEM src)
 }
 static bool FN_check_item_sex(LPCHARACTER ch, LPITEM item)
 {
-	// ³²ÀÚ ±İÁö
+	// å·¢ç£Š é™›ç˜¤
 	if (IS_SET(item->GetAntiFlag(), ITEM_ANTIFLAG_MALE))
 	{
 		if (SEX_MALE==GET_SEX(ch))
 			return false;
 	}
-	// ¿©ÀÚ±İÁö
+	// å’¯ç£Šé™›ç˜¤
 	if (IS_SET(item->GetAntiFlag(), ITEM_ANTIFLAG_FEMALE)) 
 	{
 		if (SEX_FEMALE==GET_SEX(ch))
@@ -222,7 +222,7 @@ void CHARACTER::SetItem(TItemPos Cell, LPITEM pItem)
 		assert(!"GetOwner exist");
 		return;
 	}
-	// ±âº» ÀÎº¥Åä¸®
+	// æ‰å¤¯ ç‰¢äº¥é…åºœ
 	switch(window_type)
 	{
 	case INVENTORY:
@@ -268,8 +268,8 @@ void CHARACTER::SetItem(TItemPos Cell, LPITEM pItem)
 						if (p >= INVENTORY_MAX_NUM)
 							continue;
 
-						// wCell + 1 ·Î ÇÏ´Â °ÍÀº ºó°÷À» Ã¼Å©ÇÒ ¶§ °°Àº
-						// ¾ÆÀÌÅÛÀº ¿¹¿ÜÃ³¸®ÇÏ±â À§ÇÔ
+						// wCell + 1 è‚º çªç»° å·´ç¯® åé•‘é˜‘ çœ‰å†œä¸” é”­ éç¯®
+						// é…’æè¢ç¯® æŠ—å¯‡è´¸åºœçªæ‰ å›°çªƒ
 						m_pointsInstant.bItemGrid[p] = wCell + 1;
 					}
 				}
@@ -287,7 +287,7 @@ void CHARACTER::SetItem(TItemPos Cell, LPITEM pItem)
 
 	if (GetDesc())
 	{
-		// È®Àå ¾ÆÀÌÅÛ: ¼­¹ö¿¡¼­ ¾ÆÀÌÅÛ ÇÃ·¡±× Á¤º¸¸¦ º¸³½´Ù
+		// çŠ¬å˜ é…’æè¢: è¾‘æ»šä¿Šè¾‘ é…’æè¢ æ•²è´°å¼Š æ²¥ç„Šç”« ç„Šè¾°ä¿ƒ
 		if (pItem)
 		{
 			TPacketGCItemSet pack;
@@ -357,7 +357,7 @@ void CHARACTER::SetWear(BYTE bCell, LPITEM item)
 
 	if (!item && bCell == WEAR_WEAPON)
 	{
-		// ±Í°Ë »ç¿ë ½Ã ¹ş´Â °ÍÀÌ¶ó¸é È¿°ú¸¦ ¾ø¾Ö¾ß ÇÑ´Ù.
+		// è“–å…« è¤ä¾© çŸ« å“ˆç»° å·´ææ‰¼æ ç“¤è‹ç”« ç»å±€å…· èŒ„ä¿ƒ.
 		if (IsAffectFlag(AFF_GWIGUM))
 			RemoveAffect(SKILL_GWIGEOM);
 
@@ -374,8 +374,8 @@ bool CHARACTER::IsEmptyItemGrid(TItemPos Cell, BYTE bSize, int iExceptionCell) c
 		{
 			BYTE bCell = Cell.cell;
 
-			// bItemCellÀº 0ÀÌ falseÀÓÀ» ³ªÅ¸³»±â À§ÇØ + 1 ÇØ¼­ Ã³¸®ÇÑ´Ù.
-			// µû¶ó¼­ iExceptionCell¿¡ 1À» ´õÇØ ºñ±³ÇÑ´Ù.
+			// bItemCellç¯® 0æ falseçƒ™é˜‘ å”±é¸¥éƒ´æ‰ å›°ç§¦ + 1 ç§¦è¾‘ è´¸åºœèŒ„ä¿ƒ.
+			// è¶æ‰¼è¾‘ iExceptionCellä¿Š 1é˜‘ æ­¹ç§¦ åšèƒŒèŒ„ä¿ƒ.
 			++iExceptionCell;
 
 			if (bCell >= INVENTORY_MAX_NUM)
@@ -413,7 +413,7 @@ bool CHARACTER::IsEmptyItemGrid(TItemPos Cell, BYTE bSize, int iExceptionCell) c
 					return false;
 			}
 
-			// Å©±â°¡ 1ÀÌ¸é ÇÑÄ­À» Â÷ÁöÇÏ´Â °ÍÀÌ¹Ç·Î ±×³É ¸®ÅÏ
+			// å†œæ‰å•Š 1ææ èŒ„æ²«é˜‘ ç’ç˜¤çªç»° å·´æéª¨è‚º å¼Šæˆ åºœç•”
 			if (1 == bSize)
 				return true;
 			else
@@ -478,7 +478,7 @@ void TransformRefineItem(LPITEM pkOldItem, LPITEM pkNewItem)
 	// END_OF_ACCESSORY_REFINE
 	else
 	{
-		// ¿©±â¼­ ±úÁø¼®ÀÌ ÀÚµ¿ÀûÀ¸·Î Ã»¼Ò µÊ
+		// å’¯æ‰è¾‘ æŸ„æŸ³ç±æ ç£Šæ‚¼åˆ©æ è‚º æ²¡å®¶ å‡³
 		for (int i = 0; i < ITEM_SOCKET_MAX_NUM; ++i)
 		{
 			if (!pkOldItem->GetSocket(i))
@@ -487,7 +487,7 @@ void TransformRefineItem(LPITEM pkOldItem, LPITEM pkNewItem)
 				pkNewItem->SetSocket(i, 1);
 		}
 
-		// ¼ÒÄÏ ¼³Á¤
+		// å®¶å— æ±²æ²¥
 		int slot = 0;
 
 		for (int i = 0; i < ITEM_SOCKET_MAX_NUM; ++i)
@@ -500,7 +500,7 @@ void TransformRefineItem(LPITEM pkOldItem, LPITEM pkNewItem)
 
 	}
 
-	// ¸ÅÁ÷ ¾ÆÀÌÅÛ ¼³Á¤
+	// æ¦‚æµ é…’æè¢ æ±²æ²¥
 	pkOldItem->CopyAttributeTo(pkNewItem);
 }
 
@@ -544,8 +544,8 @@ bool CHARACTER::DoRefine(LPITEM item, bool bMoneyOnly)
 		return false;
 	}
 	
-	//°³·® ½Ã°£Á¦ÇÑ : upgrade_refine_scroll.quest ¿¡¼­ °³·®ÈÄ 5ºĞÀÌ³»¿¡ ÀÏ¹İ °³·®À» 
-	//ÁøÇàÇÒ¼ö ¾øÀ½
+	//ä¿ºæ¨Š çŸ«åŸƒåŠ›èŒ„ : upgrade_refine_scroll.quest ä¿Šè¾‘ ä¿ºæ¨Šé¥¶ 5ç›’æéƒ´ä¿Š è€é¦† ä¿ºæ¨Šé˜‘ 
+	//æŸ³é’ä¸”è ç»æ¾œ
 	if (quest::CQuestManager::instance().GetEventFlag("update_refine_time") != 0)
 	{
 		if (get_global_time() < quest::CQuestManager::instance().GetEventFlag("update_refine_time") + (60 * 5))
@@ -582,7 +582,7 @@ bool CHARACTER::DoRefine(LPITEM item, bool bMoneyOnly)
 
 	if (result_vnum == 0)
 	{
-		ChatPacket(CHAT_TYPE_INFO, "Obiectul nu poate fi îmbunãtãşit.");
+		ChatPacket(CHAT_TYPE_INFO, "Obiectul nu poate fi é ¼buné‰»æ³¾it.");
 		return false;
 	}
 
@@ -594,7 +594,7 @@ bool CHARACTER::DoRefine(LPITEM item, bool bMoneyOnly)
 	if (!pProto)
 	{
 		sys_err("DoRefine NOT GET ITEM PROTO %d", item->GetRefinedVnum());
-		ChatPacket(CHAT_TYPE_INFO, "Obiectul nu poate fi îmbunãtãşit.");
+		ChatPacket(CHAT_TYPE_INFO, "Obiectul nu poate fi é ¼buné‰»æ³¾it.");
 		return false;
 	}
 
@@ -611,7 +611,7 @@ bool CHARACTER::DoRefine(LPITEM item, bool bMoneyOnly)
 		{
 			if (CountSpecifyItem(prt->materials[i].vnum, item->GetCell()) < prt->materials[i].count)
 			{
-				ChatPacket(CHAT_TYPE_INFO, "Nu ai toate materialele necesare acestei operaşiuni.");
+				ChatPacket(CHAT_TYPE_INFO, "Nu ai toate materialele necesare acestei operaã±®uni.");
 				return false;
 			}
 		}
@@ -657,7 +657,7 @@ bool CHARACTER::DoRefine(LPITEM item, bool bMoneyOnly)
 		else
 		{
 			// DETAIL_REFINE_LOG
-			// ¾ÆÀÌÅÛ »ı¼º¿¡ ½ÇÆĞ -> °³·® ½ÇÆĞ·Î °£ÁÖ
+			// é…’æè¢ ç§¯å·±ä¿Š è§’è© -> ä¿ºæ¨Š è§’è©è‚º åŸƒæ—
 			sys_err("cannot create item %u", result_vnum);
 			NotifyRefineFail(this, item, IsRefineThroughGuild() ? "GUILD" : "POWER");
 			// END_OF_DETAIL_REFINE_LOG
@@ -665,7 +665,7 @@ bool CHARACTER::DoRefine(LPITEM item, bool bMoneyOnly)
 	}
 	else
 	{
-		// ½ÇÆĞ! ¸ğµç ¾ÆÀÌÅÛÀÌ »ç¶óÁü.
+		// è§’è©! è‘›ç”µ é…’æè¢æ è¤æ‰¼å’™.
 		DBManager::instance().SendMoneyLog(MONEY_LOG_REFINE, item->GetVnum(), -cost);
 		NotifyRefineFail(this, item, IsRefineThroughGuild() ? "GUILD" : "POWER");
 		item->AttrLog();
@@ -681,7 +681,7 @@ bool CHARACTER::DoRefine(LPITEM item, bool bMoneyOnly)
 enum enum_RefineScrolls
 {
 	CHUKBOK_SCROLL = 0,
-	HYUNIRON_CHN	= 1, // Áß±¹¿¡¼­¸¸ »ç¿ë
+	HYUNIRON_CHN	= 1, // åæƒ«ä¿Šè¾‘çˆ¶ è¤ä¾©
 	YONGSIN_SCROLL = 2,
 	MUSIN_SCROLL	= 3,
 	YAGONG_SCROLL  = 4,
@@ -699,8 +699,8 @@ bool CHARACTER::DoRefineWithScroll(LPITEM item)
 
 	ClearRefineMode();
 
-	//°³·® ½Ã°£Á¦ÇÑ : upgrade_refine_scroll.quest ¿¡¼­ °³·®ÈÄ 5ºĞÀÌ³»¿¡ ÀÏ¹İ °³·®À» 
-	//ÁøÇàÇÒ¼ö ¾øÀ½
+	//ä¿ºæ¨Š çŸ«åŸƒåŠ›èŒ„ : upgrade_refine_scroll.quest ä¿Šè¾‘ ä¿ºæ¨Šé¥¶ 5ç›’æéƒ´ä¿Š è€é¦† ä¿ºæ¨Šé˜‘ 
+	//æŸ³é’ä¸”è ç»æ¾œ
 	if (quest::CQuestManager::instance().GetEventFlag("update_refine_time") != 0)
 	{
 		if (get_global_time() < quest::CQuestManager::instance().GetEventFlag("update_refine_time") + (60 * 5))
@@ -734,7 +734,7 @@ bool CHARACTER::DoRefineWithScroll(LPITEM item)
 
 	if (result_vnum == 0)
 	{
-		ChatPacket(CHAT_TYPE_INFO, "Obiectul nu poate fi îmbunãtãşit.");
+		ChatPacket(CHAT_TYPE_INFO, "Obiectul nu poate fi é ¼buné‰»æ³¾it.");
 		return false;
 	}
 
@@ -742,7 +742,7 @@ bool CHARACTER::DoRefineWithScroll(LPITEM item)
 	{
 		if (item->GetRefineLevel() >= 4)
 		{
-			ChatPacket(CHAT_TYPE_INFO, "Nu pot îmbunãtãşi acest obiect.");
+			ChatPacket(CHAT_TYPE_INFO, "Nu pot é ¼buné‰»æ³¾i acest obiect.");
 			return false;
 		}
 	}
@@ -750,7 +750,7 @@ bool CHARACTER::DoRefineWithScroll(LPITEM item)
 	{
 		if (item->GetRefineLevel() != pkItemScroll->GetValue(1))
 		{
-			ChatPacket(CHAT_TYPE_INFO, "Nu pot îmbunãtãşi acest obiect.");
+			ChatPacket(CHAT_TYPE_INFO, "Nu pot é ¼buné‰»æ³¾i acest obiect.");
 			return false;
 		}
 	}
@@ -758,7 +758,7 @@ bool CHARACTER::DoRefineWithScroll(LPITEM item)
 	{
 		if (item->GetType() != ITEM_METIN || item->GetRefineLevel() != 4)
 		{
-			ChatPacket(CHAT_TYPE_INFO, "Nu pot îmbunãtãşi acest obiect.");
+			ChatPacket(CHAT_TYPE_INFO, "Nu pot é ¼buné‰»æ³¾i acest obiect.");
 			return false;
 		}
 	}
@@ -768,7 +768,7 @@ bool CHARACTER::DoRefineWithScroll(LPITEM item)
 	if (!pProto)
 	{
 		sys_err("DoRefineWithScroll NOT GET ITEM PROTO %d", item->GetRefinedVnum());
-		ChatPacket(CHAT_TYPE_INFO, "Obiectul nu poate fi îmbunãtãşit.");
+		ChatPacket(CHAT_TYPE_INFO, "Obiectul nu poate fi é ¼buné‰»æ³¾it.");
 		return false;
 	}
 
@@ -782,7 +782,7 @@ bool CHARACTER::DoRefineWithScroll(LPITEM item)
 	{
 		if (CountSpecifyItem(prt->materials[i].vnum, item->GetCell()) < prt->materials[i].count)
 		{
-			ChatPacket(CHAT_TYPE_INFO, "Nu ai toate materialele necesare acestei operaşiuni.");
+			ChatPacket(CHAT_TYPE_INFO, "Nu ai toate materialele necesare acestei operaã±®uni.");
 			return false;
 		}
 	}
@@ -854,7 +854,7 @@ bool CHARACTER::DoRefineWithScroll(LPITEM item)
 		}
 		else
 		{
-			// ¾ÆÀÌÅÛ »ı¼º¿¡ ½ÇÆĞ -> °³·® ½ÇÆĞ·Î °£ÁÖ
+			// é…’æè¢ ç§¯å·±ä¿Š è§’è© -> ä¿ºæ¨Š è§’è©è‚º åŸƒæ—
 			sys_err("cannot create item %u", result_vnum);
 			NotifyRefineFail(this, item, szRefineType);
 		}
@@ -927,7 +927,7 @@ bool CHARACTER::RefineInformation(BYTE bCell, BYTE bType, int iAdditionalCell)
 	if (p.result_vnum == 0)
 	{
 		sys_err("RefineInformation p.result_vnum == 0");
-		ChatPacket(CHAT_TYPE_INFO, "Obiectul nu poate fi îmbunãtãşit.");
+		ChatPacket(CHAT_TYPE_INFO, "Obiectul nu poate fi é ¼buné‰»æ³¾it.");
 		return false;
 	}
 
@@ -935,14 +935,14 @@ bool CHARACTER::RefineInformation(BYTE bCell, BYTE bType, int iAdditionalCell)
 	{
 		if (bType == 0)
 		{
-			ChatPacket(CHAT_TYPE_INFO, "Nu poşi face acest lucru.");
+			ChatPacket(CHAT_TYPE_INFO, "Nu poã±® face acest lucru.");
 			return false;
 		}
 		else
 		{
 			if (!itemScroll || item->GetVnum() == itemScroll->GetVnum())
 			{
-				ChatPacket(CHAT_TYPE_INFO, "Ai primit binecuvântare.");
+				ChatPacket(CHAT_TYPE_INFO, "Ai primit binecuvéˆ”tare.");
 				return false;
 			}
 		}
@@ -955,7 +955,7 @@ bool CHARACTER::RefineInformation(BYTE bCell, BYTE bType, int iAdditionalCell)
 	if (!prt)
 	{
 		sys_err("RefineInformation NOT GET REFINE SET %d", item->GetRefineSet());
-		ChatPacket(CHAT_TYPE_INFO, "Obiectul nu poate fi îmbunãtãşit.");
+		ChatPacket(CHAT_TYPE_INFO, "Obiectul nu poate fi é ¼buné‰»æ³¾it.");
 		return false;
 	}
 	
@@ -1045,7 +1045,7 @@ bool CHARACTER::RefineItem(LPITEM pkItem, LPITEM pkTarget)
 		}
 		else
 		{
-			ChatPacket(CHAT_TYPE_INFO, "Nicio piatrã identificatã.");
+			ChatPacket(CHAT_TYPE_INFO, "Nicio piatrï¿½ identificatï¿½.");
 			return false;
 		}
 	}
@@ -1103,12 +1103,12 @@ bool CHARACTER::GiveRecallItem(LPITEM item)
 
 	int pos;
 
-	if (item->GetCount() == 1)	// ¾ÆÀÌÅÛÀÌ ÇÏ³ª¶ó¸é ±×³É ¼ÂÆÃ.
+	if (item->GetCount() == 1)	// é…’æè¢æ çªå”±æ‰¼æ å¼Šæˆ æ‚¸æ³¼.
 	{
 		item->SetSocket(0, GetX());
 		item->SetSocket(1, GetY());
 	}
-	else if ((pos = GetEmptyInventory(item->GetSize())) != -1) // ±×·¸Áö ¾Ê´Ù¸é ´Ù¸¥ ÀÎº¥Åä¸® ½½·ÔÀ» Ã£´Â´Ù.
+	else if ((pos = GetEmptyInventory(item->GetSize())) != -1) // å¼ŠçŠ¯ç˜¤ è‡¼ä¿ƒæ ä¿ƒå¼— ç‰¢äº¥é…åºœ æµ‡å©é˜‘ èŒ«ç»°ä¿ƒ.
 	{
 		LPITEM item2 = ITEM_MANAGER::instance().CreateItem(item->GetVnum(), 1);
 
@@ -1158,7 +1158,7 @@ void CHARACTER::ProcessRecallItem(LPITEM item)
 
 	if (iEmpireByMapIndex && GetEmpire() != iEmpireByMapIndex)
 	{
-		ChatPacket(CHAT_TYPE_INFO, "Nu poşi face acest lucru.");
+		ChatPacket(CHAT_TYPE_INFO, "Nu poã±® face acest lucru.");
 		item->SetSocket(0, 0);
 		item->SetSocket(1, 0);
 	}
@@ -1181,7 +1181,7 @@ void CHARACTER::__OpenPrivateShop()
 			ChatPacket(CHAT_TYPE_COMMAND, "OpenPrivateShop");
 			break;
 		default:
-			ChatPacket(CHAT_TYPE_INFO, "Da-şi jos armura înainte.");
+			ChatPacket(CHAT_TYPE_INFO, "Da-ã±® jos armura é ½ainte.");
 			break;
 	}
 }
@@ -1196,14 +1196,14 @@ void CHARACTER::SendMyShopPriceListCmd(DWORD dwItemVnum, DWORD dwItemPrice)
 }
 
 //
-// DB Ä³½Ã·Î ºÎÅÍ ¹ŞÀº ¸®½ºÆ®¸¦ User ¿¡°Ô Àü¼ÛÇÏ°í »óÁ¡À» ¿­¶ó´Â Ä¿¸Çµå¸¦ º¸³½´Ù.
+// DB æŸçŸ«è‚º ä½•ç£ ç½ç¯® åºœèƒ¶é£˜ç”« User ä¿Šéœ¸ å‚ˆä»·çªç»Š æƒ‘ç—¢é˜‘ å‡¯æ‰¼ç»° ç›®ç›–é›ç”« ç„Šè¾°ä¿ƒ.
 //
 void CHARACTER::UseSilkBotaryReal(const TPacketMyshopPricelistHeader* p)
 {
 	const TItemPriceInfo* pInfo = (const TItemPriceInfo*)(p + 1);
 
 	if (!p->byCount)
-		// °¡°İ ¸®½ºÆ®°¡ ¾ø´Ù. dummy µ¥ÀÌÅÍ¸¦ ³ÖÀº Ä¿¸Çµå¸¦ º¸³»ÁØ´Ù.
+		// å•Šæ‹œ åºœèƒ¶é£˜å•Š ç»ä¿ƒ. dummy å•æç£ç”« æŒç¯® ç›®ç›–é›ç”« ç„Šéƒ´éœ–ä¿ƒ.
 		SendMyShopPriceListCmd(1, 0);
 	else {
 		for (int idx = 0; idx < p->byCount; idx++)
@@ -1214,8 +1214,8 @@ void CHARACTER::UseSilkBotaryReal(const TPacketMyshopPricelistHeader* p)
 }
 
 //
-// ÀÌ¹ø Á¢¼Ó ÈÄ Ã³À½ »óÁ¡À» Open ÇÏ´Â °æ¿ì ¸®½ºÆ®¸¦ Load ÇÏ±â À§ÇØ DB Ä³½Ã¿¡ °¡°İÁ¤º¸ ¸®½ºÆ® ¿äÃ» ÆĞÅ¶À» º¸³½´Ù.
-// ÀÌÈÄºÎÅÍ´Â ¹Ù·Î »óÁ¡À» ¿­¶ó´Â ÀÀ´äÀ» º¸³½´Ù.
+// æé”… ç«‹åŠ  é¥¶ è´¸æ¾œ æƒ‘ç—¢é˜‘ Open çªç»° ç‰ˆå¿« åºœèƒ¶é£˜ç”« Load çªæ‰ å›°ç§¦ DB æŸçŸ«ä¿Š å•Šæ‹œæ²¥ç„Š åºœèƒ¶é£˜ å¤¸æ²¡ è©å“¦é˜‘ ç„Šè¾°ä¿ƒ.
+// æé¥¶ä½•ç£ç»° å®˜è‚º æƒ‘ç—¢é˜‘ å‡¯æ‰¼ç»° è§ˆç¿ é˜‘ ç„Šè¾°ä¿ƒ.
 //
 void CHARACTER::UseSilkBotary(void)
 {
@@ -1243,14 +1243,14 @@ int CalculateConsume(LPCHARACTER ch)
 		const int needLife = ch->GetMaxHP() * needPercent / 100;
 		if (curLife < needLife)
 		{
-			ch->ChatPacket(CHAT_TYPE_INFO, "Punctele de viaşã sunt insuficiente.");
+			ch->ChatPacket(CHAT_TYPE_INFO, "Punctele de viaî’ª sunt insuficiente.");
 			return -1;
 		}
 
 		consumeLife = needLife;
 
 
-		// CheckMinLifeForWarp: µ¶¿¡ ÀÇÇØ¼­ Á×À¸¸é ¾ÈµÇ¹Ç·Î »ı¸í·Â ÃÖ¼Ò·®´Â ³²°ÜÁØ´Ù
+		// CheckMinLifeForWarp: åˆ€ä¿Š ç‹¼ç§¦è¾‘ ç£·æ æ æ•‘ç™»éª¨è‚º ç§¯ç–™ä»¿ å¼¥å®¶æ¨Šç»° å·¢è´¥éœ–ä¿ƒ
 		const int minPercent	= WARP_MIN_LIFE_PERCENT;
 		const int minLife	= ch->GetMaxHP() * minPercent / 100;
 		if (curLife - needLife < minLife)
@@ -1272,7 +1272,7 @@ int CalculateConsumeSP(LPCHARACTER lpChar)
 
 	if (curSP < needSP)
 	{
-		lpChar->ChatPacket(CHAT_TYPE_INFO, "Nu poşi face asta.");
+		lpChar->ChatPacket(CHAT_TYPE_INFO, "Nu poã±® face asta.");
 		return -1;
 	}
 
@@ -1293,7 +1293,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 			case LIMIT_LEVEL:
 				if (GetLevel() < limitValue)
 				{
-					ChatPacket(CHAT_TYPE_INFO, "Nivelul tãu este prea mic.");
+					ChatPacket(CHAT_TYPE_INFO, "Nivelul té‰¼ este prea mic.");
 					return false;
 				}
 				break;
@@ -1343,7 +1343,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 			{
 				if (item->GetVnum() == 50051 || item->GetVnum() == 50052 || item->GetVnum() == 50053)
 				{
-					ChatPacket(CHAT_TYPE_INFO, "Nu poşi face asta aici.");
+					ChatPacket(CHAT_TYPE_INFO, "Nu poã±® face asta aici.");
 					return false;
 				}
 			}
@@ -1376,7 +1376,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 				if (tree->IsAttr((long)(GetX()+fx), (long)(GetY()+fy), ATTR_WATER))
 				{
-					ChatPacket(CHAT_TYPE_INFO, "Nu poşi face un foc în apã.");
+					ChatPacket(CHAT_TYPE_INFO, "Nu poã±® face un foc é ½ apï¿½.");
 					return false;
 				}
 
@@ -1494,7 +1494,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 			{
 				if (CArenaManager::instance().IsArenaMap(GetMapIndex()) == true)
 				{
-					ChatPacket(CHAT_TYPE_INFO, "Nu poşi face asta aici.");
+					ChatPacket(CHAT_TYPE_INFO, "Nu poã±® face asta aici.");
 					return false;
 				}
 
@@ -1543,22 +1543,22 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									ChatPacket(CHAT_TYPE_INFO, "Nu ai primit nimic.", dwCounts[i]);
 									break;
 								case CSpecialItemGroup::EXP:
-									ChatPacket(CHAT_TYPE_INFO, "Ai primit %d puncte de experienşã.", dwCounts[i]);
+									ChatPacket(CHAT_TYPE_INFO, "Ai primit %d puncte de experienî’ª.", dwCounts[i]);
 									break;
 								case CSpecialItemGroup::MOB:
-									ChatPacket(CHAT_TYPE_INFO, "În cutie se afla un monstru.");
+									ChatPacket(CHAT_TYPE_INFO, "è cutie se afla un monstru.");
 									break;
 								case CSpecialItemGroup::SLOW:
-									ChatPacket(CHAT_TYPE_INFO, "Vei rãsufla mai uºor.");
+									ChatPacket(CHAT_TYPE_INFO, "Vei ré‰ºufla mai uç°…r.");
 									break;
 								case CSpecialItemGroup::DRAIN_HP:
-									ChatPacket(CHAT_TYPE_INFO, "Cutia a explodat afectãndu-şi punctele de viaşã.");
+									ChatPacket(CHAT_TYPE_INFO, "Cutia a explodat afecté‰µdu-ã±® punctele de viaî’ª.");
 									break;
 								case CSpecialItemGroup::POISON:
-									ChatPacket(CHAT_TYPE_INFO, "Din cutie ºi-a fãcut aparişia un nor otrãvitor.");
+									ChatPacket(CHAT_TYPE_INFO, "Din cutie ç¯¿-a fé‰©ut apariã±®a un nor otré‰½itor.");
 									break;
 								case CSpecialItemGroup::MOB_GROUP:
-									ChatPacket(CHAT_TYPE_INFO, "În cutie se afla un monstru.");
+									ChatPacket(CHAT_TYPE_INFO, "è cutie se afla un monstru.");
 									break;
 								default:
 									if (item_gets[i])
@@ -1575,13 +1575,13 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 					}
 					else
 					{
-						ChatPacket(CHAT_TYPE_TALKING, "Ceva nu se potriveºte.");
+						ChatPacket(CHAT_TYPE_TALKING, "Ceva nu se potriveç°e.");
 						return false;
 					}
 				}
 				else
 				{
-					ChatPacket(CHAT_TYPE_TALKING, "Ceva nu se potriveºte.");
+					ChatPacket(CHAT_TYPE_TALKING, "Ceva nu se potriveç°e.");
 					return false;
 				}
 			}
@@ -1606,22 +1606,22 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 							ChatPacket(CHAT_TYPE_INFO, "Nu ai primit nimic.", dwCounts[i]);
 							break;
 						case CSpecialItemGroup::EXP:
-							ChatPacket(CHAT_TYPE_INFO, "Ai primit %d puncte de experienşã.", dwCounts[i]);
+							ChatPacket(CHAT_TYPE_INFO, "Ai primit %d puncte de experienî’ª.", dwCounts[i]);
 							break;
 						case CSpecialItemGroup::MOB:
-							ChatPacket(CHAT_TYPE_INFO, "În cutie se afla un monstru.");
+							ChatPacket(CHAT_TYPE_INFO, "è cutie se afla un monstru.");
 							break;
 						case CSpecialItemGroup::SLOW:
-							ChatPacket(CHAT_TYPE_INFO, "Vei rãsufla mai uºor.");
+							ChatPacket(CHAT_TYPE_INFO, "Vei ré‰ºufla mai uç°…r.");
 							break;
 						case CSpecialItemGroup::DRAIN_HP:
-							ChatPacket(CHAT_TYPE_INFO, "Cutia a explodat afectãndu-şi punctele de viaşã.");
+							ChatPacket(CHAT_TYPE_INFO, "Cutia a explodat afecté‰µdu-ã±® punctele de viaî’ª.");
 							break;
 						case CSpecialItemGroup::POISON:
-							ChatPacket(CHAT_TYPE_INFO, "Din cutie ºi-a fãcut aparişia un nor otrãvitor.");
+							ChatPacket(CHAT_TYPE_INFO, "Din cutie ç¯¿-a fé‰©ut apariã±®a un nor otré‰½itor.");
 							break;
 						case CSpecialItemGroup::MOB_GROUP:
-							ChatPacket(CHAT_TYPE_INFO, "În cutie se afla un monstru.");
+							ChatPacket(CHAT_TYPE_INFO, "è cutie se afla un monstru.");
 							break;
 						default:
 							if (item_gets[i])
@@ -1659,7 +1659,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 					ChatPacket(CHAT_TYPE_INFO, "Succes.");
 				}
 				else
-					ChatPacket(CHAT_TYPE_INFO, "Nu poşi face asta.");
+					ChatPacket(CHAT_TYPE_INFO, "Nu poã±® face asta.");
 			}
 			break;
 
@@ -1667,7 +1667,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 			{
 				if (IsPolymorphed())
 				{
-					ChatPacket(CHAT_TYPE_INFO, "Nu poşi face asta.");
+					ChatPacket(CHAT_TYPE_INFO, "Nu poã±® face asta.");
 					return false;
 				}
 
@@ -1679,7 +1679,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 				}
 				else
 				{
-					// »õ·Î¿î ¼ö·Ã¼­´Â value 0 ¿¡ ½ºÅ³ ¹øÈ£°¡ ÀÖÀ¸¹Ç·Î ±×°ÍÀ» »ç¿ë.
+					// è´§è‚ºæ¬¾ èè®¿è¾‘ç»° value 0 ä¿Š èƒ¶æ‡¦ é”…é¾‹å•Š ä¹æ éª¨è‚º å¼Šå·´é˜‘ è¤ä¾©.
 					dwVnum = item->GetValue(0);
 				}
 
@@ -1753,7 +1753,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 						case USE_ABILITY_UP:
 							if (FindAffect(affect_type, apply_type))
 							{
-								ChatPacket(CHAT_TYPE_INFO, "Foloseºti deja acest efect.");
+								ChatPacket(CHAT_TYPE_INFO, "Foloseç°i deja acest efect.");
 								return false;
 							}
 
@@ -1794,7 +1794,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 						{
 							if (FindAffect(AFFECT_EXP_BONUS_EURO_FREE, aApplyInfo[item->GetValue(1)].bPointType))
 							{
-								ChatPacket(CHAT_TYPE_INFO, "Foloseºti deja acest efect.");
+								ChatPacket(CHAT_TYPE_INFO, "Foloseç°i deja acest efect.");
 							}
 							else
 							{
@@ -1810,7 +1810,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 							{
 								if (quest::CQuestManager::instance().GetEventFlag("arena_potion_limit") > 0)
 								{
-									ChatPacket(CHAT_TYPE_INFO, "Nu poşi face asta aici.");
+									ChatPacket(CHAT_TYPE_INFO, "Nu poã±® face asta aici.");
 									return false;
 								}
 
@@ -1824,14 +1824,14 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 										{
 											if (m_nPotionLimit <= 0)
 											{
-												ChatPacket(CHAT_TYPE_INFO, "Nu poşi face asta aici.");
+												ChatPacket(CHAT_TYPE_INFO, "Nu poã±® face asta aici.");
 												return false;
 											}
 										}
 										break;
 
 									default :
-										ChatPacket(CHAT_TYPE_INFO, "Nu poşi face asta aici.");
+										ChatPacket(CHAT_TYPE_INFO, "Nu poã±® face asta aici.");
 										return false;
 										break;
 								}
@@ -1839,7 +1839,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 							bool used = false;
 
-							if (item->GetValue(0) != 0) // HP Àı´ë°ª È¸º¹
+							if (item->GetValue(0) != 0) // HP ä¾‹æªè”¼ é›€æ±—
 							{
 								if (GetHP() < GetMaxHP())
 								{
@@ -1849,7 +1849,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 							}
 
-							if (item->GetValue(1) != 0)	// SP Àı´ë°ª È¸º¹
+							if (item->GetValue(1) != 0)	// SP ä¾‹æªè”¼ é›€æ±—
 							{
 								if (GetSP() < GetMaxSP())
 								{
@@ -1859,7 +1859,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 							}
 
-							if (item->GetValue(3) != 0) // HP % È¸º¹
+							if (item->GetValue(3) != 0) // HP % é›€æ±—
 							{
 								if (GetHP() < GetMaxHP())
 								{
@@ -1869,7 +1869,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 							}
 
-							if (item->GetValue(4) != 0) // SP % È¸º¹
+							if (item->GetValue(4) != 0) // SP % é›€æ±—
 							{
 								if (GetSP() < GetMaxSP())
 								{
@@ -1908,7 +1908,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 				{
 					if (CArenaManager::instance().IsArenaMap(GetMapIndex()) == true)
 					{
-						ChatPacket(CHAT_TYPE_INFO, "Nu poşi face asta aici.");
+						ChatPacket(CHAT_TYPE_INFO, "Nu poã±® face asta aici.");
 						return false;
 					}
 				}
@@ -1931,7 +1931,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								{
 									if (FindAffect(AFFECT_NOG_ABILITY))
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Foloseºti deja acest efect.");
+										ChatPacket(CHAT_TYPE_INFO, "Foloseç°i deja acest efect.");
 										return false;
 									}
 									long time = item->GetValue(0);
@@ -1966,7 +1966,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 										{
 											if (CArenaManager::instance().IsArenaMap(pMarriage->ch1->GetMapIndex()) == true)
 											{
-												ChatPacket(CHAT_TYPE_INFO, "Nu poşi face asta aici.");
+												ChatPacket(CHAT_TYPE_INFO, "Nu poã±® face asta aici.");
 												break;
 											}
 										}
@@ -1975,7 +1975,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 										{
 											if (CArenaManager::instance().IsArenaMap(pMarriage->ch2->GetMapIndex()) == true)
 											{
-												ChatPacket(CHAT_TYPE_INFO, "Nu poşi face asta aici.");
+												ChatPacket(CHAT_TYPE_INFO, "Nu poã±® face asta aici.");
 												break;
 											}
 										}
@@ -1990,7 +1990,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 										WarpToPID(pMarriage->GetOther(GetPlayerID()));
 									}
 									else
-										ChatPacket(CHAT_TYPE_INFO, "Eºec.");
+										ChatPacket(CHAT_TYPE_INFO, "Eç¯¹c.");
 								}
 								break;
 
@@ -2013,7 +2013,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 							case 30094:
 							case 30095:
 							case 30096:
-								// º¹ÁÖ¸Ó´Ï
+								// æ±—æ—èµ£èª
 								{
 									const int MAX_BAG_INFO = 26;
 									static struct LuckyBagInfo
@@ -2067,7 +2067,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 									if (bi[i].vnum == 50300)
 									{
-										// ½ºÅ³¼ö·Ã¼­´Â Æ¯¼öÇÏ°Ô ÁØ´Ù.
+										// èƒ¶æ‡¦èè®¿è¾‘ç»° æ¼‚èçªéœ¸ éœ–ä¿ƒ.
 										GiveRandomSkillBook();
 									}
 									else if (bi[i].vnum == 1)
@@ -2100,7 +2100,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 										}
 										else
 										{
-											ChatPacket(CHAT_TYPE_INFO, "Eºec.");
+											ChatPacket(CHAT_TYPE_INFO, "Eç¯¹c.");
 											return false;
 										}
 									}
@@ -2253,11 +2253,11 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									else
 										dist = 3;
 
-									// ¸¹ÀÌ »ç¿ëÇßÀ¸¸é »ç¶óÁø´Ù.
+									// è…¹æ è¤ä¾©æ²æ æ è¤æ‰¼æŸ³ä¿ƒ.
 									const int STONE_DETECT_MAX_TRY = 10;
 									if (item->GetSocket(0) >= STONE_DETECT_MAX_TRY)
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Numãrul maxim de folosiri a fost atins.");
+										ChatPacket(CHAT_TYPE_INFO, "Numé‰¹ul maxim de folosiri a fost atins.");
 										ITEM_MANAGER::instance().RemoveItem(item, "REMOVE (DETECT_EVENT_STONE) 0");
 										AutoGiveItem(27002);
 										return true;
@@ -2273,7 +2273,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 										if (len < 0 || len >= (int) sizeof(chatbuf))
 											len = sizeof(chatbuf) - 1;
 
-										++len;  // \0 ¹®ÀÚ±îÁö º¸³»±â
+										++len;  // \0 å·©ç£Šé³–ç˜¤ ç„Šéƒ´æ‰
 
 										TPacketGCChat pack_chat;
 										pack_chat.header	= HEADER_GC_CHAT;
@@ -2293,8 +2293,8 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 								break;
 
-							case 27989: // ¿µ¼®°¨Áö±â
-							case 76006: // ¼±¹°¿ë ¿µ¼®°¨Áö±â
+							case 27989: // åº·ç±çš‘ç˜¤æ‰
+							case 76006: // æ€¥æ‹±ä¾© åº·ç±çš‘ç˜¤æ‰
 								{
 									LPSECTREE_MAP pMap = SECTREE_MANAGER::instance().GetMap(GetMapIndex());
 
@@ -2337,10 +2337,10 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 														(int)GetDegreeFromPositionXY(GetX(), pTarget->GetY(), pTarget->GetX(), GetY()));
 											}
 											else
-												ChatPacket(CHAT_TYPE_INFO, "Eºec.");
+												ChatPacket(CHAT_TYPE_INFO, "Eç¯¹c.");
 										}
 										else
-											ChatPacket(CHAT_TYPE_INFO, "Eºec.");
+											ChatPacket(CHAT_TYPE_INFO, "Eç¯¹c.");
 
 										if (item->GetSocket(0) >= 6)
 										{
@@ -2352,13 +2352,13 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 								break;
 
-							case 27996: // µ¶º´
+							case 27996: // åˆ€æ
 								item->SetCount(item->GetCount() - 1);
 								/*if (GetSkillLevel(SKILL_CREATE_POISON))
 								  AddAffect(AFFECT_ATT_GRADE, POINT_ATT_GRADE, 3, AFF_DRINK_POISON, 15*60, 0, true);
 								  else
 								  {
-								// µ¶´Ù·ç±â°¡ ¾øÀ¸¸é 50% Áï»ç 50% °ø°İ·Â +2
+								// åˆ€ä¿ƒé£æ‰å•Š ç»æ æ 50% æºœè¤ 50% å‚æ‹œä»¿ +2
 								if (number(0, 1))
 								{
 								if (GetHP() > 100)
@@ -2379,7 +2379,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 									if (r <= 50)
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Ai deschis o scoicã.");
+										ChatPacket(CHAT_TYPE_INFO, "Ai deschis o scoicï¿½.");
 										AutoGiveItem(27990);
 									}
 									else
@@ -2388,21 +2388,21 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 										if (r <= prob_table[0])
 										{
-											ChatPacket(CHAT_TYPE_INFO, "Ai deschis o scoicã goalã.");
+											ChatPacket(CHAT_TYPE_INFO, "Ai deschis o scoicï¿½ goalï¿½.");
 										}
 										else if (r <= prob_table[1])
 										{
-											ChatPacket(CHAT_TYPE_INFO, "Ai gãsit o perlã.");
+											ChatPacket(CHAT_TYPE_INFO, "Ai gé‰ºit o perlï¿½.");
 											AutoGiveItem(27992);
 										}
 										else if (r <= prob_table[2])
 										{
-											ChatPacket(CHAT_TYPE_INFO, "Ai gãsit o perlã.");
+											ChatPacket(CHAT_TYPE_INFO, "Ai gé‰ºit o perlï¿½.");
 											AutoGiveItem(27993);
 										}
 										else
 										{
-											ChatPacket(CHAT_TYPE_INFO, "Ai gãsit o perlã.");
+											ChatPacket(CHAT_TYPE_INFO, "Ai gé‰ºit o perlï¿½.");
 											AutoGiveItem(27994);
 										}
 									}
@@ -2414,7 +2414,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								item->SetCount(item->GetCount() - 1);
 								break;
 
-							case 50100: // ÆøÁ×
+							case 50100: // æ°”ç£·
 							case 50101:
 							case 50102:
 							case 50103:
@@ -2434,13 +2434,13 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								item->SetCount(item->GetCount() - 1);
 								break;
 
-							case 50301: // Åë¼Ö·Â ¼ö·Ã¼­
+							case 50301: // çƒ¹è´¾ä»¿ èè®¿è¾‘
 							case 50302:
 							case 50303:
 								{
 									if (IsPolymorphed() == true)
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Eºec.");
+										ChatPacket(CHAT_TYPE_INFO, "Eç¯¹c.");
 										return false;
 									}
 
@@ -2448,13 +2448,13 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 									if (lv < item->GetValue(0))
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Nivelul competenşei este prea mic.");
+										ChatPacket(CHAT_TYPE_INFO, "Nivelul competenã§i este prea mic.");
 										return false;
 									}
 
 									if (lv >= item->GetValue(1))
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Nivelul maxim al competenşei a fost atins.");
+										ChatPacket(CHAT_TYPE_INFO, "Nivelul maxim al competenã§i a fost atins.");
 										return false;
 									}
 
@@ -2475,25 +2475,25 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								{
 									if (IsPolymorphed())
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Nu poşi face asta.");
+										ChatPacket(CHAT_TYPE_INFO, "Nu poã±® face asta.");
 										return false;
 										
 									}
 									if (GetSkillLevel(SKILL_COMBO) == 0 && GetLevel() < 30)
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Nu pot învãşa aceastã carte pânã la nivel 30.");
+										ChatPacket(CHAT_TYPE_INFO, "Nu pot é ½væ³¾a aceastï¿½ carte péˆ”ï¿½ la nivel 30.");
 										return false;
 									}
 
 									if (GetSkillLevel(SKILL_COMBO) == 1 && GetLevel() < 50)
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Nu pot învãşa aceastã carte pânã la nivel 50.");
+										ChatPacket(CHAT_TYPE_INFO, "Nu pot é ½væ³¾a aceastï¿½ carte péˆ”ï¿½ la nivel 50.");
 										return false;
 									}
 
 									if (GetSkillLevel(SKILL_COMBO) >= 2)
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Nu pot folosi aceastã carte.");
+										ChatPacket(CHAT_TYPE_INFO, "Nu pot folosi aceastï¿½ carte.");
 										return false;
 									}
 
@@ -2515,7 +2515,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								{
 									if (IsPolymorphed())
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Nu poşi face asta.");
+										ChatPacket(CHAT_TYPE_INFO, "Nu poã±® face asta.");
 										return false;
 										
 									}
@@ -2523,7 +2523,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									int iPct = MINMAX(0, item->GetValue(1), 100);
 									if (GetSkillLevel(dwSkillVnum)>=20 || dwSkillVnum-SKILL_LANGUAGE1+1 == GetEmpire())
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Nu pot citi aceastã carte.");
+										ChatPacket(CHAT_TYPE_INFO, "Nu pot citi aceastï¿½ carte.");
 										return false;
 									}
 
@@ -2542,7 +2542,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								{
 									if (IsPolymorphed())
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Nu poşi face asta.");
+										ChatPacket(CHAT_TYPE_INFO, "Nu poã±® face asta.");
 										return false;
 										
 									}
@@ -2551,7 +2551,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 									if (GetSkillLevel(dwSkillVnum) >= 10)
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Aceastã competenşã este deja la nivelul maxim.");
+										ChatPacket(CHAT_TYPE_INFO, "Aceastï¿½ competenî’ª este deja la nivelul maxim.");
 										return false;
 									}
 
@@ -2572,7 +2572,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								{
 									if (IsPolymorphed())
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Eºec.");
+										ChatPacket(CHAT_TYPE_INFO, "Eç¯¹c.");
 										return false;
 									}
 									
@@ -2605,25 +2605,25 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 									if (GetLevel() < iLevelLimit)
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Nivelul tãu este prea mic.");
+										ChatPacket(CHAT_TYPE_INFO, "Nivelul té‰¼ este prea mic.");
 										return false;
 									}
 
 									if (GetSkillLevel(dwSkillVnum) >= 40)
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Aceastã competenşã este deja la nivelul maxim.");
+										ChatPacket(CHAT_TYPE_INFO, "Aceastï¿½ competenî’ª este deja la nivelul maxim.");
 										return false;
 									}
 
 									if (GetSkillLevel(dwSkillVnum) < iSkillLevelLowLimit)
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Nivelul competenşei este prea mic.");
+										ChatPacket(CHAT_TYPE_INFO, "Nivelul competenã§i este prea mic.");
 										return false;
 									}
 
 									if (GetSkillLevel(dwSkillVnum) >= iSkillLevelHighLimit)
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Nivelul competenşei este prea mare.");
+										ChatPacket(CHAT_TYPE_INFO, "Nivelul competenã§i este prea mare.");
 										return false;
 									}
 
@@ -2644,7 +2644,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								{
 									if (IsPolymorphed())
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Nu poşi face asta.");
+										ChatPacket(CHAT_TYPE_INFO, "Nu poã±® face asta.");
 										return false;
 										
 									}
@@ -2653,7 +2653,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 									if (GetSkillLevel(dwSkillVnum)>=40)
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Aceastã competenşã este deja la nivelul maxim.");
+										ChatPacket(CHAT_TYPE_INFO, "Aceastï¿½ competenî’ª este deja la nivelul maxim.");
 										return false;
 									}
 
@@ -2673,7 +2673,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								{
 									if (IsPolymorphed())
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Nu poşi face asta.");
+										ChatPacket(CHAT_TYPE_INFO, "Nu poã±® face asta.");
 										return false;
 										
 									}
@@ -2682,7 +2682,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 									if (GetSkillLevel(dwSkillVnum)>=40)
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Aceastã competenşã este deja la nivelul maxim.");
+										ChatPacket(CHAT_TYPE_INFO, "Aceastï¿½ competenî’ª este deja la nivelul maxim.");
 										return false;
 									}
 
@@ -2702,7 +2702,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								{
 									if (IsPolymorphed())
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Nu poşi face asta.");
+										ChatPacket(CHAT_TYPE_INFO, "Nu poã±® face asta.");
 										return false;
 										
 									}
@@ -2711,7 +2711,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 									if (GetLevel() < 50)
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Nivelul tãu este prea mic.");
+										ChatPacket(CHAT_TYPE_INFO, "Nivelul té‰¼ este prea mic.");
 										return false;
 									}
 
@@ -2733,7 +2733,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 											GetSkillLevel(SKILL_HORSE_WILDATTACK) + GetSkillLevel(SKILL_HORSE_CHARGE) + GetSkillLevel(SKILL_HORSE_ESCAPE) >= 60 ||
 											GetSkillLevel(SKILL_HORSE_WILDATTACK_RANGE) + GetSkillLevel(SKILL_HORSE_CHARGE) + GetSkillLevel(SKILL_HORSE_ESCAPE) >= 60)
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Nu pot citi aceastã carte.");
+										ChatPacket(CHAT_TYPE_INFO, "Nu pot citi aceastï¿½ carte.");
 										return false;
 									}
 
@@ -2747,7 +2747,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									}
 									else
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Nu pot întelege aceastã carte.");
+										ChatPacket(CHAT_TYPE_INFO, "Nu pot é ½telege aceastï¿½ carte.");
 									}
 
 									ITEM_MANAGER::instance().RemoveItem(item);
@@ -2768,7 +2768,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									item->SetCount(item->GetCount() - 1);
 
 									if (delta / 10 > 0)
-										ChatPacket(CHAT_TYPE_INFO, "Balanşa dintre bine ºi rãu este de %d.", delta/10);
+										ChatPacket(CHAT_TYPE_INFO, "Balanî ¦ dintre bine ç¯¿ ré‰¼ este de %d.", delta/10);
 								}
 								break;
 
@@ -2784,7 +2784,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 									if (get_global_time() - last_use_time < interval * 60 * 60)
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Mai aºteaptã.");
+										ChatPacket(CHAT_TYPE_INFO, "Mai aç°eaptï¿½.");
 										return false;
 									}
 									
@@ -2806,7 +2806,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									item->SetCount(item->GetCount()-1);
 									pPC->SetFlag("mythical_peach.last_use_time", get_global_time());
 
-									ChatPacket(CHAT_TYPE_INFO, "Balanşa dintre bine ºi rãu este de %d.", val);
+									ChatPacket(CHAT_TYPE_INFO, "Balanî ¦ dintre bine ç¯¿ ré‰¼ este de %d.", val);
 
 									char buf[256 + 1];
 									snprintf(buf, sizeof(buf), "%d %d", old_alignment, GetAlignment() / 10);
@@ -2814,7 +2814,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 								break;
 
-							case 71109: // Å»¼®¼­
+							case 71109: // å‘•ç±è¾‘
 								{
 									LPITEM item2;
 
@@ -2837,7 +2837,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 											case ARMOR_EAR:
 											case ARMOR_WRIST:
 											case ARMOR_NECK:
-												ChatPacket(CHAT_TYPE_INFO, "Eºuat.");
+												ChatPacket(CHAT_TYPE_INFO, "Eç°at.");
 												return false;
 											}
 											break;
@@ -2864,7 +2864,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 									if (socket.size() == 0)
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Eºuat.");
+										ChatPacket(CHAT_TYPE_INFO, "Eç°at.");
 										return false;
 									}
 
@@ -2883,15 +2883,15 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 								break;
 
-							case 70201:	// Å»»öÁ¦
-							case 70202:	// ¿°»ö¾à(Èò»ö)
-							case 70203:	// ¿°»ö¾à(±İ»ö)
-							case 70204:	// ¿°»ö¾à(»¡°£»ö)
-							case 70205:	// ¿°»ö¾à(°¥»ö)
-							case 70206:	// ¿°»ö¾à(°ËÀº»ö)
+							case 70201:	// å‘•ç¥¸åŠ›
+							case 70202:	// å ªç¥¸è·(é—°ç¥¸)
+							case 70203:	// å ªç¥¸è·(é™›ç¥¸)
+							case 70204:	// å ªç¥¸è·(å¼§åŸƒç¥¸)
+							case 70205:	// å ªç¥¸è·(å“ç¥¸)
+							case 70206:	// å ªç¥¸è·(å…«ç¯®ç¥¸)
 								{
 									if (GetPart(PART_HAIR) >= 1001)
-										ChatPacket(CHAT_TYPE_INFO, "Nu poşi face asta.");
+										ChatPacket(CHAT_TYPE_INFO, "Nu poã±® face asta.");
 									else
 									{
 										quest::CQuestManager& q = quest::CQuestManager::instance();
@@ -3007,27 +3007,27 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 												break;
 
 											case CSpecialItemGroup::EXP:
-												ChatPacket(CHAT_TYPE_INFO, "Ai primit %d puncte de experienşã.", dwCounts[i]);
+												ChatPacket(CHAT_TYPE_INFO, "Ai primit %d puncte de experienî’ª.", dwCounts[i]);
 												break;
 
 											case CSpecialItemGroup::MOB:
-												ChatPacket(CHAT_TYPE_INFO, "În cutie se afla un monstru.");
+												ChatPacket(CHAT_TYPE_INFO, "è cutie se afla un monstru.");
 												break;
 
 											case CSpecialItemGroup::SLOW:
-												ChatPacket(CHAT_TYPE_INFO, "Vei rãsufla mai uºor.");
+												ChatPacket(CHAT_TYPE_INFO, "Vei ré‰ºufla mai uç°…r.");
 												break;
 
 											case CSpecialItemGroup::DRAIN_HP:
-												ChatPacket(CHAT_TYPE_INFO, "Cutia a explodat afectãndu-şi punctele de viaşã.");
+												ChatPacket(CHAT_TYPE_INFO, "Cutia a explodat afecté‰µdu-ã±® punctele de viaî’ª.");
 												break;
 
 											case CSpecialItemGroup::POISON:
-												ChatPacket(CHAT_TYPE_INFO, "Din cutie ºi-a fãcut aparişia un nor otrãvitor.");
+												ChatPacket(CHAT_TYPE_INFO, "Din cutie ç¯¿-a fé‰©ut apariã±®a un nor otré‰½itor.");
 												break;
 
 											case CSpecialItemGroup::MOB_GROUP:
-												ChatPacket(CHAT_TYPE_INFO, "În cutie se afla un monstru.");
+												ChatPacket(CHAT_TYPE_INFO, "è cutie se afla un monstru.");
 												break;
 
 											default:
@@ -3069,7 +3069,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								{
 									if (CArenaManager::instance().IsArenaMap(GetMapIndex()))
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Nu poşi face asta aici.");
+										ChatPacket(CHAT_TYPE_INFO, "Nu poã±® face asta aici.");
 										return false;
 									}
 
@@ -3140,13 +3140,13 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 									if (item2->GetAttributeSetIndex() == -1)
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Nu poşi adãuga un bonus acestui obiect.");
+										ChatPacket(CHAT_TYPE_INFO, "Nu poã±® adé‰¼ga un bonus acestui obiect.");
 										return false;
 									}
 
 									if (item2->AddRareAttribute())
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Ai adãugat bonusul special cu succes.");
+										ChatPacket(CHAT_TYPE_INFO, "Ai adé‰¼gat bonusul special cu succes.");
 
 										int iAddedIdx = item2->GetRareAttrCount() + 4;
 										char buf[21];
@@ -3166,7 +3166,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									}
 									else
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Operaşiunea a eºuat.");
+										ChatPacket(CHAT_TYPE_INFO, "Operaã±®unea a eç°at.");
 									}
 								}
 								break;
@@ -3183,7 +3183,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 									if (item2->GetAttributeSetIndex() == -1)
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Nu poşi adãuga un bonus acestui obiect.");
+										ChatPacket(CHAT_TYPE_INFO, "Nu poã±® adé‰¼ga un bonus acestui obiect.");
 										return false;
 									}
 
@@ -3199,7 +3199,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									}
 									else
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Operaşiunea a eºuat.");
+										ChatPacket(CHAT_TYPE_INFO, "Operaã±®unea a eç°at.");
 									}
 								}
 								break;
@@ -3221,7 +3221,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								{
 									if (CArenaManager::instance().IsArenaMap(GetMapIndex()) == true)
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Nu poşi face asta aici.");
+										ChatPacket(CHAT_TYPE_INFO, "Nu poã±® face asta aici.");
 										return false;
 									}
 
@@ -3366,7 +3366,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 									if (get_global_time() - last_use_time < 10*60)
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Mai aºteaptã.");
+										ChatPacket(CHAT_TYPE_INFO, "Mai aç°eaptï¿½.");
 										return false;
 									}
 
@@ -3385,7 +3385,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 							{
 								if (quest::CQuestManager::instance().GetEventFlag("arena_potion_limit") > 0)
 								{
-									ChatPacket(CHAT_TYPE_INFO, "Nu poşi face asta aici.");
+									ChatPacket(CHAT_TYPE_INFO, "Nu poã±® face asta aici.");
 									return false;
 								}
 
@@ -3399,14 +3399,14 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 										{
 											if (m_nPotionLimit <= 0)
 											{
-												ChatPacket(CHAT_TYPE_INFO, "Nu poşi face asta aici.");
+												ChatPacket(CHAT_TYPE_INFO, "Nu poã±® face asta aici.");
 												return false;
 											}
 										}
 										break;
 
 									default :
-										ChatPacket(CHAT_TYPE_INFO, "Nu poşi face asta aici.");
+										ChatPacket(CHAT_TYPE_INFO, "Nu poã±® face asta aici.");
 										return false;
 								}
 							}
@@ -3478,7 +3478,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 						{
 							if (quest::CQuestManager::instance().GetEventFlag("arena_potion_limit") > 0)
 							{
-								ChatPacket(CHAT_TYPE_INFO, "Nu poşi face asta aici.");
+								ChatPacket(CHAT_TYPE_INFO, "Nu poã±® face asta aici.");
 								return false;
 							}
 						
@@ -3494,14 +3494,14 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									{
 										if (m_nPotionLimit <= 0)
 										{
-											ChatPacket(CHAT_TYPE_INFO, "Nu poşi face asta aici.");
+											ChatPacket(CHAT_TYPE_INFO, "Nu poã±® face asta aici.");
 											return false;
 										}
 									}
 									break;
 
 								default :
-									ChatPacket(CHAT_TYPE_INFO, "Nu poşi face asta aici.");
+									ChatPacket(CHAT_TYPE_INFO, "Nu poã±® face asta aici.");
 									return false;
 							}
 						}
@@ -3562,7 +3562,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								case APPLY_MOV_SPEED:
 									if (FindAffect(AFFECT_MOV_SPEED))
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Foloseºti deja acest efect.");
+										ChatPacket(CHAT_TYPE_INFO, "Foloseç°i deja acest efect.");
 										return false;
 									}
 									AddAffect(AFFECT_MOV_SPEED, POINT_MOV_SPEED, item->GetValue(2), AFF_MOV_SPEED_POTION, item->GetValue(1), 0, true);
@@ -3571,7 +3571,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								case APPLY_ATT_SPEED:
 									if (FindAffect(AFFECT_ATT_SPEED))
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Foloseºti deja acest efect.");
+										ChatPacket(CHAT_TYPE_INFO, "Foloseç°i deja acest efect.");
 										return false;
 									}
 									AddAffect(AFFECT_ATT_SPEED, POINT_ATT_SPEED, item->GetValue(2), AFF_ATT_SPEED_POTION, item->GetValue(1), 0, true);
@@ -3580,7 +3580,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								case APPLY_STR:
 									if (FindAffect(AFFECT_STR))
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Foloseºti deja acest efect.");
+										ChatPacket(CHAT_TYPE_INFO, "Foloseç°i deja acest efect.");
 										return false;
 									}
 									AddAffect(AFFECT_STR, POINT_ST, item->GetValue(2), 0, item->GetValue(1), 0, true);
@@ -3589,7 +3589,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								case APPLY_DEX:
 									if (FindAffect(AFFECT_DEX))
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Foloseºti deja acest efect.");
+										ChatPacket(CHAT_TYPE_INFO, "Foloseç°i deja acest efect.");
 										return false;
 									}
 									AddAffect(AFFECT_DEX, POINT_DX, item->GetValue(2), 0, item->GetValue(1), 0, true);
@@ -3598,7 +3598,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								case APPLY_CON:
 									if (FindAffect(AFFECT_CON))
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Foloseºti deja acest efect.");
+										ChatPacket(CHAT_TYPE_INFO, "Foloseç°i deja acest efect.");
 										return false;
 									}
 									AddAffect(AFFECT_CON, POINT_HT, item->GetValue(2), 0, item->GetValue(1), 0, true);
@@ -3607,7 +3607,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								case APPLY_INT:
 									if (FindAffect(AFFECT_INT))
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Foloseºti deja acest efect.");
+										ChatPacket(CHAT_TYPE_INFO, "Foloseç°i deja acest efect.");
 										return false;
 									}
 									AddAffect(AFFECT_INT, POINT_IQ, item->GetValue(2), 0, item->GetValue(1), 0, true);
@@ -3616,7 +3616,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								case APPLY_CAST_SPEED:
 									if (FindAffect(AFFECT_CAST_SPEED))
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Foloseºti deja acest efect.");
+										ChatPacket(CHAT_TYPE_INFO, "Foloseç°i deja acest efect.");
 										return false;
 									}
 									AddAffect(AFFECT_CAST_SPEED, POINT_CASTING_SPEED, item->GetValue(2), 0, item->GetValue(1), 0, true);
@@ -3625,7 +3625,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								case APPLY_ATT_GRADE_BONUS:
 									if (FindAffect(AFFECT_ATT_GRADE))
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Foloseºti deja acest efect.");
+										ChatPacket(CHAT_TYPE_INFO, "Foloseç°i deja acest efect.");
 										return false;
 									}
 									AddAffect(AFFECT_ATT_GRADE, POINT_ATT_GRADE_BONUS, item->GetValue(2), 0, item->GetValue(1), 0, true);
@@ -3634,7 +3634,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								case APPLY_DEF_GRADE_BONUS:
 									if (FindAffect(AFFECT_DEF_GRADE))
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Foloseºti deja acest efect.");
+										ChatPacket(CHAT_TYPE_INFO, "Foloseç°i deja acest efect.");
 										return false;
 									}
 									AddAffect(AFFECT_DEF_GRADE, POINT_DEF_GRADE_BONUS, item->GetValue(2), 0, item->GetValue(1), 0, true);
@@ -3658,19 +3658,19 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 							if (GetMapIndex() == 200 || GetMapIndex() == 113)
 							{
-								ChatPacket(CHAT_TYPE_INFO, "Nu poşi face asta aici.");
+								ChatPacket(CHAT_TYPE_INFO, "Nu poã±® face asta aici.");
 								return false;
 							}
 
 							if (CArenaManager::instance().IsArenaMap(GetMapIndex()) == true)
 							{
-								ChatPacket(CHAT_TYPE_INFO, "Nu poşi face asta aici.");
+								ChatPacket(CHAT_TYPE_INFO, "Nu poã±® face asta aici.");
 								return false;
 							}
 
 							if (m_pkWarpEvent)
 							{
-								ChatPacket(CHAT_TYPE_INFO, "Încearcã mai târziu.");
+								ChatPacket(CHAT_TYPE_INFO, "ècearcï¿½ mai téˆ˜ziu.");
 								return false;
 							}
 
@@ -3713,7 +3713,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								{
 									if (GetDungeon())
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Nu poşi folosi %s aici.", item->GetName());
+										ChatPacket(CHAT_TYPE_INFO, "Nu poã±® folosi %s aici.", item->GetName());
 										return false;
 									}
 
@@ -3748,7 +3748,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 	
 							if (item2->GetVnum() >= 28330 && item2->GetVnum() <= 28343)
 							{
-								ChatPacket(CHAT_TYPE_INFO, "Nu poşi face asta.");
+								ChatPacket(CHAT_TYPE_INFO, "Nu poã±® face asta.");
 								return false;
 							}
 							
@@ -3757,7 +3757,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								if (item->GetVnum() == 71056)
 									RefineItem(item, item2);
 								else
-									ChatPacket(CHAT_TYPE_INFO, "Nu poşi face asta.");
+									ChatPacket(CHAT_TYPE_INFO, "Nu poã±® face asta.");
 							}
 							else
 								RefineItem(item, item2);
@@ -3823,13 +3823,13 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								case USE_CHANGE_ATTRIBUTE2:
 									if (item2->GetAttributeSetIndex() == -1)
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Nu poşi adãuga un bonus acestui obiect.");
+										ChatPacket(CHAT_TYPE_INFO, "Nu poã±® adé‰¼ga un bonus acestui obiect.");
 										return false;
 									}
 
 									if (item2->GetAttributeCount() == 0)
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Nu existã nici un bonus pe care sã îl schimbi.");
+										ChatPacket(CHAT_TYPE_INFO, "Nu existï¿½ nici un bonus pe care sï¿½ é » schimbi.");
 										return false;
 									}
 
@@ -3866,7 +3866,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 											}
 											if (!bCanUse)
 											{
-												ChatPacket(CHAT_TYPE_INFO, "Acest obiect poate fi folosit doar pe obiectele pânã în nivel 40 inclusiv.");
+												ChatPacket(CHAT_TYPE_INFO, "Acest obiect poate fi folosit doar pe obiectele péˆ”ï¿½ é ½ nivel 40 inclusiv.");
 												break;
 											}
 										}
@@ -3885,7 +3885,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								case USE_ADD_ATTRIBUTE:
 									if (item2->GetAttributeSetIndex() == -1)
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Nu poşi adãuga un bonus acestui obiect.");
+										ChatPacket(CHAT_TYPE_INFO, "Nu poã±® adé‰¼ga un bonus acestui obiect.");
 										return false;
 									}
 
@@ -3904,7 +3904,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 											}
 											if (!bCanUse)
 											{
-												ChatPacket(CHAT_TYPE_INFO, "Acest obiect poate fi folosit doar pe obiectele pânã în nivel 40 inclusiv.");
+												ChatPacket(CHAT_TYPE_INFO, "Acest obiect poate fi folosit doar pe obiectele péˆ”ï¿½ é ½ nivel 40 inclusiv.");
 												break;
 											}
 										}
@@ -3914,7 +3914,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 										if (number(1, 100) <= aiItemAttributeAddPercent[item2->GetAttributeCount()])
 										{
 											item2->AddAttribute();
-											ChatPacket(CHAT_TYPE_INFO, "Ai adãugat bonusul cu succes.");
+											ChatPacket(CHAT_TYPE_INFO, "Ai adé‰¼gat bonusul cu succes.");
 
 											int iAddedIdx = item2->GetAttributeCount() - 1;
 											LogManager::instance().ItemLog(
@@ -3929,20 +3929,20 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 										}
 										else
 										{
-											ChatPacket(CHAT_TYPE_INFO, "Bonusul a eºuat la adãugare.");
+											ChatPacket(CHAT_TYPE_INFO, "Bonusul a eç°at la adé‰¼gare.");
 											LogManager::instance().ItemLog(this, item, "ADD_ATTRIBUTE_FAIL", buf);
 										}
 
 										item->SetCount(item->GetCount() - 1);
 									}
 									else
-										ChatPacket(CHAT_TYPE_INFO, "Nu poşi adãuga un bonus.");
+										ChatPacket(CHAT_TYPE_INFO, "Nu poã±® adé‰¼ga un bonus.");
 									break;
 
 								case USE_ADD_ATTRIBUTE2 :
 									if (item2->GetAttributeSetIndex() == -1)
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Nu poşi adãuga un bonus acestui obiect.");
+										ChatPacket(CHAT_TYPE_INFO, "Nu poã±® adé‰¼ga un bonus acestui obiect.");
 										return false;
 									}
 
@@ -3954,7 +3954,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 										if (number(1, 100) <= aiItemAttributeAddPercent[item2->GetAttributeCount()])
 										{
 											item2->AddAttribute();
-											ChatPacket(CHAT_TYPE_INFO, "Ai adãugat bonusul cu succes.");
+											ChatPacket(CHAT_TYPE_INFO, "Ai adé‰¼gat bonusul cu succes.");
 
 											int iAddedIdx = item2->GetAttributeCount() - 1;
 											LogManager::instance().ItemLog(
@@ -3969,16 +3969,16 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 										}
 										else
 										{
-											ChatPacket(CHAT_TYPE_INFO, "Bonusul a eºuat la adãugare.");
+											ChatPacket(CHAT_TYPE_INFO, "Bonusul a eç°at la adé‰¼gare.");
 											LogManager::instance().ItemLog(this, item, "ADD_ATTRIBUTE2_FAIL", buf);
 										}
 
 										item->SetCount(item->GetCount() - 1);
 									}
 									else if (item2->GetAttributeCount() == 5)
-										ChatPacket(CHAT_TYPE_INFO, "Nu poşi adãuga alte bonusuri.");
+										ChatPacket(CHAT_TYPE_INFO, "Nu poã±® adé‰¼ga alte bonusuri.");
 									else if (item2->GetAttributeCount() < 4)
-										ChatPacket(CHAT_TYPE_INFO, "Nu poşi face asta.");
+										ChatPacket(CHAT_TYPE_INFO, "Nu poã±® face asta.");
 									else
 										sys_err("ADD_ATTRIBUTE2 : Item has wrong AttributeCount(%d)", item2->GetAttributeCount());
 
@@ -3996,12 +3996,12 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 												if (number(1, 100) <= 50)
 												{
 													item2->SetAccessorySocketMaxGrade(item2->GetAccessorySocketMaxGrade() + 1);
-													ChatPacket(CHAT_TYPE_INFO, "Adãugarea diamantului a reuºit.");
+													ChatPacket(CHAT_TYPE_INFO, "Adé‰¼garea diamantului a reuç¯¿t.");
 													LogManager::instance().ItemLog(this, item, "ADD_SOCKET_SUCCESS", buf);
 												}
 												else
 												{
-													ChatPacket(CHAT_TYPE_INFO, "Adãugarea diamantului a eºuat.");
+													ChatPacket(CHAT_TYPE_INFO, "Adé‰¼garea diamantului a eç°at.");
 													LogManager::instance().ItemLog(this, item, "ADD_SOCKET_FAIL", buf);
 												}
 
@@ -4011,7 +4011,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 												ChatPacket(CHAT_TYPE_INFO, "Nu mai sunt locuri disponibile pe acest obiect.");
 										}
 										else
-											ChatPacket(CHAT_TYPE_INFO, "Nu poşi face asta.");
+											ChatPacket(CHAT_TYPE_INFO, "Nu poã±® face asta.");
 									}
 									break;
 
@@ -4026,12 +4026,12 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 											if (number(1, 100) <= aiAccessorySocketPutPct[item2->GetAccessorySocketGrade()])
 											{
 												item2->SetAccessorySocketGrade(item2->GetAccessorySocketGrade() + 1);
-												ChatPacket(CHAT_TYPE_INFO, "Adãugare reuºitã.");
+												ChatPacket(CHAT_TYPE_INFO, "Adé‰¼gare reuç¯¿tï¿½.");
 												LogManager::instance().ItemLog(this, item, "PUT_SOCKET_SUCCESS", buf);
 											}
 											else
 											{
-												ChatPacket(CHAT_TYPE_INFO, "Adãugare eºuatã.");
+												ChatPacket(CHAT_TYPE_INFO, "Adé‰¼gare eç°atï¿½.");
 												LogManager::instance().ItemLog(this, item, "PUT_SOCKET_FAIL", buf);
 											}
 
@@ -4048,7 +4048,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 										}
 									}
 									else
-										ChatPacket(CHAT_TYPE_INFO, "Nu poşi face asta.");
+										ChatPacket(CHAT_TYPE_INFO, "Nu poã±® face asta.");
 									break;
 							}
 						}
@@ -4060,7 +4060,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 							if (m_pkFishingEvent)
 							{
-								ChatPacket(CHAT_TYPE_INFO, "Nu poşi face asta.");
+								ChatPacket(CHAT_TYPE_INFO, "Nu poã±® face asta.");
 								return false;
 							}
 
@@ -4072,7 +4072,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 							if (weapon->GetSocket(2))
 								ChatPacket(CHAT_TYPE_INFO, "Ai schimbat %s.", item->GetName());
 							else
-								ChatPacket(CHAT_TYPE_INFO, "Foloseºti %s ca momealã.", item->GetName());
+								ChatPacket(CHAT_TYPE_INFO, "Foloseç°i %s ca momealï¿½.", item->GetName());
 
 							weapon->SetSocket(2, item->GetValue(0));
 							item->SetCount(item->GetCount() - 1);
@@ -4087,7 +4087,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 					case USE_AFFECT :
 						{
 							if (FindAffect(item->GetValue(0), aApplyInfo[item->GetValue(1)].bPointType))
-								ChatPacket(CHAT_TYPE_INFO, "Foloseºti deja acest efect.");
+								ChatPacket(CHAT_TYPE_INFO, "Foloseç°i deja acest efect.");
 							else
 							{
 								AddAffect(item->GetValue(0), aApplyInfo[item->GetValue(1)].bPointType, item->GetValue(2), 0, item->GetValue(3), 0, false);
@@ -4153,7 +4153,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 							if (!pBottle || pBottle->GetCount() < 1)
 							{
-								ChatPacket(CHAT_TYPE_INFO, "Nu poşi face asta.");
+								ChatPacket(CHAT_TYPE_INFO, "Nu poã±® face asta.");
 								return false;
 							}
 
@@ -4161,7 +4161,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 							if (number(1, 100) > item->GetValue(5))
 							{
-								ChatPacket(CHAT_TYPE_INFO, "Procesul a eºuat.");
+								ChatPacket(CHAT_TYPE_INFO, "Procesul a eç°at.");
 								return false;
 							}
 
@@ -4201,7 +4201,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 					if (item->GetValue(5) == p->alValues[5])
 					{
-						ChatPacket(CHAT_TYPE_INFO, "Nu poşi adãuga mai multe pietre de acelaº fel.");
+						ChatPacket(CHAT_TYPE_INFO, "Nu poã±® adé‰¼ga mai multe pietre de acelaï¿½ fel.");
 						return false;
 					}
 				}
@@ -4210,7 +4210,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 				{
 					if (!IS_SET(item->GetWearFlag(), WEARABLE_BODY) || !IS_SET(item2->GetWearFlag(), WEARABLE_BODY))
 					{
-						ChatPacket(CHAT_TYPE_INFO, "Ceva nu se potriveºte.");
+						ChatPacket(CHAT_TYPE_INFO, "Ceva nu se potriveç°e.");
 						return false;
 					}
 				}
@@ -4218,13 +4218,13 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 				{
 					if (!IS_SET(item->GetWearFlag(), WEARABLE_WEAPON))
 					{
-						ChatPacket(CHAT_TYPE_INFO, "Ceva nu se potriveºte.");
+						ChatPacket(CHAT_TYPE_INFO, "Ceva nu se potriveç°e.");
 						return false;
 					}
 				}
 				else
 				{
-					ChatPacket(CHAT_TYPE_INFO, "Piatra nu poate fi adãugatã.");
+					ChatPacket(CHAT_TYPE_INFO, "Piatra nu poate fi adé‰¼gatï¿½.");
 					return false;
 				}
 
@@ -4233,12 +4233,12 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 					{
 						if (number(1, 100) <= 30)
 						{
-							ChatPacket(CHAT_TYPE_INFO, "Piatra a fost adaugatã cu succes.");
+							ChatPacket(CHAT_TYPE_INFO, "Piatra a fost adaugatï¿½ cu succes.");
 							item2->SetSocket(i, item->GetVnum());
 						}
 						else
 						{
-							ChatPacket(CHAT_TYPE_INFO, "Piatra nu a fost adaugatã.");
+							ChatPacket(CHAT_TYPE_INFO, "Piatra nu a fost adaugatï¿½.");
 							item2->SetSocket(i, ITEM_BROKEN_METIN_VNUM);
 						}
 
@@ -4248,7 +4248,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 					}
 
 				if (i == ITEM_SOCKET_MAX_NUM)
-					ChatPacket(CHAT_TYPE_INFO, "Piatra nu poate fi adãugatã.");
+					ChatPacket(CHAT_TYPE_INFO, "Piatra nu poate fi adé‰¼gatï¿½.");
 			}
 			break;
 
@@ -4282,7 +4282,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 				if (FindAffect(AFFECT_BLEND, iApplyType))
 				{
-					ChatPacket(CHAT_TYPE_INFO, "Foloseºti deja acest efect.");
+					ChatPacket(CHAT_TYPE_INFO, "Foloseç°i deja acest efect.");
 					return false;
 				}
 
@@ -4325,7 +4325,7 @@ bool CHARACTER::UseItem(TItemPos Cell, TItemPos DestCell)
 
 	if (!item->CanUsedBy(this))
 	{
-		ChatPacket(CHAT_TYPE_INFO, "Nu poşi purta asta.");
+		ChatPacket(CHAT_TYPE_INFO, "Nu poã±® purta asta.");
 		return false;
 	}
 
@@ -4343,33 +4343,33 @@ bool CHARACTER::UseItem(TItemPos Cell, TItemPos DestCell)
 	{
 		if (!IS_SUMMONABLE_ZONE(GetMapIndex()))
 		{
-			ChatPacket(CHAT_TYPE_INFO, "Nu se poate folosi un pergament în acest loc.");
+			ChatPacket(CHAT_TYPE_INFO, "Nu se poate folosi un pergament é ½ acest loc.");
 			return false;
 		}
 
 		if (CThreeWayWar::instance().IsThreeWayWarMapIndex(GetMapIndex()))
 		{
-			ChatPacket(CHAT_TYPE_INFO, "Nu poşi folosi poşiuni în timpul bãtãliei.");
+			ChatPacket(CHAT_TYPE_INFO, "Nu poã±® folosi poã±®uni é ½ timpul bé‰»é‰²iei.");
 			return false;
 		}
 		int iPulse = thecore_pulse();
 
 		if (iPulse - GetSafeboxLoadTime() < PASSES_PER_SEC(5))
 		{
-			ChatPacket(CHAT_TYPE_INFO, "Aºteaptã 5 secunde.");
+			ChatPacket(CHAT_TYPE_INFO, "Aç°eaptï¿½ 5 secunde.");
 			return false; 
 		}
 
 		if (GetExchange() || GetMyShop() || GetShopOwner() || IsOpenSafebox() || IsCubeOpen())
 		{
-			ChatPacket(CHAT_TYPE_INFO, "Se petrece altceva în acest moment.");
+			ChatPacket(CHAT_TYPE_INFO, "Se petrece altceva é ½ acest moment.");
 			return false;
 		}
 
 		//PREVENT_REFINE_HACK
 		if (iPulse - GetRefineTime() < PASSES_PER_SEC(5))
 		{
-			ChatPacket(CHAT_TYPE_INFO, "Aºteaptã 5 secunde.");
+			ChatPacket(CHAT_TYPE_INFO, "Aç°eaptï¿½ 5 secunde.");
 			return false;
 		}
 		//END_PREVENT_REFINE_HACK
@@ -4378,7 +4378,7 @@ bool CHARACTER::UseItem(TItemPos Cell, TItemPos DestCell)
 		//PREVENT_ITEM_COPY
 		if (iPulse - GetMyShopTime() < PASSES_PER_SEC(5))
 		{
-			ChatPacket(CHAT_TYPE_INFO, "Mai aºteaptã 5 secunde.");
+			ChatPacket(CHAT_TYPE_INFO, "Mai aç°eaptï¿½ 5 secunde.");
 			return false;
 		}
 		//END_PREVENT_ITEM_COPY
@@ -4418,7 +4418,7 @@ bool CHARACTER::UseItem(TItemPos Cell, TItemPos DestCell)
 
 			if (nDistant > nDist)
 			{
-				ChatPacket(CHAT_TYPE_INFO, "Nu poşi face asta.");
+				ChatPacket(CHAT_TYPE_INFO, "Nu poã±® face asta.");
 				return false;
 			}
 		}
@@ -4426,7 +4426,7 @@ bool CHARACTER::UseItem(TItemPos Cell, TItemPos DestCell)
 		//PREVENT_PORTAL_AFTER_EXCHANGE
 		if (iPulse - GetExchangeTime() < PASSES_PER_SEC(5))
 		{
-			ChatPacket(CHAT_TYPE_INFO, "Mai aºteaptã 5 secunde.");
+			ChatPacket(CHAT_TYPE_INFO, "Mai aç°eaptï¿½ 5 secunde.");
 			return false;
 		}
 		//END_PREVENT_PORTAL_AFTER_EXCHANGE
@@ -4437,7 +4437,7 @@ bool CHARACTER::UseItem(TItemPos Cell, TItemPos DestCell)
 	{
 		if (GetExchange() || GetMyShop() || GetShopOwner() || IsOpenSafebox() || IsCubeOpen())
 		{
-			ChatPacket(CHAT_TYPE_INFO, "Se petrece altceva în acest moment.");
+			ChatPacket(CHAT_TYPE_INFO, "Se petrece altceva é ½ acest moment.");
 			return false;
 		}
 
@@ -4534,7 +4534,7 @@ bool CHARACTER::DropItem(TItemPos Cell, BYTE bCount)
 
 	if (pkItemToDrop->AddToGround(GetMapIndex(), pxPos))
 	{
-		ChatPacket(CHAT_TYPE_INFO, "Obiectul aruncat va dispãrea in 3 minute.");
+		ChatPacket(CHAT_TYPE_INFO, "Obiectul aruncat va dispé‰¹ea in 3 minute.");
 		pkItemToDrop->StartDestroyEvent();
 
 		ITEM_MANAGER::instance().FlushDelayedSave(pkItemToDrop);
@@ -4560,7 +4560,7 @@ bool CHARACTER::DropGold(int gold)
 	{
 		if (get_dword_time() < m_dwLastGoldDropTime + g_GoldDropTimeLimitValue)
 		{
-			ChatPacket(CHAT_TYPE_INFO, "Nu pot arunca Yang chiar aºa de repede.");
+			ChatPacket(CHAT_TYPE_INFO, "Nu pot arunca Yang chiar aç¯´ de repede.");
 			return false;
 		}
 	}
@@ -4582,7 +4582,7 @@ bool CHARACTER::DropGold(int gold)
 				LogManager::instance().CharLog(this, gold, "DROP_GOLD", "");
 
 			item->StartDestroyEvent(180);
-			ChatPacket(CHAT_TYPE_INFO, "Ai renunşat la %d Yang.", gold);
+			ChatPacket(CHAT_TYPE_INFO, "Ai renunî ¦t la %d Yang.", gold);
 		}
 
 		Save();
@@ -4627,7 +4627,7 @@ bool CHARACTER::MoveItem(TItemPos Cell, TItemPos DestCell, BYTE count)
 	{
 		if (GetItem(DestCell))
 		{
-			ChatPacket(CHAT_TYPE_INFO, "Eºec.");
+			ChatPacket(CHAT_TYPE_INFO, "Eç¯¹c.");
 			
 			return false;
 		}
@@ -4750,7 +4750,7 @@ namespace NPartyPickupDistribute
 				{
 					ch->PointChange(POINT_GOLD, iMoney, true);
 
-					if (iMoney > 1000) // Ãµ¿ø ÀÌ»ó¸¸ ±â·ÏÇÑ´Ù.
+					if (iMoney > 1000) // ç«ç›” ææƒ‘çˆ¶ æ‰åºŸèŒ„ä¿ƒ.
 						LogManager::instance().CharLog(ch, iMoney, "GET_GOLD", "");
 				}
 		}
@@ -4768,7 +4768,7 @@ void CHARACTER::GiveGold(int iAmount)
 	{
 		LPPARTY pParty = GetParty();
 
-		// ÆÄÆ¼°¡ ÀÖ´Â °æ¿ì ³ª´©¾î °¡Áø´Ù.
+		// é¢‡èå•Š ä¹ç»° ç‰ˆå¿« å”±ç©¿ç»¢ å•ŠæŸ³ä¿ƒ.
 		DWORD dwTotal = iAmount;
 		DWORD dwMyAmount = dwTotal;
 
@@ -4787,7 +4787,22 @@ void CHARACTER::GiveGold(int iAmount)
 
 		PointChange(POINT_GOLD, dwMyAmount, true);
 
-		if (dwMyAmount > 1000) // Ãµ¿ø ÀÌ»ó¸¸ ±â·ÏÇÑ´Ù.
+		const bool bIsOwner = item->IsOwnership(this);
+		bool bStolenItem = false;
+
+		if (!bIsOwner && item->HasOwnership())
+		{
+			const int iStealChance = MINMAX(0, GetPoint(POINT_STEAL_GOLD), 100);
+
+			if (iStealChance > 0 && number(1, 100) <= iStealChance)
+			{
+				bStolenItem = true;
+				UpdateAlignment(-2000);
+				ChatPacket(CHAT_TYPE_INFO, "Ai furat un obiect. Ai devenit mai zalim.");
+			}
+		}
+
+		if (bIsOwner || bStolenItem)
 			LogManager::instance().CharLog(this, dwMyAmount, "GET_GOLD", "");
 	}
 	else
@@ -4813,7 +4828,7 @@ bool CHARACTER::PickupItem(DWORD dwVID)
 	{
 		if (item->IsOwnership(this))
 		{
-			// ¸¸¾à ÁÖÀ¸·Á ÇÏ´Â ¾ÆÀÌÅÛÀÌ ¿¤Å©¶ó¸é
+			// çˆ¶è· æ—æ å¦¨ çªç»° é…’æè¢æ éƒ¡å†œæ‰¼æ
 			if (item->GetType() == ITEM_ELK)
 			{
 				GiveGold(item->GetCount());
@@ -4870,7 +4885,7 @@ bool CHARACTER::PickupItem(DWORD dwVID)
 				if (iEmptyCell == -1)
 				{
 					sys_log(0, "No empty inventory pid %u size %ud itemid %u", GetPlayerID(), item->GetSize(), item->GetID());
-					ChatPacket(CHAT_TYPE_INFO, "Ai prea multe obiecte în inventar.");
+					ChatPacket(CHAT_TYPE_INFO, "Ai prea multe obiecte é ½ inventar.");
 					return false;
 				}
 
@@ -4942,7 +4957,7 @@ bool CHARACTER::PickupItem(DWORD dwVID)
 			int iEmptyCell = owner->GetEmptyInventory(item->GetSize());
 			if (iEmptyCell == -1)
 			{
-				owner->ChatPacket(CHAT_TYPE_INFO, "Ai prea multe obiecte în inventar.");
+				owner->ChatPacket(CHAT_TYPE_INFO, "Ai prea multe obiecte é ½ inventar.");
 				return false;
 			}
 
@@ -5074,13 +5089,13 @@ bool CHARACTER::EquipItem(LPITEM item, int iCandidateCell)
 
 	if (GetWear(WEAR_BODY) && GetWear(WEAR_BODY)->GetVnum() >= 11901 && GetWear(WEAR_BODY)->GetVnum() <= 11904 && item->GetType() == ITEM_COSTUME && item->GetSubType() == COSTUME_BODY)
 	{
-		ChatPacket(CHAT_TYPE_INFO, "Nu poşi purta un costum atât timp cât ai echipat un obiect de nuntã.");
+		ChatPacket(CHAT_TYPE_INFO, "Nu poã±® purta un costum atéˆš timp céˆš ai echipat un obiect de nuntï¿½.");
 		return false;
 	}
    
 	if (GetWear(WEAR_COSTUME_BODY) && item->GetVnum() >= 11901 && item->GetVnum() <= 11904)
 	{
-		ChatPacket(CHAT_TYPE_INFO, "Nu poşi purta un costum atât timp cât ai echipat un obiect de nuntã.");
+		ChatPacket(CHAT_TYPE_INFO, "Nu poã±® purta un costum atéˆš timp céˆš ai echipat un obiect de nuntï¿½.");
 		return false;
 	}
 
@@ -5091,19 +5106,19 @@ bool CHARACTER::EquipItem(LPITEM item, int iCandidateCell)
 
 	if (iWearCell == WEAR_BODY && IsRiding() && (item->GetVnum() >= 11901 && item->GetVnum() <= 11904))
 	{
-		ChatPacket(CHAT_TYPE_INFO, "Nu poşi face asta.");
+		ChatPacket(CHAT_TYPE_INFO, "Nu poã±® face asta.");
 		return false;
 	}
 
 	if (iWearCell == WEAR_WEAPON && IsRiding() && (item->GetType() == ITEM_ROD || item->GetType() == ITEM_PICK))
 	{
-		ChatPacket(CHAT_TYPE_INFO, "Nu poşi face asta.");
+		ChatPacket(CHAT_TYPE_INFO, "Nu poã±® face asta.");
 		return false;
 	}
 
 	if (iWearCell != WEAR_ARROW && IsPolymorphed())
 	{
-		ChatPacket(CHAT_TYPE_INFO, "Nu poşi face asta.");
+		ChatPacket(CHAT_TYPE_INFO, "Nu poã±® face asta.");
 		return false;
 	}
 
@@ -5113,10 +5128,10 @@ bool CHARACTER::EquipItem(LPITEM item, int iCandidateCell)
 		return false;
 	}
 
-	//½Å±Ô Å»°Í »ç¿ë½Ã ±âÁ¸ ¸» »ç¿ë¿©ºÎ Ã¼Å©
+	//è„šç—¹ å‘•å·´ è¤ä¾©çŸ« æ‰ç²® å¯Œ è¤ä¾©å’¯ä½• çœ‰å†œ
 	if(item->IsRideItem() && IsRiding())
 	{
-		ChatPacket(CHAT_TYPE_INFO, "Poşi descãleca apãsând CTRL+G.");
+		ChatPacket(CHAT_TYPE_INFO, "Poã±® descé‰²eca apé‰ºéˆ”d CTRL+G.");
 		return false;
 	}
 
@@ -5125,7 +5140,7 @@ bool CHARACTER::EquipItem(LPITEM item, int iCandidateCell)
 	if (iWearCell != WEAR_ARROW 
 		&& (dwCurTime - GetLastAttackTime() <= 1500 || dwCurTime - m_dwLastSkillTime <= 1500))
 	{
-		ChatPacket(CHAT_TYPE_INFO, "Nu poşi face asta.");
+		ChatPacket(CHAT_TYPE_INFO, "Nu poã±® face asta.");
 		return false;
 	}
 
@@ -5675,7 +5690,7 @@ bool CHARACTER::CanReceiveItem(LPCHARACTER from, LPITEM item) const
 			{
 				if (!IsDead())
 				{
-					from->ChatPacket(CHAT_TYPE_INFO, "Nu poşi învia un cal viu.");
+					from->ChatPacket(CHAT_TYPE_INFO, "Nu poã±® é ½via un cal viu.");
 					return false;
 				}
 				return true;
@@ -5684,7 +5699,7 @@ bool CHARACTER::CanReceiveItem(LPCHARACTER from, LPITEM item) const
 			{
 				if (IsDead())
 				{
-					from->ChatPacket(CHAT_TYPE_INFO, "Nu poşi hrãni un cal mort.");
+					from->ChatPacket(CHAT_TYPE_INFO, "Nu poã±® hré‰µi un cal mort.");
 					return false;
 				}
 				return true;
@@ -5701,7 +5716,7 @@ bool CHARACTER::CanReceiveItem(LPCHARACTER from, LPITEM item) const
 			{
 				if (!IsDead())
 				{
-					from->ChatPacket(CHAT_TYPE_INFO, "Nu poşi învia un cal viu.");
+					from->ChatPacket(CHAT_TYPE_INFO, "Nu poã±® é ½via un cal viu.");
 					return false;
 				}
 				return true;
@@ -5710,7 +5725,7 @@ bool CHARACTER::CanReceiveItem(LPCHARACTER from, LPITEM item) const
 			{
 				if (IsDead())
 				{
-					from->ChatPacket(CHAT_TYPE_INFO, "Nu poşi hrãni un cal mort.");
+					from->ChatPacket(CHAT_TYPE_INFO, "Nu poã±® hré‰µi un cal mort.");
 					return false;
 				}
 				return true;
@@ -5727,7 +5742,7 @@ bool CHARACTER::CanReceiveItem(LPCHARACTER from, LPITEM item) const
 			{
 				if (!IsDead())
 				{
-					from->ChatPacket(CHAT_TYPE_INFO, "Nu poşi învia un cal viu.");
+					from->ChatPacket(CHAT_TYPE_INFO, "Nu poã±® é ½via un cal viu.");
 					return false;
 				}
 				return true;
@@ -5736,7 +5751,7 @@ bool CHARACTER::CanReceiveItem(LPCHARACTER from, LPITEM item) const
 			{
 				if (IsDead())
 				{
-					from->ChatPacket(CHAT_TYPE_INFO, "Nu poşi hrãni un cal mort.");
+					from->ChatPacket(CHAT_TYPE_INFO, "Nu poã±® hré‰µi un cal mort.");
 					return false;
 				}
 				return true;
@@ -5781,7 +5796,7 @@ void CHARACTER::ReceiveItem(LPCHARACTER from, LPITEM item)
 			}
 			else
 			{
-				from->ChatPacket(CHAT_TYPE_INFO, "Obiectul nu poate fi îmbunãtãşit.");
+				from->ChatPacket(CHAT_TYPE_INFO, "Obiectul nu poate fi é ¼buné‰»æ³¾it.");
 			}
 			break;
 			// END_OF_DEVILTOWER_NPC
@@ -5798,7 +5813,7 @@ void CHARACTER::ReceiveItem(LPCHARACTER from, LPITEM item)
 			}
 			else
 			{
-				from->ChatPacket(CHAT_TYPE_INFO, "Obiectul nu poate fi îmbunãtãşit.");
+				from->ChatPacket(CHAT_TYPE_INFO, "Obiectul nu poate fi é ¼buné‰»æ³¾it.");
 			}
 			break;
 
@@ -5817,14 +5832,14 @@ void CHARACTER::ReceiveItem(LPCHARACTER from, LPITEM item)
 			{
 				from->ReviveHorse();
 				item->SetCount(item->GetCount()-1);
-				from->ChatPacket(CHAT_TYPE_INFO, "Calul este în cea mai bunã condişie a sa.");
+				from->ChatPacket(CHAT_TYPE_INFO, "Calul este é ½ cea mai bunï¿½ condiã±®e a sa.");
 			}
 			else if (item->GetVnum() == ITEM_HORSE_FOOD_1 ||
 					item->GetVnum() == ITEM_HORSE_FOOD_2 ||
 					item->GetVnum() == ITEM_HORSE_FOOD_3)
 			{
 				from->FeedHorse();
-				from->ChatPacket(CHAT_TYPE_INFO, "Calul a fost hrãnit.");
+				from->ChatPacket(CHAT_TYPE_INFO, "Calul a fost hré‰µit.");
 				item->SetCount(item->GetCount()-1);
 				EffectPacket(SE_HPUP_RED);
 			}
@@ -6005,7 +6020,7 @@ bool CHARACTER::ItemProcess_Hair(LPITEM item, int iDestCell)
 {
 	if (!item->CheckItemUseLevel(GetLevel()))
 	{
-		ChatPacket(CHAT_TYPE_INFO, "Nu poşi purta asta.");
+		ChatPacket(CHAT_TYPE_INFO, "Nu poã±® purta asta.");
 		return false;
 	}
 
@@ -6053,13 +6068,13 @@ bool CHARACTER::ItemProcess_Polymorph(LPITEM item)
 {
 	if (IsPolymorphed())
 	{
-		ChatPacket(CHAT_TYPE_INFO, "Eºti deja transformat.");
+		ChatPacket(CHAT_TYPE_INFO, "Eç°i deja transformat.");
 		return false;
 	}
 
 	if (IsRiding())
 	{
-		ChatPacket(CHAT_TYPE_INFO, "Nu te poşi transforma cât timp cãlãreºti.");
+		ChatPacket(CHAT_TYPE_INFO, "Nu te poã±® transforma céˆš timp cé‰²é‰¹eç°i.");
 		return false;
 	}
 
@@ -6067,7 +6082,7 @@ bool CHARACTER::ItemProcess_Polymorph(LPITEM item)
 
 	if (dwVnum == 0)
 	{
-		ChatPacket(CHAT_TYPE_INFO, "Eºec.");
+		ChatPacket(CHAT_TYPE_INFO, "Eç¯¹c.");
 		return false;
 	}
 
@@ -6075,7 +6090,7 @@ bool CHARACTER::ItemProcess_Polymorph(LPITEM item)
 
 	if (pMob == NULL)
 	{
-		ChatPacket(CHAT_TYPE_INFO, "Eºec.");
+		ChatPacket(CHAT_TYPE_INFO, "Eç¯¹c.");
 		return false;
 	}
 
@@ -6092,7 +6107,7 @@ bool CHARACTER::ItemProcess_Polymorph(LPITEM item)
 				int iPolymorphLevelLimit = MAX(0, 20 - GetLevel() * 3 / 10);
 				if (pMob->m_table.bLevel >= GetLevel() + iPolymorphLevelLimit)
 				{
-					ChatPacket(CHAT_TYPE_INFO, "Diferenşã de nivel necorespunzãtoare.");
+					ChatPacket(CHAT_TYPE_INFO, "Diferenî’ª de nivel necorespunzé‰»oare.");
 					return false;
 				}
 
@@ -6309,7 +6324,7 @@ bool CHARACTER::CanEquipNow(const LPITEM item, const TItemPos& srcCell, const TI
 			case LIMIT_LEVEL:
 				if (GetLevel() < limit)
 				{
-					ChatPacket(CHAT_TYPE_INFO, "Nivelul tãu este prea mic.");
+					ChatPacket(CHAT_TYPE_INFO, "Nivelul té‰¼ este prea mic.");
 					return false;
 				}
 				break;
@@ -6317,7 +6332,7 @@ bool CHARACTER::CanEquipNow(const LPITEM item, const TItemPos& srcCell, const TI
 			case LIMIT_STR:
 				if (GetPoint(POINT_ST) < limit)
 				{
-					ChatPacket(CHAT_TYPE_INFO, "Nu poşi face asta.");
+					ChatPacket(CHAT_TYPE_INFO, "Nu poã±® face asta.");
 					return false;
 				}
 				break;
@@ -6325,7 +6340,7 @@ bool CHARACTER::CanEquipNow(const LPITEM item, const TItemPos& srcCell, const TI
 			case LIMIT_INT:
 				if (GetPoint(POINT_IQ) < limit)
 				{
-					ChatPacket(CHAT_TYPE_INFO, "Nu poşi face asta.");
+					ChatPacket(CHAT_TYPE_INFO, "Nu poã±® face asta.");
 					return false;
 				}
 				break;
@@ -6333,7 +6348,7 @@ bool CHARACTER::CanEquipNow(const LPITEM item, const TItemPos& srcCell, const TI
 			case LIMIT_DEX:
 				if (GetPoint(POINT_DX) < limit)
 				{
-					ChatPacket(CHAT_TYPE_INFO, "Nu poşi face asta.");
+					ChatPacket(CHAT_TYPE_INFO, "Nu poã±® face asta.");
 					return false;
 				}
 				break;
@@ -6341,7 +6356,7 @@ bool CHARACTER::CanEquipNow(const LPITEM item, const TItemPos& srcCell, const TI
 			case LIMIT_CON:
 				if (GetPoint(POINT_HT) < limit)
 				{
-					ChatPacket(CHAT_TYPE_INFO, "Nu poşi face asta.");
+					ChatPacket(CHAT_TYPE_INFO, "Nu poã±® face asta.");
 					return false;
 				}
 				break;
@@ -6353,14 +6368,14 @@ bool CHARACTER::CanEquipNow(const LPITEM item, const TItemPos& srcCell, const TI
 		if ((GetWear(WEAR_UNIQUE1) && GetWear(WEAR_UNIQUE1)->IsSameSpecialGroup(item)) ||
 			(GetWear(WEAR_UNIQUE2) && GetWear(WEAR_UNIQUE2)->IsSameSpecialGroup(item)))
 		{
-			ChatPacket(CHAT_TYPE_INFO, "Nu poşi face asta.");
+			ChatPacket(CHAT_TYPE_INFO, "Nu poã±® face asta.");
 			return false;
 		}
 
 		if (marriage::CManager::instance().IsMarriageUniqueItem(item->GetVnum()) && 
 			!marriage::CManager::instance().IsMarried(GetPlayerID()))
 		{
-			ChatPacket(CHAT_TYPE_INFO, "Poşi face asta doar în prezenşa partenerului.");
+			ChatPacket(CHAT_TYPE_INFO, "Poã±® face asta doar é ½ prezenî ¦ partenerului.");
 			return false;
 		}
 	}
@@ -6378,7 +6393,7 @@ bool CHARACTER::CanUnequipNow(const LPITEM item, bool switchItems, const TItemPo
 
 	if (GetEmptyInventory(item->GetSize()) == -1)
 	{
-		ChatPacket(CHAT_TYPE_INFO, "Nu existã spaşiu disponibil.");
+		ChatPacket(CHAT_TYPE_INFO, "Nu existï¿½ spaã±®u disponibil.");
 		return false;
 	}
 

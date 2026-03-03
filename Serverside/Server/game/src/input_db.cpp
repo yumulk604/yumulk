@@ -1004,8 +1004,7 @@ void CInputDB::QuestLoad(LPDESC d, const char * c_pData)
 			st += ".";
 			st += pQuestTable[i].szState;
 
-			sys_log(0,  "            %s %d", st.c_str(), pQuestTable[i].lValue);
-			pkPC->SetFlag(st.c_str(), pQuestTable[i].lValue, false);
+			pkPC->SetFlag(st, pQuestTable[i].lValue, true);
 		}
 
 		pkPC->SetLoaded();

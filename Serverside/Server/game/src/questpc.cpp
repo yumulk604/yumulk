@@ -58,22 +58,24 @@ namespace quest
 			return;
 		}
 
-		TFlagMap::iterator it = m_FlagMap.find(name);
+		int flagID = CQuestFlagManager::instance().GetFlagID(name);
+		TFlagMap::iterator it = m_FlagMap.find(flagID);
 
 		if (it == m_FlagMap.end())
-			m_FlagMap.insert(make_pair(name, value));
+			m_FlagMap.insert(make_pair(flagID, value));
 		else if (it->second != value)
 			it->second = value;
 		else
 			bSkipSave = true;
 
 		if (!bSkipSave)
-			SaveFlag(name, value);
+			m_FlagSaveMap[flagID] = value;
 	}
 
 	bool PC::DeleteFlag(const string & name)
 	{
-		TFlagMap::iterator it = m_FlagMap.find(name);
+		int flagID = CQuestFlagManager::instance().GetFlagID(name);
+		TFlagMap::iterator it = m_FlagMap.find(flagID);
 
 		if (it != m_FlagMap.end())
 		{
@@ -524,8 +526,9 @@ namespace quest
 
 		while (it != m_FlagSaveMap.end())
 		{
-			const std::string & stComp = it->first;
+			int flagID = it->first;
 			long lValue = it->second;
+			const std::string& stComp = CQuestFlagManager::instance().GetFlagName(flagID);
 
 			++it;
 
@@ -659,9 +662,10 @@ namespace quest
 		itertype(m_FlagMap) it;
 		for (it = m_FlagMap.begin(); it != m_FlagMap.end(); ++it)
 		{
-			if (it->first.size()>9 && it->first.compare(it->first.size()-9,9, ".__status") == 0)
+			const std::string& flagName = CQuestFlagManager::instance().GetFlagName(it->first);
+			if (flagName.size()>9 && flagName.compare(flagName.size()-9,9, ".__status") == 0)
 			{
-				DWORD dwQuestIndex = CQuestManager::instance().GetQuestIndexByName(it->first.substr(0, it->first.size()-9));
+				DWORD dwQuestIndex = CQuestManager::instance().GetQuestIndexByName(flagName.substr(0, flagName.size()-9));
 				int state = it->second;
 				QuestState qs;
 				qs.st = state;
@@ -677,10 +681,10 @@ namespace quest
 		for (itertype(m_FlagMap) it = m_FlagMap.begin(); it!= m_FlagMap.end();)
 		{
 			itertype(m_FlagMap) itNow = it++;
-			if (itNow->second != 0 && itNow->first.compare(0, quest_name_with_dot.size(), quest_name_with_dot) == 0)
+			const std::string& flagName = CQuestFlagManager::instance().GetFlagName(itNow->first);
+			if (itNow->second != 0 && flagName.rfind(quest_name_with_dot, 0) == 0)
 			{
-				//m_FlagMap.erase(itNow);
-				SetFlag(itNow->first, 0);
+				SetFlag(flagName, 0);
 			}
 		}
 
@@ -705,15 +709,16 @@ namespace quest
 	{
 		for (itertype(m_FlagMap) it = m_FlagMap.begin(); it!= m_FlagMap.end(); ++it)
 		{
-			if (it->first.size()>9 && it->first.compare(it->first.size()-9,9, ".__status") == 0)
+			const std::string& flagName = CQuestFlagManager::instance().GetFlagName(it->first);
+			if (flagName.size()>9 && flagName.compare(flagName.size()-9,9, ".__status") == 0)
 			{
-				const string quest_name = it->first.substr(0, it->first.size()-9);
+				const string quest_name = flagName.substr(0, flagName.size()-9);
 				const char* state_name = CQuestManager::instance().GetQuestStateName(quest_name, it->second);
 				ch->ChatPacket(CHAT_TYPE_INFO, "%s %s (%d)", quest_name.c_str(), state_name, it->second);
 			}
 			else
 			{
-				ch->ChatPacket(CHAT_TYPE_INFO, "%s %d", it->first.c_str(), it->second);
+				ch->ChatPacket(CHAT_TYPE_INFO, "%s %d", flagName.c_str(), it->second);
 			}
 		}
 	}
